@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Certifications — Artizia Quartz</title>
+<meta name="description" content="Artizia quartz is GreenGuard, NSF and Kosher certified — proof of low emissions, food-safe surfaces and independent quality assurance.">
+<link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="certifications">
+
+<!--
+═══════════════════════════════════════════════════════════════════════
+  CERTIFICATIONS PAGE CONTENT  —  EDIT EVERYTHING HERE
+═══════════════════════════════════════════════════════════════════════
+  IMAGES  put files in  assets/img/  then write  "assets/img/name.jpg"
+  Leave  image: ""  and a live marble texture is used instead.
+═══════════════════════════════════════════════════════════════════════
+-->
+<script>
+window.PAGE = {
+
+  /* ---- banner behind the page heading ---- */
+  banner: {
+    image:    "",                       /* e.g. "assets/img/certifications-banner.jpg" */
+    alt:      "Artizia quartz surface",
+    fallback: "pearl-white",
+    zoom:     1.4,
+    eyebrow:  "Resources · Certifications",
+    title:    "Proof, <em>not promises.</em>",
+    lead:     "Independent certifications that back every Artizia surface — for cleaner air, food-safe use and assured quality."
+  },
+
+  /* ---- the certification cards ---- */
+  certs: [
+    { name: "GreenGuard",
+      text: "Certified for low chemical emissions, GreenGuard means Artizia surfaces contribute to healthier indoor air — safe for kitchens, bathrooms and the rooms you live in every day." },
+    { name: "NSF Certified",
+      text: "NSF certification confirms our surfaces meet strict public-health standards for food-contact use — safe wherever you prep, cook and eat." },
+    { name: "Kosher",
+      text: "Independently certified kosher, our quartz is approved for use in observant homes and commercial food environments." }
+  ],
+
+  /* ---- warranty block + its side image ---- */
+  side: {
+    eyebrow: "Warranty",
+    title:   "Backed for a lifetime.",
+    text:    "Beyond certification, every Artizia surface carries a <b>Lifetime Warranty</b> against manufacturing defects — resisting scratches, stains, heat, household chemicals, mould and mildew.",
+    image:    "",                       /* e.g. "assets/img/warranty-side.jpg" */
+    alt:      "Artizia quartz detail",
+    fallback: "mystique",
+    zoom:     1
+  }
+};
+</script>
+
+<section class="page-hero">
+  <div class="ph-vis"></div>
+  <div class="wrap">
+    <span class="eyebrow"></span>
+    <h1></h1>
+    <p class="lead"></p>
+  </div>
+</section>
+
+<section class="pad" style="padding-top:clamp(20px,4vw,50px)"><div class="wrap">
+  <div class="cert-grid" id="certs"></div>
+</div></section>
+
+<section class="pad" style="padding-top:0"><div class="wrap"><div class="grid-2">
+  <div class="prose rv">
+    <span class="eyebrow" id="sideEye"></span>
+    <h3 id="sideTitle"></h3>
+    <p id="sideText"></p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-line mag" href="warranty.html"><span>Warranty Details →</span></a><a class="btn btn-line mag" href="technical-details.html"><span>Technical Specs</span></a></div>
+  </div>
+  <div class="feat-vis rv d1" id="sideVis"></div>
+</div></div></section>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/marble.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const P=window.PAGE,A=window.Artizia,$=id=>document.getElementById(id);
+  const certs=(P.certs&&P.certs.length)?P.certs.map(c=>[c.name,c.text]):window.CERTS;
+  $('certs').innerHTML=certs.map(c=>`<div class="cert rv"><div class="cmark">✦</div><h3>${c[0]}</h3><p>${c[1]}</p></div>`).join('');
+  const s=P.side||{};
+  $('sideEye').textContent=s.eyebrow||''; $('sideTitle').textContent=s.title||''; $('sideText').innerHTML=s.text||'';
+  A.visual($('sideVis'),s);
+  A.refresh();
+})();
+</script>
+</body>
+</html>

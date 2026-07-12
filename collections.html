@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Collections — Artizia Quartz Surfaces</title>
+<meta name="description" content="Explore 26 engineered quartz surfaces across four Artizia collections — Signature, Luxury, Premium and Essentials.">
+<link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="collections">
+
+<!--
+═══════════════════════════════════════════════════════════════════════
+  COLLECTIONS PAGE CONTENT  —  EDIT EVERYTHING HERE
+═══════════════════════════════════════════════════════════════════════
+  IMAGES  put files in  assets/img/  then write  "assets/img/name.jpg"
+  Leave  image: ""  and a live marble texture is used instead.
+
+  NOTE  the product cards below are NOT edited here — they come from the
+  database.  Add, edit or delete products in the admin panel: /admin.html
+═══════════════════════════════════════════════════════════════════════
+-->
+<script>
+window.PAGE = {
+
+  /* ---- banner behind the page heading ---- */
+  banner: {
+    image:    "",                       /* e.g. "assets/img/collections-banner.jpg" */
+    alt:      "Artizia quartz surface",
+    fallback: "grigio-cloud",
+    zoom:     1.3,
+    eyebrow:  "The Collections · 26 Surfaces",
+    title:    "Four worlds <em>of stone.</em>",
+    lead:     "From marble-veined luxury to quiet everyday essentials — every Artizia surface is engineered on Breton technology and backed for a lifetime."
+  },
+
+  /* ---- closing call-to-action ---- */
+  cta: {
+    eyebrow: "Not sure which?",
+    title:   "Order the ones <em>you love.</em>",
+    text:    "Add up to four surfaces to your sample set and we'll ship physical samples, free."
+  }
+};
+</script>
+
+<section class="page-hero">
+  <div class="ph-vis"></div>
+  <div class="wrap">
+    <span class="eyebrow"></span>
+    <h1></h1>
+    <p class="lead"></p>
+  </div>
+</section>
+
+<section class="pad" style="padding-top:clamp(30px,4vw,50px)"><div class="wrap">
+  <div class="filters" id="filters"></div>
+  <div class="mgrid" id="grid"></div>
+</div></section>
+
+<section class="cta pad"><div class="wrap rv">
+  <span class="eyebrow center" id="ctaEye"></span>
+  <h2 style="margin-top:22px" id="ctaTitle"></h2>
+  <p id="ctaText"></p>
+  <div class="row"><a class="btn btn-fill mag" href="#" id="ctaSamples"><span>Build a Sample Set <span class="arw">→</span></span></a>
+    <a class="btn btn-line mag" href="contact.html"><span>Talk to Us</span></a></div>
+</div></section>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/marble.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const GL=window.MarbleGL,MAT=window.MAT,dpr=GL.dpr,reduce=GL.reduce;
+  const params=new URLSearchParams(location.search);
+  let active=params.get('c')||'All';
+  const cats=['All',...window.COLLECTIONS.map(c=>c.key)];
+  document.getElementById('filters').innerHTML=cats.map(c=>`<button data-c="${c}" class="${c===active?'active':''}">${c}</button>`).join('');
+  /* Every card is the same 375x250 frame and the whole slab is fitted inside it,
+     whatever its shape (they range from 1.5:1 to 2.9:1). Fitting the widest ones
+     leaves a lot of empty frame, so the same photo — blurred and zoomed — fills
+     the space behind it. The card is always full; the slab is never cropped. */
+  function art(k,m){
+    const photo = GL.firstPhoto(k);
+    if(!photo) return GL.imgFor(k,0);                /* no photo yet: generated marble */
+    const alt = (m.name||'').replace(/"/g,'&quot;');
+    return `<img class="bed" src="${photo}" alt="" aria-hidden="true" loading="lazy">
+      <img class="slab" src="${photo}" alt="${alt}" loading="lazy">`;
+  }
+  function card(k,i){const m=MAT[k];
+    return `<div class="mcard rv">
+      <a class="mimg" href="product.html?p=${k}" aria-label="${m.name}">${art(k,m)}</a>
+      <button class="madd" data-add="${k}" aria-label="Add ${m.name} to samples">+</button>
+      <div class="minfo">
+        <a class="mtxt" href="product.html?p=${k}">
+          <div class="mcoll">${m.coll} · No. ${m.code}</div>
+          <div class="mtitle">${m.name}</div>
+          <div class="mdesc">${m.desc}</div>
+        </a>
+        <a class="marw" href="product.html?p=${k}" aria-label="View ${m.name}"><span>→</span></a>
+      </div>
+    </div>`;}
+  function render(){
+    const list=window.productList().filter(k=>active==='All'||MAT[k].coll===active);
+    document.getElementById('grid').innerHTML=list.map(card).join('');
+    document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();window.addSample(b.dataset.add,b);}));
+    window.Artizia.refresh();
+  }
+  document.getElementById('filters').addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(!b)return;
+    active=b.dataset.c;document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('active',x.dataset.c===active));
+    history.replaceState(null,'',active==='All'?location.pathname:'?c='+active);render();});
+  // wait for live products from the API, then render
+  (window.ArtiziaData ? window.ArtiziaData.ready : Promise.resolve()).then(render);
+  document.getElementById('ctaSamples').addEventListener('click',e=>{e.preventDefault();window.openTray();});
+
+  const c=(window.PAGE||{}).cta||{},$=id=>document.getElementById(id);
+  $('ctaEye').textContent=c.eyebrow||''; $('ctaTitle').innerHTML=c.title||''; $('ctaText').textContent=c.text||'';
+})();
+</script>
+</body>
+</html>

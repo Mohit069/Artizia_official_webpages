@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Care &amp; Maintenance — Artizia Quartz</title>
+<meta name="description" content="How to care for your Artizia engineered quartz surface — everyday cleaning, preventing damage and long-term maintenance. No sealing required.">
+<link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="care">
+
+<!--
+═══════════════════════════════════════════════════════════════════════
+  CARE & MAINTENANCE PAGE CONTENT  —  EDIT EVERYTHING HERE
+═══════════════════════════════════════════════════════════════════════
+  IMAGES  put files in  assets/img/  then write  "assets/img/name.jpg"
+  Leave  image: ""  and a live marble texture is used instead.
+═══════════════════════════════════════════════════════════════════════
+-->
+<script>
+window.PAGE = {
+
+  /* ---- banner behind the page heading ---- */
+  banner: {
+    image:    "",                       /* e.g. "assets/img/care-banner.jpg" */
+    alt:      "Artizia quartz surface",
+    fallback: "makrana-mist",
+    zoom:     1.4,
+    eyebrow:  "Resources · Care",
+    title:    "Beautiful <em>with barely any effort.</em>",
+    lead:     "Non-porous and low-maintenance by design — here's how to keep your Artizia surface looking its best for a lifetime."
+  },
+
+  /* ---- the three care cards.  Add bullet points freely. ---- */
+  steps: [
+    { tag: "01 · Daily", title: "Everyday cleaning", points: [
+        "Use a soft cloth or sponge with warm water and a mild detergent.",
+        "Wipe up spills promptly to keep the surface pristine.",
+        "Avoid harsh chemicals and abrasive scrubbers that could dull the finish."
+      ] },
+    { tag: "02 · Protect", title: "Preventing damage", points: [
+        "Use a cutting board — don't cut directly on the countertop.",
+        "Place trivets or pads under pots, pans and hot appliances.",
+        "Avoid dropping heavy objects, which can chip any hard surface."
+      ] },
+    { tag: "03 · Maintain", title: "Long-term care", points: [
+        "Wipe down regularly to maintain lustre and hygiene.",
+        "For stubborn marks, use a non-abrasive cleaner made for quartz.",
+        "No sealing required — quartz is non-porous for life."
+      ] }
+  ],
+
+  /* ---- closing note ---- */
+  note: {
+    eyebrow: "Good to Know",
+    title:   "Engineered to make life easy.",
+    body: [
+      "Because Artizia quartz is <b>non-porous, low-maintenance and resistant to everyday wear</b>, it never needs sealing and resists staining from common household spills. Consistent, gentle care preserves both appearance and performance for years to come."
+    ]
+  }
+};
+</script>
+
+<section class="page-hero">
+  <div class="ph-vis"></div>
+  <div class="wrap">
+    <span class="eyebrow"></span>
+    <h1></h1>
+    <p class="lead"></p>
+  </div>
+</section>
+
+<section class="pad" style="padding-top:clamp(20px,4vw,50px)"><div class="wrap">
+  <div class="care-grid rv" id="care"></div>
+</div></section>
+
+<section class="pad" style="padding-top:0"><div class="wrap"><div class="prose rv">
+  <span class="eyebrow" id="nEye"></span>
+  <h3 id="nTitle"></h3>
+  <div id="nBody"></div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-line mag" href="warranty.html"><span>Warranty →</span></a><a class="btn btn-line mag" href="faq.html"><span>Read the FAQ</span></a></div>
+</div></div></section>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/marble.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const P=window.PAGE,$=id=>document.getElementById(id);
+  $('care').innerHTML=(P.steps||[]).map(s=>`<div class="care"><span class="ci">${s.tag}</span><h4>${s.title}</h4><ul>${(s.points||[]).map(p=>`<li>${p}</li>`).join('')}</ul></div>`).join('');
+  const n=P.note||{};
+  $('nEye').textContent=n.eyebrow||''; $('nTitle').textContent=n.title||'';
+  $('nBody').innerHTML=(n.body||[]).map(p=>`<p>${p}</p>`).join('');
+  window.Artizia.refresh();
+})();
+</script>
+</body>
+</html>

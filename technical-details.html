@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Technical Details — Artizia Quartz</title>
+<meta name="description" content="Full technical specifications for Artizia engineered quartz — tested to EN and ASTM standards for strength, absorption, abrasion and chemical resistance.">
+<link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="technical">
+
+<!--
+═══════════════════════════════════════════════════════════════════════
+  TECHNICAL DETAILS PAGE CONTENT  —  EDIT EVERYTHING HERE
+═══════════════════════════════════════════════════════════════════════
+  IMAGES  put files in  assets/img/  then write  "assets/img/name.jpg"
+  Leave  image: ""  and a live marble texture is used instead.
+
+  NOTE  the spec table is also shown on every product page.  Leaving
+  specs: []  keeps both in sync from assets/js/data.js (window.SPECS).
+  Fill it in here and this page alone will use your version.
+═══════════════════════════════════════════════════════════════════════
+-->
+<script>
+window.PAGE = {
+
+  /* ---- banner behind the page heading ---- */
+  banner: {
+    image:    "",                       /* e.g. "assets/img/technical-banner.jpg" */
+    alt:      "Artizia quartz surface",
+    fallback: "volcanic-ash",
+    zoom:     1.4,
+    eyebrow:  "Resources · Technical",
+    title:    "The numbers <em>behind the beauty.</em>",
+    lead:     "Every Artizia surface is tested to international EN and ASTM standards. Here's exactly how our quartz performs."
+  },
+
+  /* ---- spec rows:  { property, standard, result }.  [] = use the shared list ---- */
+  specs: [],
+
+  /* ---- small print under the table ---- */
+  note: "Values are typical ranges for Artizia engineered quartz and may vary by design and finish. Available in <b style=\"color:var(--text)\">20 mm and 30 mm</b> thicknesses, standard slab format <b style=\"color:var(--text)\">3200 × 1600 mm</b>. Finishes: Polished, Honed (selected designs).",
+
+  /* ---- closing call-to-action ---- */
+  cta: {
+    eyebrow: "Specifying a Project?",
+    title:   "We'll help you <em>get it right.</em>",
+    text:    "Request samples, full spec sheets or design guidance from our team."
+  }
+};
+</script>
+
+<section class="page-hero">
+  <div class="ph-vis"></div>
+  <div class="wrap">
+    <span class="eyebrow"></span>
+    <h1></h1>
+    <p class="lead"></p>
+  </div>
+</section>
+
+<section class="pad" style="padding-top:clamp(20px,4vw,50px)"><div class="wrap">
+  <div class="spwrap rv"><table class="sp"><thead><tr><th>Property</th><th>Test Standard</th><th style="text-align:right">Result</th></tr></thead><tbody id="spbody"></tbody></table></div>
+  <div class="prose rv" style="margin-top:50px">
+    <p class="mono" style="font-size:12px;color:var(--text-faint)" id="spNote"></p>
+  </div>
+</div></section>
+
+<section class="cta pad"><div class="wrap rv">
+  <span class="eyebrow center" id="ctaEye"></span>
+  <h2 style="margin-top:22px" id="ctaTitle"></h2>
+  <p id="ctaText"></p>
+  <div class="row"><a class="btn btn-fill mag" href="#" id="ctaSamples"><span>Request Samples <span class="arw">→</span></span></a><a class="btn btn-line mag" href="contact.html"><span>Contact Us</span></a></div>
+</div></section>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/marble.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const P=window.PAGE,$=id=>document.getElementById(id);
+  const rows=(P.specs&&P.specs.length)?P.specs.map(s=>[s.property,s.standard,s.result]):window.SPECS;
+  $('spbody').innerHTML=rows.map(s=>`<tr><td>${s[0]}</td><td class="st">${s[1]}</td><td class="rs">${s[2]}</td></tr>`).join('');
+  $('spNote').innerHTML=P.note||'';
+  const c=P.cta||{}; $('ctaEye').textContent=c.eyebrow||''; $('ctaTitle').innerHTML=c.title||''; $('ctaText').textContent=c.text||'';
+  $('ctaSamples').addEventListener('click',e=>{e.preventDefault();window.openTray();});
+  window.Artizia.refresh();
+})();
+</script>
+</body>
+</html>

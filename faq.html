@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAQ — Artizia Quartz</title>
+<meta name="description" content="Frequently asked questions about Artizia engineered quartz — products, quality, samples, ordering, installation and warranty.">
+<link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="faq">
+
+<!--
+═══════════════════════════════════════════════════════════════════════
+  FAQ PAGE CONTENT  —  EDIT EVERYTHING HERE
+═══════════════════════════════════════════════════════════════════════
+  IMAGES  put files in  assets/img/  then write  "assets/img/name.jpg"
+  Leave  image: ""  and a live marble texture is used instead.
+  <em>…</em> inside a title renders in the accent italic.
+═══════════════════════════════════════════════════════════════════════
+-->
+<script>
+window.PAGE = {
+
+  /* ---- banner behind the page heading ---- */
+  banner: {
+    image:    "",                       /* e.g. "assets/img/faq-banner.jpg" */
+    alt:      "Artizia quartz surface",
+    fallback: "jaipur-fog",             /* marble used while image is "" */
+    zoom:     1.4,
+    eyebrow:  "Resources · FAQ",
+    title:    "Questions, <em>answered.</em>",
+    lead:     "Everything you need to know about Artizia surfaces — from samples to installation to warranty."
+  },
+
+  /* ---- the questions.  Add, remove or reorder freely. ---- */
+  faqs: [
+    { q: "What is engineered quartz?",
+      a: "Engineered quartz combines roughly 90–93% natural quartz aggregate with resins and pigments, compacted under vacuum and vibration on Breton technology. The result is a non-porous surface that is harder and more consistent than natural stone." },
+    { q: "Do I need to seal my Artizia surface?",
+      a: "No. Artizia quartz is non-porous, so it never needs sealing — unlike granite or marble." },
+    { q: "How do I request samples?",
+      a: "Use the sample tray on any product page. Samples are free, ship in 5–7 days, and you may order up to four at a time." },
+    { q: "What thicknesses are available?",
+      a: "Slabs are produced in 12 mm, 18 mm and 20 mm. Availability varies by design — check the product page for the exact specification." },
+    { q: "Is Artizia quartz heat resistant?",
+      a: "It withstands normal kitchen heat, but resin can scorch under prolonged or direct heat. Always use a trivet under hot cookware." },
+    { q: "What does the warranty cover?",
+      a: "A Lifetime Warranty against manufacturing defects, covering scratches, stains, heat, household chemicals, mould and mildew. See the warranty page for full terms." }
+  ],
+
+  /* ---- closing call-to-action ---- */
+  cta: {
+    eyebrow: "Still Curious?",
+    title:   "We're happy <em>to help.</em>",
+    text:    "Reach our team in Jaipur for anything not covered here."
+  }
+};
+</script>
+
+<section class="page-hero">
+  <div class="ph-vis"></div>
+  <div class="wrap">
+    <span class="eyebrow"></span>
+    <h1></h1>
+    <p class="lead"></p>
+  </div>
+</section>
+
+<section class="pad" style="padding-top:clamp(20px,4vw,50px)"><div class="wrap" style="max-width:900px">
+  <div id="faqs"></div>
+</div></section>
+
+<section class="cta pad"><div class="wrap rv">
+  <span class="eyebrow center" id="ctaEye"></span>
+  <h2 style="margin-top:22px" id="ctaTitle"></h2>
+  <p id="ctaText"></p>
+  <div class="row"><a class="btn btn-fill mag" href="contact.html"><span>Contact Us <span class="arw">→</span></span></a><a class="btn btn-line mag" href="#" id="ctaSamples"><span>Request Samples</span></a></div>
+</div></section>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/marble.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const P=window.PAGE,$=id=>document.getElementById(id);
+  const list=(P.faqs&&P.faqs.length)?P.faqs.map(f=>[f.q,f.a]):window.FAQS;
+  $('faqs').innerHTML=list.map((f,i)=>`<details class="faq-item"${i===0?' open':''}><summary>${f[0]}<span class="pm">+</span></summary><div class="fa">${f[1]}</div></details>`).join('');
+  const c=P.cta||{}; $('ctaEye').textContent=c.eyebrow||''; $('ctaTitle').innerHTML=c.title||''; $('ctaText').textContent=c.text||'';
+  $('ctaSamples').addEventListener('click',e=>{e.preventDefault();window.openTray();});
+  window.Artizia.refresh();
+})();
+</script>
+</body>
+</html>

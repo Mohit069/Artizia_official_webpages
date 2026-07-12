@@ -1,0 +1,2806 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Artizia — Premium Engineered Quartz Surfaces</title>
+  <meta name="description"
+    content="Artizia crafts premium engineered quartz surfaces — global craftsmanship, Indian design sensibility. 26 designs across four collections, built on Breton technology.">
+  <link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
+  <link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/css/styles.css">
+
+  <!--
+═══════════════════════════════════════════════════════════════════════
+  HOME PAGE CONTENT  —  EDIT EVERYTHING HERE
+═══════════════════════════════════════════════════════════════════════
+  Change text, swap images, add a video. Nothing below this block
+  needs to be touched.
+
+  IMAGES  put files in  assets/img/   then write  "assets/img/name.jpg"
+  VIDEO   put files in  assets/video/ then write  "assets/video/name.mp4"
+
+  Leave an image as ""  ->  the site falls back to generated marble,
+  so the page never breaks while you are still collecting photos.
+═══════════════════════════════════════════════════════════════════════
+-->
+  <script>
+    window.PAGE = {
+
+      /* ---- S2 · FEATURED COLLECTIONS (the slider cards) ----------------
+         This is a looping slider — add or remove cards freely and it adapts.
+         image  ""            -> uses a photo from a product in that collection,
+                                 or generated marble if none has been uploaded
+         image  "assets/..."  -> uses exactly that file
+         "key" must match the collection name, or the card will not link right.
+         href   optional      -> overrides the link (Classic has no products in
+                                 the database yet, so it points at the full list) */
+      featuredCollections: [
+        { key: "Signature",  image: "assets/img/calacatta-gold-full.jpg", desc: "Statement surfaces with distinctive veining." },
+        { key: "Luxury",     image: "assets/img/grigio-cloud-full.jpg",   desc: "Marble-inspired drama, engineered for a lifetime." },
+        { key: "Premium",    image: "assets/img/carrara-bianco-full.jpg", desc: "Refined, versatile designs for considered interiors." },
+        { key: "Classic",    image: "assets/img/albestor-concrete-full.jpg", desc: "Solid, understated tones for calm contemporary spaces.", href: "collections.html" },
+        { key: "Essentials", image: "assets/img/sparkle-white-full.jpg",  desc: "Clean, dependable everyday whites, greys & black." }
+      ],
+
+      /* ---- S4 · DESIGNED FOR EVERY SPACE (the six cards) --------------- */
+      applications: [
+        { title: "Kitchen Countertops", image: "", href: "collections.html", fallback: "calacatta-gold" },
+        { title: "Bathroom Vanity", image: "", href: "collections.html", fallback: "oceana" },
+        { title: "Dining Tables", image: "", href: "collections.html", fallback: "mystique" },
+        { title: "Living Rooms", image: "", href: "collections.html", fallback: "grigio-cloud" },
+        { title: "Commercial Spaces", image: "", href: "collections.html", fallback: "volcanic-ash" },
+        { title: "Hotels & Hospitality", image: "", href: "collections.html", fallback: "berrica" }
+      ],
+
+      /* ---- S3 · ABOUT ------------------------------------------------- */
+      about: {
+        /* video wins over image.  The frame reshapes itself to whatever you
+           put here — set ratio to the clip's own w/h so nothing gets cropped. */
+        video: "assets/video/Artizia_Marudhar_video.mp4",
+        poster: "assets/img/factory-poster.jpg",
+        ratio: "9/16",                   /* the clip is 720x1280 (portrait) */
+        image: "",                       /* photo of your Jaipur facility */
+        caption: "Artizia · Jaipur",
+        fallback: "calacatta-valleta",
+        /* mark: a symbol instead of a number.  value + suffix: counts up. */
+        stats: [
+          { value: 35, suffix: "+", label: "Years of Legacy" },
+          { value: 38, suffix: "M", label: "Sq Ft Annual Capacity" },
+          { mark: "✦", label: "State-of-the-Art Manufacturing" },
+          { mark: "◈", label: "Trusted Worldwide" }
+        ]
+      },
+
+      /* ---- S6 · MANUFACTURING ------------------------------------------
+         Put your factory clip in  assets/video/factory.mp4  and set video.
+         While video is "" you get the image + a play badge instead.        */
+      factory: {
+        video: "assets/video/Artizia_Marudhar_video.mp4",
+        poster: "assets/img/factory-poster.jpg",  /* still frame shown while the video loads */
+        image: "",                       /* used when there is no video    */
+        caption: "Inside the Artizia factory",
+        fallback: "volcanic-ash"
+      },
+
+      /* ---- S11 · GLOBAL PRESENCE ---------------------------------------
+         The map drills World -> India -> Rajasthan -> Jaipur on its own.
+         The geography lives in  assets/js/map.js  — that file is generated,
+         don't hand-edit it.  Set mapImage to fall back to a flat picture.
+         Pins take real coordinates, so they land where they should.        */
+      global: {
+        mapImage: "",                      /* optional flat world-map image */
+        stops: [
+          { view: "world",     label: "World" },
+          { view: "india",     label: "India" },
+          { view: "rajasthan", label: "Rajasthan" },
+          { view: "jaipur",    label: "Jaipur" }
+        ],
+        home: { label: "Jaipur", note: "Mahindra World City", lon: 75.7873, lat: 26.9124 },
+        /* export markets — add { label, lon, lat } and they appear on the world view */
+        pins: [],
+        stats: [
+          { mark: "◆", label: "Manufacturing in India" },
+          { value: 25, suffix: "+", label: "Countries · Export Network" },
+          { value: 500, suffix: "+", label: "Global Customers" },
+          { value: 1000, suffix: "+", label: "Premium Projects" }
+        ]
+      },
+
+      /* ---- S13 · TESTIMONIALS -------------------------------------------
+         Empty this list ( testimonials: [] ) to hide the whole section.     */
+      testimonials: [
+        {
+          stars: 5, name: "Aarav Mehta", role: "Principal Architect · Studio Meridian",
+          quote: "The veining is so natural it fooled our architect — but it never stains and never needs sealing. Artizia has become our default for luxury kitchens."
+        },
+        {
+          stars: 5, name: "Priya Kapoor", role: "Interior Designer · Kapoor & Co.",
+          quote: "Consistent slabs, on-time delivery and a finish that photographs beautifully. Our clients keep asking where the countertops are from."
+        },
+        {
+          stars: 5, name: "Rohan Shah", role: "Project Director · Aurelia Hospitality",
+          quote: "We specified Artizia across a 200-key hotel. Two years on, the surfaces still look brand new despite constant use. Outstanding durability."
+        },
+        {
+          stars: 5, name: "Neha Verma", role: "Homeowner · Bengaluru",
+          quote: "From sample to installation, the process was effortless. The Calacatta Gold is the centrepiece of our home now."
+        }
+      ],
+
+      /* ---- S14 · INSTAGRAM FEED ------------------------------------------
+         Posts are pulled live from the Instagram Graph API by our own server
+         (/api/instagram) and cached for an hour — there is nothing to edit here
+         but the wording. Until IG_ACCESS_TOKEN is set in .env the API returns no
+         posts and this whole section removes itself rather than sit empty.     */
+      instagram: {
+        eyebrow: "@artizia_by_marudhar",
+        title: "Surfaces <em>in the wild.</em>",
+        lead: "Projects, installations and the quiet detail of engineered stone.",
+        cta: "Follow on Instagram",
+        count: 8                        /* how many posts to show */
+      },
+
+      /* ---- S15 · FINAL CTA --------------------------------------------- */
+      cta: { image: "" }
+    };
+  </script>
+  <style>
+    /* ---- Cinematic hero (home only) ---- */
+    .hero {
+      position: relative;
+      height: 300vh
+    }
+
+    .hero-stage {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      min-height: 600px;
+      overflow: hidden
+    }
+
+    /* Aspect-locked scene. The kitchen is drawn (not photographed) in a
+       1200x1000 coordinate space, so the island and the slab live in one
+       geometry — the slab is mapped onto the countertop quad by a projective
+       transform, which is why it lands on it exactly rather than approximately. */
+    .hero-scene {
+      --k-ar: 1.2;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: max(100vw, calc(100svh * var(--k-ar)));
+      height: max(100svh, calc(100vw / var(--k-ar)));
+      z-index: 0;
+    }
+
+    .k-scene {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      z-index: 0;
+      will-change: opacity;
+    }
+
+    .k-scene svg {
+      width: 100%;
+      height: 100%;
+      display: block
+    }
+
+    .slab-box {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* the slab image itself is never filtered or recoloured — only placed */
+    .slab-box img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: auto;
+      /* natural aspect — no stretching */
+      transform-origin: 0 0;
+      will-change: transform;
+      display: block;
+      backface-visibility: hidden;
+    }
+
+    .slab-frame {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    /* corner marks track the slab's four projected corners, so they still read
+       correctly once the slab is lying in perspective on the counter */
+    .slab-frame .fc {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      margin: -8px 0 0 -8px;
+      border: 1px solid var(--accent);
+    }
+
+    .slab-frame .tl {
+      border-right: 0;
+      border-bottom: 0
+    }
+
+    .slab-frame .tr {
+      border-left: 0;
+      border-bottom: 0
+    }
+
+    .slab-frame .bl {
+      border-right: 0;
+      border-top: 0
+    }
+
+    .slab-frame .br {
+      border-left: 0;
+      border-top: 0
+    }
+
+    .slab-cap {
+      position: absolute;
+      z-index: 2;
+      left: 0;
+      right: 0;
+      top: 50%;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--pearl);
+      text-shadow: 0 2px 18px rgba(0, 0, 0, .6);
+    }
+
+    .hero-grad {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(8, 8, 10, .72) 0%, transparent 32%, transparent 52%, rgba(8, 8, 10, .5) 100%)
+    }
+
+    :root[data-theme="light"] .hero-grad {
+      background: linear-gradient(180deg, rgba(237, 234, 227, .5), transparent 30%, transparent 56%, rgba(237, 234, 227, .55) 100%)
+    }
+
+    .hero-inner {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: clamp(48px, 7vw, 92px);
+      pointer-events: none
+    }
+
+    /* scrim tied to the copy layer — fades out with it as the slab pulls back */
+    .hero-inner::before {
+      content: "";
+      position: absolute;
+      inset: 30% 0 0 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(95% 120% at 0% 86%, rgba(8, 8, 10, .72), transparent 66%),
+        linear-gradient(180deg, transparent, rgba(8, 8, 10, .3) 44%, rgba(8, 8, 10, .66) 100%)
+    }
+
+    :root[data-theme="light"] .hero-inner::before {
+      background:
+        radial-gradient(95% 120% at 0% 86%, rgba(237, 234, 227, .92), transparent 66%),
+        linear-gradient(180deg, transparent, rgba(237, 234, 227, .45) 44%, rgba(237, 234, 227, .78) 100%)
+    }
+
+    .hero-inner .wrap {
+      pointer-events: auto;
+      width: 100%
+    }
+
+    .hero-tag {
+      position: absolute;
+      top: calc(20px + 88px);
+      right: clamp(20px, 5vw, 72px);
+      writing-mode: vertical-rl;
+      z-index: 4;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .34em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      pointer-events: none
+    }
+
+    .hero h1 {
+      font-size: clamp(52px, 10vw, 150px);
+      line-height: .9;
+      letter-spacing: -.03em
+    }
+
+    .hero h1 .ln {
+      display: block;
+      overflow: hidden
+    }
+
+    .hero h1 .ln i {
+      display: block;
+      font-style: normal;
+      transform: translateY(110%);
+      transition: transform 1s var(--e2)
+    }
+
+    .hero h1 .ln.it i {
+      font-style: italic;
+      background: var(--opal);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent
+    }
+
+    body.loaded .hero h1 .ln i {
+      transform: translateY(0)
+    }
+
+    body.loaded .hero h1 .ln:nth-child(2) i {
+      transition-delay: .09s
+    }
+
+    .hero-eye {
+      overflow: hidden;
+      margin-bottom: 26px
+    }
+
+    .hero-eye .eyebrow {
+      transform: translateY(110%);
+      transition: transform .8s var(--e2) .15s
+    }
+
+    body.loaded .hero-eye .eyebrow {
+      transform: translateY(0)
+    }
+
+    .hero-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 30px;
+      margin-top: 34px;
+      flex-wrap: wrap;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: .9s var(--e) .5s
+    }
+
+    body.loaded .hero-foot {
+      opacity: 1;
+      transform: none
+    }
+
+    .hero-sub {
+      max-width: 40ch;
+      color: var(--text-dim);
+      font-size: clamp(15px, 1.5vw, 17px)
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap
+    }
+
+    .hero-endcap {
+      position: absolute;
+      z-index: 4;
+      left: clamp(20px, 5vw, 72px);
+      bottom: clamp(40px, 6vw, 72px);
+      opacity: 0;
+      transform: translateY(16px);
+      pointer-events: none
+    }
+
+    .hero-endcap.on {
+      pointer-events: auto
+    }
+
+    /* scrim keeps the endcap legible over the bright installed slab */
+    .hero-endcap::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: calc(-1 * clamp(20px, 5vw, 72px));
+      bottom: calc(-1 * clamp(40px, 6vw, 72px));
+      width: min(760px, 86vw);
+      height: 320px;
+      pointer-events: none;
+      background: radial-gradient(120% 100% at 6% 100%, rgba(8, 8, 10, .74), rgba(8, 8, 10, .4) 44%, transparent 74%)
+    }
+
+    :root[data-theme="light"] .hero-endcap::before {
+      background: radial-gradient(120% 100% at 6% 100%, rgba(237, 234, 227, .9), rgba(237, 234, 227, .55) 44%, transparent 74%)
+    }
+
+    .hero-endcap h4 {
+      font-family: var(--serif);
+      font-size: clamp(22px, 3vw, 34px);
+      margin: 12px 0 16px;
+      max-width: 16ch
+    }
+
+    .hero-endcap a {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 6px
+    }
+
+    .hero-progress {
+      position: absolute;
+      z-index: 4;
+      right: clamp(20px, 5vw, 72px);
+      bottom: clamp(40px, 6vw, 72px);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .24em;
+      color: var(--text-faint);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      pointer-events: none
+    }
+
+    .hero-progress .bar {
+      width: 64px;
+      height: 1px;
+      background: var(--line-2);
+      position: relative;
+      overflow: hidden
+    }
+
+    .hero-progress .bar i {
+      position: absolute;
+      inset: 0;
+      width: 0;
+      background: var(--opal)
+    }
+
+    .scroll-i {
+      position: absolute;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+      z-index: 4;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transition: opacity 1s .9s
+    }
+
+    body.loaded .scroll-i {
+      opacity: 1
+    }
+
+    .scroll-i .ln {
+      width: 1px;
+      height: 40px;
+      background: var(--line-2);
+      position: relative;
+      overflow: hidden
+    }
+
+    .scroll-i .ln::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--opal);
+      animation: sdrop 2.4s var(--e) infinite
+    }
+
+    @keyframes sdrop {
+      0% {
+        transform: translateY(-100%)
+      }
+
+      60%,
+      100% {
+        transform: translateY(100%)
+      }
+    }
+
+    .preload {
+      position: fixed;
+      inset: 0;
+      z-index: 900;
+      background: var(--bg);
+      display: grid;
+      place-items: center;
+      transition: opacity .9s var(--e), visibility .9s
+    }
+
+    .preload.done {
+      opacity: 0;
+      visibility: hidden
+    }
+
+    .preload .pl-mark {
+      width: min(240px, 60vw);
+      height: 60px;
+      margin: 0 auto;
+      background: url(assets/img/brand/logo-full.png) center/contain no-repeat;
+      text-indent: -9999px;
+      overflow: hidden
+    }
+
+    :root[data-theme="light"] .preload .pl-mark {
+      background-image: url(assets/img/brand/logo-full-dark.png)
+    }
+
+    .preload .pl-bar {
+      width: 180px;
+      height: 1px;
+      background: var(--line);
+      margin: 22px auto 0;
+      overflow: hidden
+    }
+
+    .preload .pl-bar i {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--opal);
+      animation: plbar 1.6s var(--e) forwards
+    }
+
+    @keyframes plbar {
+      to {
+        width: 100%
+      }
+    }
+
+    .preload .pl-pct {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .3em;
+      color: var(--text-faint);
+      margin-top: 14px;
+      text-align: center
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      .hero {
+        height: 100svh
+      }
+
+      /* no scroll animation: the JS paints the installed frame once, on load */
+      .k-scene {
+        opacity: 1
+      }
+
+      .preload {
+        display: none
+      }
+    }
+
+    /* ============ HOMEPAGE SECTIONS ============ */
+    .sec-head.center {
+      align-items: center;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto
+    }
+
+    .sec-head.center .eyebrow {
+      justify-content: center
+    }
+
+    /* S2 Featured Collections — looping slider.
+       --per is how many cards are on screen; the card width is derived from it
+       so the gaps always add up to exactly the rail width. */
+    .fcoll-slider {
+      position: relative;
+      --gap: clamp(14px, 1.6vw, 22px);
+      --per: 4;
+      --card: calc((100% - (var(--per) - 1) * var(--gap)) / var(--per))
+    }
+
+    @media(max-width:960px) {
+      .fcoll-slider {
+        --per: 2
+      }
+    }
+
+    @media(max-width:520px) {
+      .fcoll-slider {
+        --per: 1.12
+      }
+    }
+
+    .fcoll-rail {
+      overflow: hidden;
+      cursor: grab
+    }
+
+    .fcoll-rail.dragging {
+      cursor: grabbing
+    }
+
+    .fcoll-track {
+      display: flex;
+      gap: var(--gap);
+      will-change: transform
+    }
+
+    .fcoll {
+      position: relative;
+      flex: 0 0 var(--card);
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      display: block;
+      border: 1px solid var(--line);
+      background: var(--surface)
+    }
+
+    .fcoll-rail.dragging .fcoll {
+      pointer-events: none
+    }
+
+    /* arrows */
+    .fc-nav {
+      position: absolute;
+      top: 50%;
+      z-index: 3;
+      width: 46px;
+      height: 46px;
+      margin-top: -23px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: rgba(10, 10, 12, .62);
+      backdrop-filter: blur(10px);
+      color: var(--text);
+      font-size: 15px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: .35s var(--e)
+    }
+
+    :root[data-theme="light"] .fc-nav {
+      background: rgba(255, 255, 255, .78)
+    }
+
+    .fc-nav:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: scale(1.08)
+    }
+
+    .fc-nav.prev {
+      left: calc(-1 * clamp(12px, 2vw, 26px));
+      transform: translateX(-50%)
+    }
+
+    .fc-nav.next {
+      right: calc(-1 * clamp(12px, 2vw, 26px));
+      transform: translateX(50%)
+    }
+
+    .fc-nav.prev:hover {
+      transform: translateX(-50%) scale(1.08)
+    }
+
+    .fc-nav.next:hover {
+      transform: translateX(50%) scale(1.08)
+    }
+
+    @media(max-width:640px) {
+      .fc-nav {
+        display: none
+      }
+    }
+
+    /* dots */
+    .fc-dots {
+      display: flex;
+      justify-content: center;
+      gap: 9px;
+      margin-top: 28px
+    }
+
+    .fc-dots button {
+      width: 7px;
+      height: 7px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: var(--line);
+      cursor: pointer;
+      transition: .35s var(--e)
+    }
+
+    .fc-dots button.on {
+      background: var(--accent);
+      width: 22px;
+      border-radius: 4px
+    }
+
+    .fcoll img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.3s var(--e);
+      transform: scale(1.04)
+    }
+
+    .fcoll:hover img {
+      transform: scale(1.12)
+    }
+
+    .fcoll .ov {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(6, 6, 8, .12), transparent 34%, rgba(6, 6, 8, .84));
+      z-index: 1
+    }
+
+    .fcoll .c {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2;
+      padding: 22px;
+      color: #fff
+    }
+
+    .fcoll .c .k {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--pearl)
+    }
+
+    .fcoll .c h3 {
+      font-family: var(--serif);
+      font-size: clamp(22px, 1.9vw, 27px);
+      margin: 6px 0 6px;
+      color: #fff
+    }
+
+    .fcoll .c p {
+      font-size: 12.5px;
+      color: rgba(243, 240, 234, .72);
+      line-height: 1.4
+    }
+
+    .fcoll .c .go {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: .8;
+      transition: .4s var(--e)
+    }
+
+    .fcoll:hover .c .go {
+      gap: 14px;
+      opacity: 1;
+      color: var(--accent)
+    }
+
+    /* S3 About story.
+       --ratio is set from PAGE.about.ratio so the frame matches whatever media
+       is in it.  A portrait clip would otherwise run taller than the text beside
+       it, so the column stays vertically centred and capped to a sane height. */
+    .about-vis {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: var(--ratio, 4/5);
+      width: 100%;
+      margin-inline: auto;
+      border: 1px solid var(--line);
+      background: var(--surface)
+    }
+
+    /* a portrait clip at full column width would tower over the text next to it,
+       so narrow the frame and centre it instead of cropping the video */
+    .about-vis.portrait {
+      max-width: 430px
+    }
+
+    .grid-2:has(.about-vis) {
+      align-items: center
+    }
+
+    .about-vis img,
+    .about-vis video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 1.4s var(--e);
+      transform: scale(1.03)
+    }
+
+    .about-vis:hover img,
+    .about-vis:hover video {
+      transform: scale(1.08)
+    }
+
+    .about-vis .cap {
+      position: absolute;
+      left: 16px;
+      bottom: 16px;
+      z-index: 2;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: #fff;
+      background: rgba(8, 8, 10, .5);
+      backdrop-filter: blur(4px);
+      padding: 7px 12px
+    }
+
+    .about-points {
+      display: grid;
+      gap: 16px;
+      margin: 26px 0 30px
+    }
+
+    .about-point {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start
+    }
+
+    .about-point .n {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      margin-top: 4px;
+      flex: 0 0 auto
+    }
+
+    .about-point b {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 18px;
+      display: block;
+      margin-bottom: 2px
+    }
+
+    .about-point p {
+      color: var(--text-dim);
+      font-size: 14px
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 8px
+    }
+
+    @media(max-width:820px) {
+      .metrics {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 22px 18px;
+      background: var(--surface);
+      transition: .32s var(--e)
+    }
+
+    .metric:hover {
+      border-color: var(--line-2);
+      transform: translateY(-3px)
+    }
+
+    .metric .v {
+      font-family: var(--serif);
+      font-size: clamp(26px, 3vw, 38px);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      color: var(--text)
+    }
+
+    .metric .v .suf {
+      font-size: .5em;
+      color: var(--accent);
+      font-family: var(--mono);
+      letter-spacing: .02em;
+      margin-left: 2px
+    }
+
+    .metric .v.mark {
+      color: var(--accent);
+      font-size: 30px
+    }
+
+    .metric .l {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-top: 12px
+    }
+
+    /* S4 Designed for Every Space */
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(12px, 1.4vw, 20px)
+    }
+
+    @media(max-width:900px) {
+      .apps-grid {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+
+    @media(max-width:520px) {
+      .apps-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .appcard {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      display: block;
+      border: 1px solid var(--line)
+    }
+
+    .appcard img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.3s var(--e);
+      transform: scale(1.04)
+    }
+
+    .appcard:hover img {
+      transform: scale(1.13)
+    }
+
+    .appcard .ov {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(6, 6, 8, .08), transparent 42%, rgba(6, 6, 8, .82))
+    }
+
+    .appcard .c {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2;
+      padding: 20px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      color: #fff
+    }
+
+    .appcard .c h4 {
+      font-family: var(--serif);
+      font-size: clamp(19px, 1.7vw, 24px)
+    }
+
+    .appcard .arw2 {
+      flex: 0 0 auto;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, .4);
+      display: grid;
+      place-items: center;
+      transition: .4s var(--e)
+    }
+
+    .appcard:hover .arw2 {
+      background: var(--opal);
+      color: #0A0A0C;
+      border-color: transparent
+    }
+
+    /* S5 Why cards */
+    .why6 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(14px, 1.6vw, 20px)
+    }
+
+    @media(max-width:820px) {
+      .why6 {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+
+    @media(max-width:520px) {
+      .why6 {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .fcard {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: clamp(24px, 2.3vw, 32px);
+      background: var(--surface);
+      transition: .35s var(--e)
+    }
+
+    .fcard:hover {
+      transform: translateY(-6px);
+      border-color: var(--line-2);
+      box-shadow: 0 22px 50px rgba(0, 0, 0, .26)
+    }
+
+    .fcard .ic {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-2);
+      color: var(--accent);
+      margin-bottom: 20px
+    }
+
+    .fcard .ic svg {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5
+    }
+
+    .fcard h4 {
+      font-family: var(--serif);
+      font-size: 22px;
+      margin-bottom: 8px
+    }
+
+    .fcard p {
+      color: var(--text-dim);
+      font-size: 14px
+    }
+
+    /* S6 Manufacturing timeline */
+    .mfg {
+      display: grid;
+      grid-template-columns: .92fr 1.08fr;
+      gap: clamp(30px, 5vw, 70px);
+      align-items: center
+    }
+
+    @media(max-width:860px) {
+      .mfg {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .mfg-vis {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 4/5;
+      border: 1px solid var(--line);
+      background: var(--surface)
+    }
+
+    .mfg-vis img,
+    .mfg-vis video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 1.4s var(--e)
+    }
+
+    .mfg-vis:hover img {
+      transform: scale(1.06)
+    }
+
+    /* a real video carries its own subject — don't dim or zoom it */
+    .mfg-vis:has(video)::after {
+      display: none
+    }
+
+    .mfg-vis::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(6, 6, 8, .15), rgba(6, 6, 8, .45));
+      z-index: 1
+    }
+
+    .mfg-vis .play {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      place-items: center
+    }
+
+    .mfg-vis .play span {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, .55);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: rgba(8, 8, 10, .28);
+      backdrop-filter: blur(4px);
+      font-size: 15px;
+      transition: .3s
+    }
+
+    .mfg-vis:hover .play span {
+      background: rgba(8, 8, 10, .5);
+      transform: scale(1.06)
+    }
+
+    .mfg-vis .vtag {
+      position: absolute;
+      left: 16px;
+      bottom: 16px;
+      z-index: 2;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: #fff;
+      background: rgba(8, 8, 10, .5);
+      padding: 6px 11px
+    }
+
+    .timeline {
+      position: relative;
+      margin-top: 6px
+    }
+
+    .tstep {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 16px;
+      padding-bottom: 24px;
+      position: relative
+    }
+
+    .tstep:last-child {
+      padding-bottom: 0
+    }
+
+    .tstep .dot {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--line-2);
+      display: grid;
+      place-items: center;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      background: var(--bg);
+      z-index: 1
+    }
+
+    .tstep::before {
+      content: "";
+      position: absolute;
+      left: 19px;
+      top: 38px;
+      bottom: 2px;
+      width: 1px;
+      background: var(--line-2)
+    }
+
+    .tstep:last-child::before {
+      display: none
+    }
+
+    .tstep .tc h4 {
+      font-family: var(--serif);
+      font-size: 18px
+    }
+
+    .tstep .tc p {
+      color: var(--text-dim);
+      font-size: 13.5px;
+      margin-top: 3px
+    }
+
+    /* S11 Global */
+    .global {
+      display: grid;
+      grid-template-columns: 1.12fr .88fr;
+      gap: clamp(30px, 5vw, 68px);
+      align-items: center
+    }
+
+    @media(max-width:860px) {
+      .global {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .worldmap {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      /* must equal the map's own 1000x620, or the pins drift off their cities */
+      aspect-ratio: 1000/620;
+      background: radial-gradient(130% 130% at 50% 20%, var(--surface), var(--bg))
+    }
+
+    /* optional world-map image, sits under the pins */
+    .worldmap img.map {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: .5
+    }
+
+    /* the live map: one SVG, zoomed by animating its viewBox.
+       non-scaling-stroke keeps every outline hairline-thin at any zoom. */
+    .worldmap svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%
+    }
+
+    .wm-land {
+      fill: var(--line-2);
+      opacity: .5
+    }
+
+    .wm-india {
+      fill: var(--accent);
+      opacity: .16;
+      stroke: var(--accent);
+      stroke-width: 1;
+      stroke-opacity: .5;
+      vector-effect: non-scaling-stroke
+    }
+
+    .wm-states {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: .7;
+      stroke-opacity: .38;
+      vector-effect: non-scaling-stroke
+    }
+
+    .wm-raj {
+      fill: var(--accent);
+      opacity: .3;
+      stroke: var(--accent);
+      stroke-width: 1.4;
+      vector-effect: non-scaling-stroke
+    }
+
+    /* drill-down chips */
+    .wm-steps {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      z-index: 4;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px
+    }
+
+    .wm-steps button {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(10, 10, 12, .55);
+      backdrop-filter: blur(6px);
+      cursor: pointer;
+      transition: .35s var(--e)
+    }
+
+    :root[data-theme="light"] .wm-steps button {
+      background: rgba(255, 255, 255, .7)
+    }
+
+    .wm-steps button:hover {
+      color: var(--text)
+    }
+
+    .wm-steps button.on {
+      color: var(--obsidian, #0A0A0C);
+      background: var(--accent);
+      border-color: var(--accent)
+    }
+
+    .wm-pins {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none
+    }
+
+    /* sits on top of the accent-filled state, so it needs real contrast —
+       --text-faint disappeared into the fill entirely */
+    .wm-note {
+      position: absolute;
+      z-index: 3;
+      transform: translate(-50%, 16px);
+      font-family: var(--mono);
+      font-size: 9.5px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text);
+      white-space: nowrap;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(8, 8, 10, .55);
+      backdrop-filter: blur(4px)
+    }
+
+    :root[data-theme="light"] .wm-note {
+      background: rgba(255, 255, 255, .72)
+    }
+
+    .worldmap .dots {
+      position: absolute;
+      inset: 0;
+      color: var(--line-2);
+      opacity: .6;
+      background-image: radial-gradient(currentColor 1.1px, transparent 1.4px);
+      background-size: 15px 15px;
+      -webkit-mask-image: radial-gradient(115% 90% at 50% 46%, #000 42%, transparent 76%);
+      mask-image: radial-gradient(115% 90% at 50% 46%, #000 42%, transparent 76%)
+    }
+
+    .pin {
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      transform: translate(-50%, -50%);
+      z-index: 2
+    }
+
+    .pin::after {
+      content: "";
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      border: 1px solid var(--accent);
+      animation: ping 2.6s var(--e) infinite
+    }
+
+    .pin.d1::after {
+      animation-delay: .6s
+    }
+
+    .pin.d2::after {
+      animation-delay: 1.2s
+    }
+
+    .pin.d3::after {
+      animation-delay: 1.8s
+    }
+
+    @keyframes ping {
+      0% {
+        transform: scale(.5);
+        opacity: .85
+      }
+
+      70%,
+      100% {
+        transform: scale(2.4);
+        opacity: 0
+      }
+    }
+
+    .worldmap .home-pin {
+      position: absolute;
+      z-index: 3;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      transform: translate(-50%, -160%)
+    }
+
+    /* S14 Instagram feed */
+    .ig-sec {
+      padding-top: 0
+    }
+
+    .ig-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: clamp(10px, 1.2vw, 16px)
+    }
+
+    @media(max-width:900px) {
+      .ig-grid {
+        grid-template-columns: repeat(3, 1fr)
+      }
+    }
+
+    @media(max-width:560px) {
+      .ig-grid {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+
+    .ig-tile {
+      position: relative;
+      display: block;
+      aspect-ratio: 1/1;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--surface)
+    }
+
+    .ig-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 1s var(--e)
+    }
+
+    .ig-tile:hover img {
+      transform: scale(1.08)
+    }
+
+    .ig-tile .ig-ov {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      text-align: center;
+      background: rgba(8, 8, 10, .62);
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      transition: opacity .4s var(--e)
+    }
+
+    .ig-tile:hover .ig-ov {
+      opacity: 1
+    }
+
+    .ig-tile .ig-cap {
+      font-size: 12px;
+      line-height: 1.45;
+      color: rgba(243, 240, 234, .9);
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden
+    }
+
+    /* video / carousel marker, top-right */
+    .ig-tile .ig-kind {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 11px;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, .6)
+    }
+
+    .ig-foot {
+      display: flex;
+      justify-content: center;
+      margin-top: 36px
+    }
+
+    /* S13 Testimonials */
+    .tst-track {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      padding: 6px 2px 8px;
+      margin: 0 calc(-1*clamp(20px, 5vw, 72px));
+      padding-left: clamp(20px, 5vw, 72px);
+      padding-right: clamp(20px, 5vw, 72px)
+    }
+
+    .tst-track::-webkit-scrollbar {
+      display: none
+    }
+
+    .tcard {
+      flex: 0 0 clamp(280px, 62vw, 400px);
+      scroll-snap-align: center;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: clamp(24px, 3vw, 34px);
+      background: var(--surface);
+      transition: .35s var(--e)
+    }
+
+    .tcard:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 22px 46px rgba(0, 0, 0, .24);
+      border-color: var(--line-2)
+    }
+
+    .tcard .stars {
+      color: var(--accent);
+      letter-spacing: 4px;
+      margin-bottom: 16px;
+      font-size: 13px
+    }
+
+    .tcard .q {
+      font-family: var(--serif);
+      font-size: clamp(17px, 1.5vw, 20px);
+      line-height: 1.5
+    }
+
+    .tcard .who {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 26px
+    }
+
+    .tcard .av {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--opal);
+      display: grid;
+      place-items: center;
+      font-family: var(--serif);
+      color: #0A0A0C;
+      font-size: 18px;
+      flex: 0 0 auto
+    }
+
+    .tcard .who .nm {
+      font-family: var(--serif);
+      font-size: 16px
+    }
+
+    .tcard .who .rl {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-top: 2px
+    }
+
+    .tst-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 26px;
+      gap: 16px;
+      flex-wrap: wrap
+    }
+
+    .tst-dots {
+      display: flex;
+      gap: 8px
+    }
+
+    .tst-dots i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--line-2);
+      cursor: pointer;
+      transition: .3s var(--e)
+    }
+
+    .tst-dots i.on {
+      background: var(--accent);
+      width: 22px;
+      border-radius: 4px
+    }
+
+    .tst-arrows {
+      display: flex;
+      gap: 10px
+    }
+
+    .tst-arrows button {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--line-2);
+      background: none;
+      color: var(--text);
+      cursor: pointer;
+      transition: .3s var(--e);
+      font-size: 15px
+    }
+
+    .tst-arrows button:hover {
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    /* S15 Final CTA */
+    .finalcta {
+      position: relative;
+      overflow: hidden
+    }
+
+    .finalcta .bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0
+    }
+
+    .finalcta .bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .finalcta::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(6, 6, 8, .8), rgba(6, 6, 8, .9))
+    }
+
+    .finalcta .inner {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: clamp(72px, 10vw, 140px) 0
+    }
+
+    .finalcta .eyebrow {
+      justify-content: center;
+      color: var(--pearl)
+    }
+
+    .finalcta h2 {
+      font-family: var(--serif);
+      font-size: clamp(34px, 5.5vw, 66px);
+      line-height: 1.02;
+      color: #fff;
+      max-width: 18ch;
+      margin: 18px auto 0
+    }
+
+    .finalcta h2 em {
+      font-style: italic;
+      background: var(--opal);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent
+    }
+
+    .finalcta p {
+      color: rgba(243, 240, 234, .75);
+      max-width: 52ch;
+      margin: 22px auto 34px
+    }
+
+    .finalcta .btns {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap
+    }
+
+    .finalcta .btns .btn-line {
+      border-color: rgba(255, 255, 255, .38);
+      color: #fff
+    }
+
+    .finalcta .btns .btn-line:hover {
+      border-color: var(--accent)
+    }
+
+    .finalcta .contacts {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 40px
+    }
+
+    .finalcta .contacts a {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      color: rgba(243, 240, 234, .85);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .06em;
+      transition: .3s
+    }
+
+    .finalcta .contacts a:hover {
+      color: #fff
+    }
+
+    .finalcta .contacts .ci {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, .28);
+      display: grid;
+      place-items: center
+    }
+
+    .finalcta .contacts .ci svg {
+      width: 17px;
+      height: 17px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.6
+    }
+  </style>
+</head>
+
+<body data-page="home">
+
+
+  <div class="preload" id="preload">
+    <div>
+      <div class="pl-mark">ARTIZIA</div>
+      <div class="pl-bar"><i></i></div>
+      <div class="pl-pct" id="plpct"></div>
+    </div>
+  </div>
+
+  <section class="hero" id="hero">
+    <div class="hero-stage">
+      <div class="hero-scene" id="heroScene">
+        <!-- ===== the kitchen, drawn to fit the slab =====================
+             1200x1000 coordinate space. The island countertop is the quad
+             330,480 · 870,480 · 1000,640 · 200,640 — the same four points the
+             script maps the slab onto (QUAD, below), so the fit is exact by
+             construction. Change one and you must change the other.
+             Dark cabinetry and a cool floor deliberately sit well below the
+             slab in value, so a light quartz top reads as the brightest thing
+             in the frame. ============================================== -->
+        <div class="k-scene" id="kScene" role="img"
+          aria-label="A contemporary kitchen with an Artizia quartz island">
+          <svg viewBox="0 0 1200 1000" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="kWall" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#2C3138" />
+                <stop offset="1" stop-color="#1B1F25" />
+              </linearGradient>
+              <linearGradient id="kWallLight" x1="0" y1="0" x2="1" y2=".4">
+                <stop offset="0" stop-color="#E4DAC6" stop-opacity=".26" />
+                <stop offset=".4" stop-color="#E4DAC6" stop-opacity=".05" />
+                <stop offset="1" stop-color="#E4DAC6" stop-opacity="0" />
+              </linearGradient>
+              <linearGradient id="kFloor" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#1A1E23" />
+                <stop offset=".55" stop-color="#101317" />
+                <stop offset="1" stop-color="#0A0B0D" />
+              </linearGradient>
+              <linearGradient id="kCab" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#1F232A" />
+                <stop offset="1" stop-color="#121519" />
+              </linearGradient>
+              <linearGradient id="kOak" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#9A784F" />
+                <stop offset="1" stop-color="#5E4629" />
+              </linearGradient>
+              <linearGradient id="kGlass" x1="0" y1="0" x2=".25" y2="1">
+                <stop offset="0" stop-color="#F1E9D9" />
+                <stop offset=".5" stop-color="#D5CCB9" />
+                <stop offset="1" stop-color="#ADA595" />
+              </linearGradient>
+              <linearGradient id="kIsland" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#262B33" />
+                <stop offset=".45" stop-color="#191D23" />
+                <stop offset="1" stop-color="#101317" />
+              </linearGradient>
+              <linearGradient id="kIslandSide" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#8E99A6" stop-opacity=".42" />
+                <stop offset=".35" stop-color="#8E99A6" stop-opacity=".06" />
+                <stop offset="1" stop-color="#8E99A6" stop-opacity="0" />
+              </linearGradient>
+              <linearGradient id="kTopBare" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#333941" />
+                <stop offset="1" stop-color="#22272D" />
+              </linearGradient>
+              <linearGradient id="kEdge" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#F4F1EA" />
+                <stop offset=".4" stop-color="#DFDACF" />
+                <stop offset="1" stop-color="#B5AFA2" />
+              </linearGradient>
+              <linearGradient id="kSplash" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#343A42" />
+                <stop offset="1" stop-color="#232830" />
+              </linearGradient>
+              <linearGradient id="kRefl" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#2E343C" stop-opacity=".5" />
+                <stop offset="1" stop-color="#2E343C" stop-opacity="0" />
+              </linearGradient>
+              <radialGradient id="kBloom" cx=".5" cy=".5" r=".5">
+                <stop offset="0" stop-color="#FFE7C0" stop-opacity=".5" />
+                <stop offset="1" stop-color="#FFE7C0" stop-opacity="0" />
+              </radialGradient>
+              <radialGradient id="kPool" cx=".5" cy=".5" r=".5">
+                <stop offset="0" stop-color="#EADFC4" stop-opacity=".2" />
+                <stop offset="1" stop-color="#EADFC4" stop-opacity="0" />
+              </radialGradient>
+              <radialGradient id="kVig" cx=".5" cy=".42" r=".78">
+                <stop offset=".5" stop-color="#000" stop-opacity="0" />
+                <stop offset="1" stop-color="#000" stop-opacity=".6" />
+              </radialGradient>
+              <filter id="kSoft" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="20" />
+              </filter>
+              <filter id="kSoft2" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="6" />
+              </filter>
+            </defs>
+
+            <!-- Wall, then floor. The horizon is high (y=430) so the whole island
+                 body, not just its top, stays inside the band that survives the
+                 crop on a wide screen (viewBox y 125-875). -->
+            <rect x="0" y="0" width="1200" height="430" fill="url(#kWall)" />
+            <rect x="0" y="0" width="1200" height="430" fill="url(#kWallLight)" />
+            <rect x="0" y="430" width="1200" height="570" fill="url(#kFloor)" />
+            <rect x="0" y="427" width="1200" height="4" fill="#08090B" opacity=".8" />
+
+            <!-- window, left: the key light -->
+            <rect x="46" y="36" width="336" height="348" rx="3" fill="#0A0C0E" />
+            <rect x="54" y="44" width="320" height="332" fill="url(#kGlass)" />
+            <rect x="210" y="44" width="8" height="332" fill="#0A0C0E" opacity=".85" />
+            <rect x="54" y="206" width="320" height="7" fill="#0A0C0E" opacity=".85" />
+            <ellipse cx="214" cy="210" rx="290" ry="280" fill="url(#kBloom)" filter="url(#kSoft)" />
+            <path d="M54 430 L374 430 L500 1000 L-80 1000 Z" fill="#E8DCC0" opacity=".045"
+              filter="url(#kSoft)" />
+
+            <!-- tall cabinetry, right -->
+            <rect x="838" y="8" width="362" height="422" fill="url(#kCab)" />
+            <rect x="838" y="8" width="362" height="3" fill="#3E454E" opacity=".5" />
+            <g stroke="#08090B" stroke-width="2" opacity=".85">
+              <line x1="958" y1="8" x2="958" y2="430" />
+              <line x1="1078" y1="8" x2="1078" y2="430" />
+              <line x1="838" y1="222" x2="1200" y2="222" />
+            </g>
+            <g fill="#C9B896" opacity=".45">
+              <rect x="944" y="196" width="28" height="4" rx="2" />
+              <rect x="1064" y="196" width="28" height="4" rx="2" />
+              <rect x="944" y="242" width="28" height="4" rx="2" />
+              <rect x="1064" y="242" width="28" height="4" rx="2" />
+            </g>
+            <rect x="862" y="58" width="88" height="104" fill="#0B0D0F" />
+            <rect x="862" y="156" width="88" height="6" fill="url(#kOak)" opacity=".85" />
+
+            <!-- back run: splashback, counter, base units, hood -->
+            <rect x="384" y="212" width="454" height="218" fill="url(#kSplash)" />
+            <rect x="384" y="336" width="454" height="9" fill="#454C56" opacity=".9" />
+            <rect x="384" y="345" width="454" height="85" fill="#15181C" />
+            <g stroke="#08090B" stroke-width="2" opacity=".6">
+              <line x1="536" y1="345" x2="536" y2="430" />
+              <line x1="688" y1="345" x2="688" y2="430" />
+            </g>
+            <rect x="540" y="28" width="150" height="132" fill="#242A31" />
+            <path d="M540 160 L690 160 L668 200 L562 200 Z" fill="#1A1E24" />
+            <rect x="562" y="196" width="106" height="5" fill="#454C56" opacity=".7" />
+            <rect x="430" y="300" width="16" height="36" rx="3" fill="#0E1013" />
+            <ellipse cx="438" cy="300" rx="8" ry="3" fill="#3E454E" opacity=".6" />
+
+            <!-- pendants over the island -->
+            <g stroke="#3C434B" stroke-width="2">
+              <line x1="430" y1="0" x2="430" y2="248" />
+              <line x1="770" y1="0" x2="770" y2="248" />
+            </g>
+            <path d="M400 248 L460 248 L451 306 L409 306 Z" fill="#1C2027" />
+            <path d="M740 248 L800 248 L791 306 L749 306 Z" fill="#1C2027" />
+            <ellipse cx="430" cy="306" rx="21" ry="5" fill="#FFE2B4" />
+            <ellipse cx="770" cy="306" rx="21" ry="5" fill="#FFE2B4" />
+            <ellipse cx="430" cy="342" rx="112" ry="98" fill="url(#kBloom)" filter="url(#kSoft)"
+              opacity=".85" />
+            <ellipse cx="770" cy="342" rx="112" ry="98" fill="url(#kBloom)" filter="url(#kSoft)"
+              opacity=".85" />
+
+            <!-- pendant light pooling on the counter -->
+            <ellipse cx="600" cy="560" rx="420" ry="120" fill="url(#kPool)" filter="url(#kSoft)" />
+
+            <!-- ISLAND: floor reflection, then the shadow where it meets the floor,
+                 then the body, then the bare countertop the slab lands on. -->
+            <rect x="215" y="810" width="770" height="90" fill="url(#kRefl)" opacity=".5" />
+            <ellipse cx="600" cy="812" rx="430" ry="26" fill="#000" opacity=".6" filter="url(#kSoft)" />
+            <rect x="200" y="640" width="800" height="170" fill="url(#kIsland)" />
+            <rect x="200" y="640" width="240" height="170" fill="url(#kIslandSide)" />
+            <rect x="200" y="640" width="800" height="2" fill="#5C656F" opacity=".65" />
+            <rect x="200" y="640" width="4" height="170" fill="#7E8894" opacity=".35" />
+            <g stroke="#08090B" stroke-width="2" opacity=".5">
+              <line x1="466" y1="640" x2="466" y2="810" />
+              <line x1="734" y1="640" x2="734" y2="810" />
+              <line x1="200" y1="712" x2="1000" y2="712" />
+            </g>
+            <g fill="#C9B896" opacity=".3">
+              <rect x="316" y="700" width="34" height="4" rx="2" />
+              <rect x="583" y="700" width="34" height="4" rx="2" />
+              <rect x="850" y="700" width="34" height="4" rx="2" />
+            </g>
+            <polygon points="330,480 870,480 1000,640 200,640" fill="url(#kTopBare)" />
+
+            <!-- Appears only as the slab lands: its polished front edge, the shadow
+                 it drops onto the island face, and its bounce onto the splashback. -->
+            <g id="slabLand" opacity="0">
+              <rect x="200" y="638" width="800" height="18" fill="url(#kEdge)" />
+              <rect x="200" y="654" width="800" height="22" fill="#000" opacity=".4"
+                filter="url(#kSoft2)" />
+              <ellipse cx="600" cy="492" rx="310" ry="26" fill="#EFEBE2" opacity=".07"
+                filter="url(#kSoft)" />
+            </g>
+
+            <rect x="0" y="0" width="1200" height="1000" fill="url(#kVig)" />
+          </svg>
+        </div>
+        <div class="slab-box" id="slabBox">
+          <img id="slabImg" src="assets/img/hero-slab.jpg" alt="Artizia engineered quartz slab" fetchpriority="high">
+        </div>
+        <div class="slab-frame" id="slabFrame"><span class="fc tl"></span><span class="fc tr"></span><span
+            class="fc bl"></span><span class="fc br"></span></div>
+        <div class="slab-cap" id="slabCap">Artizia Quartz · Full Slab · 3200 × 1600 mm</div>
+      </div>
+      <div class="hero-grad"></div>
+      <span class="hero-tag">Molten Quartz · No. 001</span>
+      <div class="hero-inner" id="heroCopy">
+        <div class="wrap">
+          <div class="hero-eye"><span class="eyebrow">Engineered Quartz Surfaces · India</span></div>
+          <h1><span class="ln"><i>Quiet Craft.</i></span><span class="ln it"><i>Bold Vision.</i></span></h1>
+          <div class="hero-foot">
+            <p class="hero-sub">Global craftsmanship, Indian design sensibility. Surfaces born on Breton technology —
+              engineered to be felt, not just seen.</p>
+            <div class="hero-cta">
+              <a class="btn btn-fill mag" href="collections.html"><span>Explore Collections <span
+                    class="arw">→</span></span></a>
+              <a class="btn btn-line mag" href="#" id="heroSamples"><span>Free Samples</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-endcap" id="heroEndcap">
+        <span class="eyebrow">Installed · Real Kitchens</span>
+        <h4>From quarry to countertop, without compromise.</h4>
+        <a class="mag" href="collections.html">Explore Collections <span class="arw">→</span></a>
+      </div>
+      <div class="hero-progress"><span id="heroPhase">MACRO</span><span class="bar"><i id="heroBar"></i></span></div>
+      <div class="scroll-i"><span>Scroll to pull back</span><span class="ln"></span></div>
+    </div>
+  </section>
+
+  <div class="marquee">
+    <div class="track" id="mqtrack"></div>
+  </div>
+
+  <!-- ===== S2 · FEATURED COLLECTIONS ===== -->
+  <section class="pad">
+    <div class="wrap">
+      <div class="sec-head center rv" style="margin:0 auto 48px">
+        <span class="eyebrow">Featured Collections</span>
+        <h2>Curated worlds <em>of stone.</em></h2>
+        <p>Discover curated collections crafted for timeless interiors.</p>
+      </div>
+      <div class="fcoll-slider rv" id="fcollSlider">
+        <div class="fcoll-rail" id="fcollRail">
+          <div class="fcoll-track" id="fcollTrack"></div>
+        </div>
+        <button class="fc-nav prev" id="fcPrev" type="button" aria-label="Previous collection">←</button>
+        <button class="fc-nav next" id="fcNext" type="button" aria-label="Next collection">→</button>
+        <div class="fc-dots" id="fcDots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S3 · ABOUT ARTIZIA ===== -->
+  <section class="pad" style="padding-top:0">
+    <div class="wrap">
+      <div class="grid-2">
+        <div class="about-vis rv" id="aboutVis"></div>
+        <div class="rv d1">
+          <span class="eyebrow">About Artizia</span>
+          <h2 style="font-size:clamp(30px,4vw,50px);line-height:1.04;margin-top:16px">Born from a Legacy <em>of
+              Craftsmanship</em></h2>
+          <div class="about-points">
+            <div class="about-point"><span class="n">01</span>
+              <div><b>35+ Years of Manufacturing Excellence</b>
+                <p>Emerging from Marudhar Quartz's decades of heritage supplying North America, the UK and Australia.
+                </p>
+              </div>
+            </div>
+            <div class="about-point"><span class="n">02</span>
+              <div><b>Premium Engineered Quartz</b>
+                <p>Surfaces that pair durability with design — made to be felt, not just seen.</p>
+              </div>
+            </div>
+            <div class="about-point"><span class="n">03</span>
+              <div><b>Breton Technology</b>
+                <p>Italian-built precision presses deliver consistent colour, density and strength, slab after slab.</p>
+              </div>
+            </div>
+            <div class="about-point"><span class="n">04</span>
+              <div><b>Global Vision</b>
+                <p>Bringing world-class engineered stone home to India, and to projects worldwide.</p>
+              </div>
+            </div>
+          </div>
+          <div class="metrics" id="aboutMetrics"></div>
+          <div style="margin-top:30px"><a class="btn btn-line mag" href="about.html"><span>Learn More <span
+                  class="arw">→</span></span></a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S4 · DESIGNED FOR EVERY SPACE ===== -->
+  <section class="pad" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head center rv" style="margin:0 auto 48px">
+        <span class="eyebrow">Applications</span>
+        <h2>Designed for <em>Every Space.</em></h2>
+        <p>Beautiful surfaces crafted for every style of living and working.</p>
+      </div>
+      <div class="apps-grid rv" id="appsGrid"></div>
+    </div>
+  </section>
+
+  <!-- ===== S5 · WHY CHOOSE ARTIZIA ===== -->
+  <section class="pad" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head center rv" style="margin:0 auto 48px">
+        <span class="eyebrow">Why Choose Artizia</span>
+        <h2>Engineered to <em>outlast.</em></h2>
+      </div>
+      <div class="why6">
+        <div class="fcard rv">
+          <div class="ic"><svg viewBox="0 0 24 24">
+              <path d="M12 3l7 3v5c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6l7-3z" />
+              <path d="M9 12l2 2 4-4" />
+            </svg></div>
+          <h4>Scratch Resistant</h4>
+          <p>Mohs hardness 6.5–7.5 shrugs off everyday knocks and abrasion.</p>
+        </div>
+        <div class="fcard rv d1">
+          <div class="ic"><svg viewBox="0 0 24 24">
+              <path d="M12 3c1.2 3 4 4.2 4 8a4 4 0 01-8 0c0-1 .5-2 1.2-2.6C9 10 9.2 7.8 12 3z" />
+            </svg></div>
+          <h4>Heat Resistant</h4>
+          <p>Rated Class A for surface burning; withstands everyday kitchen heat.</p>
+        </div>
+        <div class="fcard rv d2">
+          <div class="ic"><svg viewBox="0 0 24 24">
+              <path d="M12 4c3 4 5 6.4 5 9a5 5 0 01-10 0c0-2.6 2-5 5-9z" />
+            </svg></div>
+          <h4>Stain Resistant</h4>
+          <p>Spills wipe away without soaking in — coffee, wine and oil included.</p>
+        </div>
+        <div class="fcard rv">
+          <div class="ic"><svg viewBox="0 0 24 24">
+              <path d="M12 4l8 4-8 4-8-4 8-4z" />
+              <path d="M4 12l8 4 8-4" />
+            </svg></div>
+          <h4>Non-Porous Surface</h4>
+          <p>Sealed for life — never needs resealing, unlike natural stone.</p>
+        </div>
+        <div class="fcard rv d1">
+          <div class="ic"><svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="8" />
+              <path d="M9 12l2 2 4-4" />
+            </svg></div>
+          <h4>Food Safe</h4>
+          <p>NSF certified for food-contact use — safe where you prep and eat.</p>
+        </div>
+        <div class="fcard rv d2">
+          <div class="ic"><svg viewBox="0 0 24 24">
+              <path d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8z" />
+            </svg></div>
+          <h4>Low Maintenance</h4>
+          <p>A soft cloth and mild detergent keep it pristine for a lifetime.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S6 · MANUFACTURING EXCELLENCE ===== -->
+  <section class="pad" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head rv" style="margin-bottom:48px"><span class="eyebrow">Manufacturing Excellence</span>
+        <h2>Precision in <em>Every Surface.</em></h2>
+        <p>Every slab is engineered with innovation, craftsmanship, and uncompromising quality.</p>
+      </div>
+      <div class="mfg">
+        <div class="mfg-vis rv" id="mfgVis"></div>
+        <div class="rv d1">
+          <div class="timeline">
+            <div class="tstep">
+              <div class="dot">01</div>
+              <div class="tc">
+                <h4>Raw Materials</h4>
+                <p>Premium quartz aggregates and resins, sourced to exacting standards.</p>
+              </div>
+            </div>
+            <div class="tstep">
+              <div class="dot">02</div>
+              <div class="tc">
+                <h4>Precision Engineering</h4>
+                <p>Exact blends measured for consistent colour, density and strength.</p>
+              </div>
+            </div>
+            <div class="tstep">
+              <div class="dot">03</div>
+              <div class="tc">
+                <h4>Breton Technology</h4>
+                <p>Italian vibro-compaction presses form flawless, uniform slabs.</p>
+              </div>
+            </div>
+            <div class="tstep">
+              <div class="dot">04</div>
+              <div class="tc">
+                <h4>Quality Inspection</h4>
+                <p>Every slab tested against international EN and ASTM benchmarks.</p>
+              </div>
+            </div>
+            <div class="tstep">
+              <div class="dot">05</div>
+              <div class="tc">
+                <h4>Surface Finishing</h4>
+                <p>Polished or honed to a refined, tactile finish.</p>
+              </div>
+            </div>
+            <div class="tstep">
+              <div class="dot">06</div>
+              <div class="tc">
+                <h4>Global Delivery</h4>
+                <p>Carefully packed and shipped to projects across the world.</p>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:34px"><a class="btn btn-fill mag" href="about.html"><span>Explore Our Manufacturing
+                <span class="arw">→</span></span></a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S11 · GLOBAL PRESENCE ===== -->
+  <section class="pad" style="padding-top:0">
+    <div class="wrap">
+      <div class="global">
+        <div class="worldmap rv" id="worldmap"></div>
+        <div class="rv d1">
+          <span class="eyebrow">Global Presence</span>
+          <h2 style="font-size:clamp(28px,3.8vw,48px);line-height:1.05;margin-top:16px">Crafted in India. <em>Trusted
+              Worldwide.</em></h2>
+          <p style="color:var(--text-dim);margin:22px 0 0;max-width:46ch">From our state-of-the-art facility at Mahindra
+            World City, Jaipur, Artizia surfaces reach homes, showrooms and landmark projects across the globe —
+            carrying Indian craftsmanship to the world.</p>
+          <div class="metrics" id="globalMetrics" style="margin-top:30px;grid-template-columns:1fr 1fr"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S13 · TESTIMONIALS ===== -->
+  <section class="pad" style="padding-top:0" id="tstSection">
+    <div class="wrap">
+      <div class="sec-head center rv" style="margin:0 auto 40px"><span class="eyebrow">Testimonials</span>
+        <h2>What Our <em>Clients Say.</em></h2>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="tst-track rv" id="tstTrack"></div>
+      <div class="wrap" style="padding:0">
+        <div class="tst-nav">
+          <div class="tst-dots" id="tstDots"></div>
+          <div class="tst-arrows"><button id="tstPrev" aria-label="Previous">←</button><button id="tstNext"
+              aria-label="Next">→</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S15 · FINAL CTA ===== -->
+  <section class="finalcta">
+    <div class="bg" id="ctaBg"></div>
+    <div class="inner">
+      <div class="wrap rv">
+        <span class="eyebrow">Let's Build Together</span>
+        <h2>Ready to Create <em>Extraordinary Spaces?</em></h2>
+        <p>Connect with our experts and discover premium engineered quartz crafted for projects that inspire.</p>
+        <div class="btns">
+          <a class="btn btn-fill mag" href="collections.html"><span>Explore Collections <span
+                class="arw">→</span></span></a>
+          <a class="btn btn-line mag" href="contact.html"><span>Request Catalogue</span></a>
+          <a class="btn btn-line mag" href="contact.html"><span>Contact Our Team</span></a>
+        </div>
+        <div class="contacts" id="ctaContacts"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S14 · INSTAGRAM FEED (sits just above the footer) =====
+       Removed from the DOM entirely if the feed returns no posts. -->
+  <section class="pad ig-sec" id="igSection" hidden>
+    <div class="wrap">
+      <div class="sec-head center rv" style="margin:0 auto 44px">
+        <span class="eyebrow" id="igEye"></span>
+        <h2 id="igTitle"></h2>
+        <p id="igLead"></p>
+      </div>
+      <div class="ig-grid rv" id="igGrid"></div>
+      <div class="ig-foot rv">
+        <a class="btn btn-line mag" id="igCta" target="_blank" rel="noopener noreferrer"><span></span></a>
+      </div>
+    </div>
+  </section>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/marble.js"></script>
+  <script src="assets/js/map.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    (function () {
+      const GL = window.MarbleGL, MAT = window.MAT, dpr = GL.dpr, reduce = GL.reduce, S = window.SITE || {};
+      const $ = id => document.getElementById(id);
+
+      /* marquee */
+      const MQ = ["Signature", "Luxury", "Premium", "Essentials", "Breton Technology", "Lifetime Warranty"];
+      $('mqtrack').innerHTML = MQ.concat(MQ).map(w => `<span>${w}<span class="dot"></span></span>`).join('');
+
+      const hs = $('heroSamples'); if (hs) hs.addEventListener('click', e => { e.preventDefault(); window.openTray(); });
+
+      /* everything below reads from window.PAGE — see the content block at the top of this file */
+      const C = window.PAGE || {};
+      const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]);
+      const initials = n => String(n).trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase();
+
+      /* a real photo when you supply one, generated marble while you don't */
+      function media(src, alt, fallbackKey, seed) {
+        return src ? `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy">` : GL.imgFor(safeMat(fallbackKey), seed || 0);
+      }
+      function metricHTML(m) {
+        return m.mark
+          ? `<div class="metric"><div class="v mark">${esc(m.mark)}</div><div class="l">${esc(m.label)}</div></div>`
+          : `<div class="metric" data-to="${+m.value || 0}"><div class="v"><span class="num">0</span><span class="suf">${esc(m.suffix || '')}</span></div><div class="l">${esc(m.label)}</div></div>`;
+      }
+
+      /* ---- content that does not need the product data: render immediately ---- */
+      (function renderStaticContent() {
+        const am = $('aboutMetrics');
+        if (am) am.innerHTML = (C.about && C.about.stats || []).map(metricHTML).join('');
+        const gm = $('globalMetrics');
+        if (gm) gm.innerHTML = (C.global && C.global.stats || []).map(metricHTML).join('');
+
+        /* world map: dot grid, then either a flat image or the live zooming map */
+        const wm = $('worldmap');
+        if (wm) {
+          const g = C.global || {};
+          if (g.mapImage || !window.MAPDATA) {
+            wm.innerHTML = '<div class="dots"></div>'
+              + (g.mapImage ? `<img class="map" src="${esc(g.mapImage)}" alt="Artizia global presence" loading="lazy">` : '');
+          } else {
+            buildWorldMap(wm, g, window.MAPDATA);
+          }
+        }
+
+        /* testimonials — an empty list hides the section entirely */
+        const track = $('tstTrack'), sec = $('tstSection'), list = C.testimonials || [];
+        if (sec && !list.length) { sec.remove(); }
+        else if (track) {
+          track.innerHTML = list.map(t => `<div class="tcard">
+          <div class="stars">${'★'.repeat(Math.max(0, Math.min(5, +t.stars || 5)))}</div>
+          <p class="q">"${esc(t.quote)}"</p>
+          <div class="who"><span class="av">${esc(initials(t.name))}</span>
+            <div><div class="nm">${esc(t.name)}</div><div class="rl">${esc(t.role)}</div></div>
+          </div></div>`).join('');
+        }
+      })();
+
+      /* ---- dynamic section content (waits for live products) ---- */
+      function repFor(coll) {
+        const list = window.productList().filter(k => MAT[k].coll === coll);
+        const withImg = list.find(k => (MAT[k].images || []).some(Boolean));
+        return withImg || list[0] || ((window.COLLECTIONS.find(c => c.key === coll) || {}).hero) || 'calacatta-gold';
+      }
+      function safeMat(k) { return MAT[k] ? k : (window.productList()[0] || 'hero'); }
+
+      /* ---- S2 looping slider ----------------------------------------------
+         The track holds three identical sets of cards. The viewport sits on the
+         middle set, so it can slide past either end and then silently jump back
+         a set — which is what makes the loop seamless. */
+      function initFcollSlider(n) {
+        const rail = $('fcollRail'), track = $('fcollTrack'), dots = $('fcDots');
+        if (!rail || !track || !n) return;
+        track.querySelectorAll('.fc-set[aria-hidden] a').forEach(a => (a.tabIndex = -1));
+
+        let i = 0, busy = false;
+        const step = () => {
+          const c = track.querySelector('.fcoll');
+          return c ? c.getBoundingClientRect().width + (parseFloat(getComputedStyle(track).gap) || 0) : 0;
+        };
+        const place = (k, animate) => {
+          track.style.transition = animate && !reduce ? 'transform .78s cubic-bezier(.16,1,.3,1)' : 'none';
+          track.style.transform = `translate3d(${-(n + k) * step()}px,0,0)`;
+        };
+        const paint = () => [...dots.children].forEach((d, j) => d.classList.toggle('on', j === ((i % n) + n) % n));
+
+        function go(to, animate = true) {
+          if (busy || to === i) return;   /* no transitionend fires if nothing moves */
+          i = to; busy = animate && !reduce;
+          place(i, animate);
+          paint();
+          if (!busy) settle();
+        }
+        /* after the slide finishes, rebase onto the middle set with no animation */
+        function settle() {
+          busy = false;
+          if (i >= n || i < 0) { i = ((i % n) + n) % n; place(i, false); }
+        }
+        track.addEventListener('transitionend', e => { if (e.propertyName === 'transform') settle(); });
+
+        dots.innerHTML = Array.from({ length: n }, (_, j) =>
+          `<button type="button" class="${j ? '' : 'on'}" aria-label="Collection ${j + 1}"></button>`).join('');
+        dots.addEventListener('click', e => { const b = e.target.closest('button'); if (b) go([...dots.children].indexOf(b)); });
+        $('fcNext').addEventListener('click', () => go(i + 1));
+        $('fcPrev').addEventListener('click', () => go(i - 1));
+
+        /* drag / swipe */
+        let x0 = 0, dx = 0, down = false;
+        rail.addEventListener('pointerdown', e => {
+          if (busy) return;
+          down = true; x0 = e.clientX; dx = 0;
+          rail.setPointerCapture(e.pointerId);
+        });
+        rail.addEventListener('pointermove', e => {
+          if (!down) return;
+          dx = e.clientX - x0;
+          if (Math.abs(dx) > 6) rail.classList.add('dragging');
+          track.style.transition = 'none';
+          track.style.transform = `translate3d(${-(n + i) * step() + dx}px,0,0)`;
+        });
+        const release = () => {
+          if (!down) return;
+          down = false;
+          rail.classList.remove('dragging');
+          const t = Math.max(40, step() * .22);
+          if (dx <= -t) go(i + 1); else if (dx >= t) go(i - 1); else place(i, true);
+          dx = 0;
+        };
+        rail.addEventListener('pointerup', release);
+        rail.addEventListener('pointercancel', release);
+
+        addEventListener('resize', () => { if (!busy) place(i, false); });
+        place(0, false);
+      }
+
+      /* ---- S11 world map --------------------------------------------------
+         One SVG, zoomed by animating its viewBox from the world down to Jaipur.
+         The frame and every view share the map's 1000x620 aspect, so a map
+         coordinate maps to a plain percentage of the box — which is how the
+         HTML pins stay glued to their location at any zoom. */
+      function buildWorldMap(host, g, M) {
+        const AR = M.h / M.w, RAD = Math.PI / 180;
+
+        /* Natural Earth 1, the same projection the geometry was baked with —
+           so a lat/lon in the content block lands exactly where it should. */
+        function project(lon, lat) {
+          const l = lon * RAD, p = lat * RAD, p2 = p * p, p4 = p2 * p2;
+          const x = l * (0.8707 - 0.131979 * p2 + p4 * (-0.013791 + p4 * (0.003971 - 0.001529 * p2)));
+          const y = p * (1.007226 + p2 * (0.015085 + p4 * (-0.044475 + 0.028874 * p2 - 0.005916 * p4)));
+          return [M.t[0] + M.k * x, M.t[1] - M.k * y];
+        }
+
+        const stops = (g.stops && g.stops.length) ? g.stops : [{ view: 'world', label: 'World' }];
+        const home = g.home || {};
+        const marks = (home.lat != null ? [Object.assign({ home: true }, home)] : []).concat(g.pins || []);
+
+        host.innerHTML = `<div class="dots"></div>
+        <svg viewBox="0 0 ${M.w} ${M.h}" aria-hidden="true">
+          <path class="wm-land" d="${M.land}"/>
+          <path class="wm-india" d="${M.india}"/>
+          <path class="wm-states" d="${M.states}"/>
+          <path class="wm-raj" d="${M.rajasthan}"/>
+        </svg>
+        <div class="wm-pins">${marks.map((p, i) => p.home
+          ? `<span class="home-pin" data-i="${i}" data-role="home">${esc(p.label || '')}</span><span class="pin" data-i="${i}" data-role="home"></span>${p.note ? `<span class="wm-note" data-i="${i}" data-role="home">${esc(p.note)}</span>` : ''}`
+          : `<span class="pin d${(i % 3) + 1}" data-i="${i}" data-role="away" title="${esc(p.label || '')}"></span>`).join('')}</div>
+        <div class="wm-steps">${stops.map((s, i) => `<button type="button" data-v="${esc(s.view)}"${i ? '' : ' class="on"'}>${esc(s.label)}</button>`).join('')}</div>`;
+
+        const svg = host.querySelector('svg');
+        const states = host.querySelector('.wm-states');
+        const raj = host.querySelector('.wm-raj');
+        const steps = host.querySelector('.wm-steps');
+        const pins = [...host.querySelectorAll('[data-i]')];
+        const pts = marks.map(p => project(p.lon, p.lat));
+
+        const ramp = (a, b, v) => Math.max(0, Math.min(1, (v - a) / (b - a)));
+        let vb = M.views.world.slice(), raf = 0, auto = true;
+
+        function paint() {
+          svg.setAttribute('viewBox', vb.map(n => n.toFixed(2)).join(' '));
+          const z = M.w / vb[2];                       /* 1 at world, ~33 at Jaipur */
+          states.style.opacity = ramp(1.7, 3.6, z) * .38;
+          raj.style.opacity = ramp(3.4, 8, z) * .30;
+          const homeOp = ramp(2.4, 5, z), awayOp = 1 - ramp(2.5, 5, z);
+          for (const el of pins) {
+            const [px, py] = pts[+el.dataset.i];
+            el.style.left = ((px - vb[0]) / vb[2] * 100) + '%';
+            el.style.top = ((py - vb[1]) / vb[3] * 100) + '%';
+            el.style.opacity = el.dataset.role === 'home' ? homeOp : awayOp;
+          }
+        }
+
+        /* zoom geometrically, not linearly — a straight lerp from a 1000-wide
+           view to a 30-wide one lurches at the end */
+        function goTo(view, animate) {
+          const to = M.views[view] || M.views.world;
+          cancelAnimationFrame(raf);
+          if (!animate || reduce) { vb = to.slice(); paint(); return; }
+          const from = vb.slice(), t0 = performance.now(), DUR = 1200;
+          const ax = from[0] + from[2] / 2, ay = from[1] + from[3] / 2, aw = from[2];
+          const bx = to[0] + to[2] / 2, by = to[1] + to[3] / 2, bw = to[2];
+          (function step(now) {
+            const p = Math.min(1, (now - t0) / DUR);
+            const e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+            const w = aw * Math.pow(bw / aw, e);
+            const cx = ax + (bx - ax) * e, cy = ay + (by - ay) * e;
+            vb = [cx - w / 2, cy - w * AR / 2, w, w * AR];
+            paint();
+            if (p < 1) raf = requestAnimationFrame(step);
+          })(t0);
+        }
+
+        const mark = v => [...steps.children].forEach(b => b.classList.toggle('on', b.dataset.v === v));
+        steps.addEventListener('click', e => {
+          const b = e.target.closest('button');
+          if (!b) return;
+          auto = false;                     /* a click ends the guided tour */
+          mark(b.dataset.v);
+          goTo(b.dataset.v, true);
+        });
+
+        paint();
+        /* drill in once, the first time the map is actually looked at */
+        if (!reduce && stops.length > 1) {
+          const io = new IntersectionObserver(en => {
+            if (!en[0].isIntersecting) return;
+            io.disconnect();
+            let i = 0;
+            const hop = () => {
+              if (!auto || ++i >= stops.length) return;
+              mark(stops[i].view);
+              goTo(stops[i].view, true);
+              setTimeout(hop, 1900);
+            };
+            setTimeout(hop, 900);        /* let it read as a world map first */
+          }, { threshold: .35 });
+          io.observe(host);
+        }
+      }
+
+      function renderSections() {
+        /* fall back to the built-in collection list if the content block is empty */
+        const fc = (C.featuredCollections && C.featuredCollections.length)
+          ? C.featuredCollections
+          : window.COLLECTIONS.map(c => ({ key: c.key, image: '', desc: c.lead }));
+        const card = c => {
+          const art = c.image ? `<img src="${esc(c.image)}" alt="${esc(c.key)} collection" loading="lazy">` : GL.imgFor(repFor(c.key), 0);
+          const href = c.href || `collections.html?c=${encodeURIComponent(c.key)}`;
+          return `<a class="fcoll" href="${esc(href)}"><div class="ov"></div>${art}
+        <div class="c"><span class="k">Collection</span><h3>${esc(c.key)}</h3><p>${esc(c.desc || '')}</p><span class="go">Explore →</span></div></a>`;
+        };
+        /* three copies so the rail can wrap in either direction; only the middle
+           set is exposed to assistive tech, the outer two are visual clones */
+        const set = hidden => `<div class="fc-set"${hidden ? ' aria-hidden="true"' : ''} style="display:contents">${fc.map(card).join('')}</div>`;
+        $('fcollTrack').innerHTML = set(true) + set(false) + set(true);
+        initFcollSlider(fc.length);
+        $('appsGrid').innerHTML = (C.applications || []).map(a => `<a class="appcard" href="${esc(a.href || 'collections.html')}"><div class="ov"></div>${media(a.image, a.title, a.fallback, 2)}
+      <div class="c"><h4>${esc(a.title)}</h4><span class="arw2">→</span></div></a>`).join('');
+
+        const ab = C.about || {}, av = $('aboutVis');
+        if (av) {
+          if (ab.ratio) {
+            av.style.setProperty('--ratio', ab.ratio);
+            const [w, h] = String(ab.ratio).split('/').map(Number);
+            av.classList.toggle('portrait', w > 0 && h > 0 && w < h);
+          }
+          const art = ab.video
+            ? `<video src="${esc(ab.video)}"${ab.poster ? ` poster="${esc(ab.poster)}"` : ''} muted loop playsinline preload="metadata"${reduce ? ' controls' : ' autoplay'}></video>`
+            : media(ab.image, 'Artizia craftsmanship', ab.fallback, 0);
+          av.innerHTML = `<span class="cap">${esc(ab.caption || '')}</span>${art}`;
+        }
+
+        /* factory: a real video when supplied, otherwise the image + play badge */
+        const f = C.factory || {}, mv = $('mfgVis');
+        if (mv) {
+          mv.innerHTML = f.video
+            ? `<video src="${esc(f.video)}"${f.poster ? ` poster="${esc(f.poster)}"` : ''} muted loop playsinline preload="metadata"${reduce ? ' controls' : ' autoplay'}></video><span class="vtag">${esc(f.caption || '')}</span>`
+            : `${media(f.image, 'Artizia manufacturing', f.fallback, 0)}<div class="play"><span>▶</span></div><span class="vtag">${esc(f.caption || '')}</span>`;
+        }
+
+        const cbg = $('ctaBg');
+        if (cbg) cbg.innerHTML = (C.cta && C.cta.image) ? media(C.cta.image, '', null, 0) : GL.imgFor('hero', 0);
+        window.Artizia.refresh();
+      }
+      (window.ArtiziaData ? window.ArtiziaData.ready : Promise.resolve()).then(renderSections);
+
+      /* ---- S14 Instagram feed ---------------------------------------------
+         Posts come from our own server, which holds the Graph API token and
+         caches the response. If there is no token yet, or Instagram is down and
+         we have no cache, the section deletes itself — an empty grid under a
+         heading that says "Surfaces in the wild" is worse than no section. */
+      (async function renderInstagram() {
+        const sec = $('igSection'), cfg = C.instagram;
+        if (!sec) return;
+        const drop = () => sec.remove();
+        if (!cfg) return drop();
+
+        let posts = [];
+        try {
+          const r = await fetch(`/api/instagram?limit=${encodeURIComponent(cfg.count || 8)}`);
+          if (r.ok) posts = (await r.json()).posts || [];
+        } catch (e) { /* offline / server down — fall through to drop() */ }
+        if (!posts.length) return drop();
+
+        const handle = (S.social && S.social.instagram) || 'https://www.instagram.com/';
+        $('igEye').textContent = cfg.eyebrow || '';
+        $('igTitle').innerHTML = cfg.title || '';
+        $('igLead').textContent = cfg.lead || '';
+        const cta = $('igCta');
+        cta.href = handle;
+        cta.querySelector('span').textContent = cfg.cta || 'Follow on Instagram';
+
+        $('igGrid').innerHTML = posts.slice(0, cfg.count || 8).map(p => {
+          const kind = p.video ? '▶' : (p.album ? '❏' : '');
+          return `<a class="ig-tile" href="${esc(p.href)}" target="_blank" rel="noopener noreferrer"
+            aria-label="View this post on Instagram">
+            <img src="${esc(p.image)}" alt="${esc(p.caption || 'Artizia on Instagram')}" loading="lazy">
+            ${kind ? `<span class="ig-kind" aria-hidden="true">${kind}</span>` : ''}
+            <span class="ig-ov"><span class="ig-cap">${esc(p.caption || '')}</span></span>
+          </a>`;
+        }).join('');
+
+        sec.hidden = false;
+        window.Artizia.refresh();
+      })();
+
+      /* final-CTA contact links */
+      const wa = (S.phoneRaw || '').replace(/[^0-9]/g, '');
+      $('ctaContacts').innerHTML = `
+    <a href="tel:${S.phoneRaw || ''}"><span class="ci"><svg viewBox="0 0 24 24"><path d="M5 4h3l2 5-2 1a11 11 0 005 5l1-2 5 2v3a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></span>${S.phone || 'Call us'}</a>
+    <a href="mailto:${S.email || ''}"><span class="ci"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>${S.email || 'Email us'}</a>
+    <a href="https://wa.me/${wa}" target="_blank" rel="noopener"><span class="ci"><svg viewBox="0 0 24 24"><path d="M12 4a8 8 0 00-6.9 12L4 20l4-1.1A8 8 0 1012 4z"/><path d="M9.2 9.4c.2 2.6 2.8 5.2 5.4 5.4l1.2-1.4 2 .9v1.5c-3.6.5-8-3.9-7.5-7.5h1.5l.9 2z"/></svg></span>WhatsApp</a>`;
+
+      /* count-up metrics */
+      function countNum(el) {
+        const to = +el.dataset.to, n = el.querySelector('.num'); if (!n) return;
+        if (reduce) { n.textContent = to; return; } let s = null;
+        (function step(t) { if (!s) s = t; const p = Math.min((t - s) / 1400, 1); n.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); })(performance.now());
+      }
+      const numIO = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { countNum(en.target); numIO.unobserve(en.target); } }), { threshold: .5 });
+      document.querySelectorAll('.metric[data-to]').forEach(el => numIO.observe(el));
+
+      /* testimonials slider */
+      (function () {
+        const track = $('tstTrack'), dots = $('tstDots'); if (!track) return;
+        const cards = [...track.children]; let idx = 0;
+        dots.innerHTML = cards.map((_, i) => `<i data-i="${i}"></i>`).join('');
+        const dotEls = [...dots.children];
+        function step(i) {
+          idx = (i + cards.length) % cards.length; const c = cards[idx];
+          track.scrollTo({ left: c.offsetLeft - track.offsetLeft, behavior: 'smooth' });
+          dotEls.forEach((d, j) => d.classList.toggle('on', j === idx));
+        }
+        dotEls.forEach(d => d.addEventListener('click', () => step(+d.dataset.i)));
+        $('tstPrev').addEventListener('click', () => step(idx - 1));
+        $('tstNext').addEventListener('click', () => step(idx + 1));
+        let st; track.addEventListener('scroll', () => {
+          clearTimeout(st); st = setTimeout(() => {
+            const mid = track.scrollLeft + track.clientWidth / 2; let best = 0, bd = 1e9;
+            cards.forEach((c, i) => { const cc = c.offsetLeft - track.offsetLeft + c.clientWidth / 2, d = Math.abs(cc - mid); if (d < bd) { bd = d; best = i; } });
+            idx = best; dotEls.forEach((d, j) => d.classList.toggle('on', j === idx));
+          }, 120);
+        }, { passive: true });
+        step(0);
+        if (!reduce) {
+          let timer = setInterval(() => step(idx + 1), 5000);
+          track.addEventListener('mouseenter', () => clearInterval(timer));
+          track.addEventListener('mouseleave', () => { clearInterval(timer); timer = setInterval(() => step(idx + 1), 5000); });
+        }
+      })();
+
+      /* ---- cinematic hero scroll: macro veining → full slab → installed on the island ---- */
+      const hero = document.getElementById('hero'), heroScene = document.getElementById('heroScene'),
+        kScene = document.getElementById('kScene'), slabLand = document.getElementById('slabLand'),
+        slabBox = document.getElementById('slabBox'), slabImg = document.getElementById('slabImg'),
+        slabFrame = document.getElementById('slabFrame'), slabCap = document.getElementById('slabCap'),
+        heroCopy = document.getElementById('heroCopy'), heroEndcap = document.getElementById('heroEndcap'),
+        heroPhase = document.getElementById('heroPhase'), heroBar = document.getElementById('heroBar'),
+        scrollI = document.querySelector('.scroll-i');
+      const frameCorners = [...slabFrame.children];
+      const cl = v => Math.max(0, Math.min(1, v)), sm = (a, b, x) => { const t = cl((x - a) / (b - a)); return t * t * (3 - 2 * t); }, mx2 = (a, b, t) => a + (b - a) * t;
+
+      /* The kitchen's coordinate space, and the island countertop within it.
+         These four points ARE the ones drawn in the SVG above — the slab is
+         mapped onto them, so it cannot land anywhere but flush on the counter. */
+      const SCENE_W = 1200, SCENE_H = 1000;
+      const QUAD = [[330, 480], [870, 480], [1000, 640], [200, 640]];   /* tl tr br bl */
+      const BASE_W = 0.84;               /* slab width at "full slab", fraction of scene */
+      const MACRO = 3.2;                 /* opening magnification */
+
+      /* Solve the projective transform taking the image's own box to four
+         arbitrary corners. A plain scale/translate cannot lay a rectangle onto a
+         trapezoid; this can, which is what makes the slab sit IN the perspective
+         of the room rather than floating flat on top of it. */
+      function quadTransform(w, h, q) {
+        const src = [[0, 0], [w, 0], [w, h], [0, h]];
+        const A = [], b = [];
+        for (let i = 0; i < 4; i++) {
+          const [x, y] = src[i], [u, v] = q[i];
+          A.push([x, y, 1, 0, 0, 0, -u * x, -u * y]); b.push(u);
+          A.push([0, 0, 0, x, y, 1, -v * x, -v * y]); b.push(v);
+        }
+        for (let i = 0; i < 8; i++) {                       /* gaussian elimination */
+          let piv = i;
+          for (let r = i + 1; r < 8; r++) if (Math.abs(A[r][i]) > Math.abs(A[piv][i])) piv = r;
+          [A[i], A[piv]] = [A[piv], A[i]];[b[i], b[piv]] = [b[piv], b[i]];
+          const d = A[i][i];
+          if (!d) return null;
+          for (let c = i; c < 8; c++) A[i][c] /= d;
+          b[i] /= d;
+          for (let r = 0; r < 8; r++) {
+            if (r === i) continue;
+            const f = A[r][i];
+            if (!f) continue;
+            for (let c = i; c < 8; c++) A[r][c] -= f * A[i][c];
+            b[r] -= f * b[i];
+          }
+        }
+        const [a, bb, c, d, e, f, g, hh] = b;
+        return `matrix3d(${a},${d},0,${g},${bb},${e},0,${hh},0,0,1,0,${c},${f},0,1)`;
+      }
+
+      window.__heroScroll = function () {
+        const total = hero.offsetHeight - window.innerHeight;
+        const p = (reduce || total <= 0) ? 1 : cl(-hero.getBoundingClientRect().top / total);
+        const sceneW = heroScene.clientWidth, sceneH = heroScene.clientHeight;
+        const w0 = slabImg.offsetWidth, h0 = slabImg.offsetHeight;   /* untransformed box */
+        if (!w0 || !h0) return;
+        const k = sceneW / SCENE_W;                                   /* scene units -> px */
+
+        const zoom = mx2(MACRO, 1, sm(0, 0.52, p));   /* phase 1: pull back from the macro */
+        const kP = sm(0.56, 0.94, p);                 /* phase 2: lay it onto the island */
+
+        /* where the slab sits while it is still facing the camera, flat */
+        const W = sceneW * BASE_W * zoom, H = W * (h0 / w0);
+        const cx = sceneW / 2, cy = sceneH / 2;
+        const flat = [[cx - W / 2, cy - H / 2], [cx + W / 2, cy - H / 2], [cx + W / 2, cy + H / 2], [cx - W / 2, cy + H / 2]];
+        const land = QUAD.map(([x, y]) => [x * k, y * k]);
+
+        /* one interpolation, four corners — the slab rotates into the room's
+           perspective and lands on the counter as a single continuous motion */
+        const q = flat.map((c, i) => [mx2(c[0], land[i][0], kP), mx2(c[1], land[i][1], kP)]);
+        const m = quadTransform(w0, h0, q);
+        if (m) slabImg.style.transform = m;
+
+        kScene.style.opacity = kP;
+        slabLand.setAttribute('opacity', (kP * kP).toFixed(3));   /* edge + contact shadow */
+
+        /* framing marks + caption during the "full slab" beat */
+        const frameOn = sm(0.30, 0.52, p) * (1 - sm(0.60, 0.74, p));
+        slabFrame.style.opacity = frameOn * 0.9;
+        if (frameOn > 0.001) {
+          frameCorners.forEach((el, i) => {
+            el.style.left = q[i][0].toFixed(1) + 'px';
+            el.style.top = q[i][1].toFixed(1) + 'px';
+          });
+          /* sit the caption just under the slab, never on top of it */
+          const low = Math.max(q[2][1], q[3][1]);
+          slabCap.style.top = Math.min(sceneH - 30, low + 26).toFixed(1) + 'px';
+        }
+        slabCap.style.opacity = frameOn * 0.85;
+
+        /* copy → endcap crossfade, HUD, scroll hint (unchanged behaviour) */
+        const co = sm(0.34, 0.56, p); heroCopy.style.opacity = 1 - co; heroCopy.style.transform = 'translateY(' + (-co * 40) + 'px)'; heroCopy.style.pointerEvents = co > 0.5 ? 'none' : '';
+        const ei = sm(0.72, 0.92, p); heroEndcap.style.opacity = ei; heroEndcap.style.transform = 'translateY(' + ((1 - ei) * 16) + 'px)'; heroEndcap.classList.toggle('on', ei > 0.5);
+        heroBar.style.width = (p * 100) + '%'; heroPhase.textContent = p < 0.5 ? 'MACRO' : (p < 0.72 ? 'FULL SLAB' : 'INSTALLED');
+        if (scrollI) scrollI.style.opacity = 1 - sm(0, 0.14, p);
+      };
+      window.__heroScroll();
+      window.addEventListener('resize', () => window.__heroScroll(), { passive: true });
+
+      /* ---- preload ---- */
+      const msgs = ["CUTTING THE FIRST SLAB…", "POLISHING THE VEINS…", "LIGHTING THE GALLERY…"]; let mi = 0;
+      const pint = setInterval(() => { mi = (mi + 1) % msgs.length; const p = document.getElementById('plpct'); if (p) p.textContent = msgs[mi]; }, 560);
+      let finished = false;
+      function done() { if (finished) return; finished = true; clearInterval(pint); const pl = document.getElementById('preload'); if (pl) pl.classList.add('done'); document.body.classList.add('loaded'); window.__heroScroll(); window.Artizia.revealScan(); }
+      /* hold the curtain until the slab has actually decoded (the kitchen is
+         inline SVG — it is already there) */
+      const heroReady = slabImg.complete
+        ? Promise.resolve()
+        : new Promise(r => { slabImg.addEventListener('load', r); slabImg.addEventListener('error', r); });
+      heroReady.then(() => { window.__heroScroll(); setTimeout(done, 500); });
+      setTimeout(done, 6000); /* safety net */
+    })();
+  </script>
+</body>
+
+</html>

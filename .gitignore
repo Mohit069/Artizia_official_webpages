@@ -1,0 +1,12 @@
+node_modules/
+.env
+# SQLite database files (WAL/SHM included)
+server/db/*.db
+server/db/*.db-wal
+server/db/*.db-shm
+# Uploaded images (runtime content) — keep the folder, ignore its contents
+server/uploads/*
+!server/uploads/.gitkeep
+# OS / editor
+.DS_Store
+Thumbs.db

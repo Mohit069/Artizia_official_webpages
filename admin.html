@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product Admin — Artizia</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/styles.css">
+<style>
+  body{cursor:auto}
+  .abar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    padding:16px clamp(18px,4vw,40px);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+  .abar .brand{font-size:20px}
+  .abar .tag{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);border:1px solid var(--line-2);padding:4px 8px}
+  .abtns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .abtns .who{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--text-faint)}
+  .ab{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:11px 16px;border:1px solid var(--line-2);
+    background:none;color:var(--text);cursor:pointer;transition:.25s;display:inline-flex;gap:8px;align-items:center}
+  .ab:hover{border-color:var(--accent);color:var(--accent)}
+  .ab.primary{background:var(--accent);color:#0A0A0C;border-color:var(--accent)}
+  .ab.primary:hover{opacity:.88;color:#0A0A0C}
+  .ab.danger:hover{border-color:#e0708a;color:#e0708a}
+  .awrap{max-width:1200px;margin:0 auto;padding:clamp(20px,4vw,40px)}
+  .abarmsg{font-family:var(--mono);font-size:11px;color:var(--text-dim);margin-bottom:20px}
+  .agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+  .aitem{border:1px solid var(--line);background:var(--surface);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+  .aitem .thumb{aspect-ratio:4/3;overflow:hidden;position:relative;background:var(--bg-2)}
+  .aitem .thumb img{width:100%;height:100%;object-fit:cover}
+  .aitem .thumb .coll{position:absolute;top:8px;left:8px;font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:#fff;background:rgba(8,8,10,.5);backdrop-filter:blur(4px);padding:4px 7px}
+  .aitem .thumb .noimg{position:absolute;top:8px;right:8px;font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#0A0A0C;background:var(--opal);padding:3px 7px;border-radius:20px}
+  .aitem .meta{padding:12px 14px;display:flex;flex-direction:column;gap:4px;flex:1}
+  .aitem .meta .n{font-family:var(--serif);font-size:17px}
+  .aitem .meta .c{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--text-faint)}
+  .aitem .row{display:flex;border-top:1px solid var(--line)}
+  .aitem .row button{flex:1;padding:11px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:none;border:0;color:var(--text-dim);cursor:pointer;transition:.2s}
+  .aitem .row button:hover{color:var(--text);background:var(--surface-2)}
+  .aitem .row button.del:hover{color:#e0708a}
+  .aitem .row button+button{border-left:1px solid var(--line)}
+
+  /* login gate */
+  .gate{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:20px;background:var(--bg)}
+  .gate .card{width:min(400px,100%);border:1px solid var(--line-2);border-radius:14px;background:var(--surface);padding:clamp(28px,4vw,40px);text-align:center}
+  .gate .gem{width:16px;height:16px;background:var(--opal);transform:rotate(45deg);margin:0 auto 18px}
+  .gate h1{font-size:28px;margin-bottom:6px}
+  .gate p{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint);margin-bottom:26px}
+  .gate .fld{text-align:left;margin-bottom:14px}
+  .gate label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint);display:block;margin-bottom:6px}
+  .gate input{width:100%;background:var(--bg);border:1px solid var(--line-2);color:var(--text);padding:13px 15px;border-radius:8px;font-size:15px}
+  .gate input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+  .gate .ab{width:100%;justify-content:center;margin-top:8px;padding:15px}
+  .gate .err{color:#e0708a;font-family:var(--mono);font-size:11px;min-height:16px;margin-top:12px}
+
+  /* editor drawer */
+  .drawer{position:fixed;inset:0;z-index:120;display:none}
+  .drawer.open{display:block}
+  .drawer .scrim{position:absolute;inset:0;background:rgba(6,6,8,.6);backdrop-filter:blur(4px)}
+  .drawer .panel{position:absolute;top:0;right:0;bottom:0;width:min(680px,100%);background:var(--bg);border-left:1px solid var(--line-2);overflow:auto;transform:translateX(100%);transition:transform .45s var(--e2)}
+  .drawer.open .panel{transform:none}
+  .dhead{position:sticky;top:0;z-index:2;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:20px clamp(20px,3vw,32px);border-bottom:1px solid var(--line)}
+  .dhead h2{font-size:24px}
+  .dbody{padding:clamp(20px,3vw,32px);display:grid;gap:18px}
+  .uploads{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:560px){.uploads{grid-template-columns:1fr 1fr}}
+  .uslot{position:relative;border:1px dashed var(--line-2);border-radius:10px;aspect-ratio:1/1;overflow:hidden;cursor:pointer;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;transition:.25s}
+  .uslot:hover{border-color:var(--accent)}
+  .uslot.filled{border-style:solid;border-color:var(--line)}
+  .uslot.busy{opacity:.6;pointer-events:none}
+  .uslot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .uslot .uplus{font-size:22px;color:var(--accent);position:relative;z-index:1}
+  .uslot.filled .uplus{display:none}
+  .uslot .ulabel{position:absolute;left:0;right:0;bottom:0;z-index:2;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:5px 4px;background:rgba(8,8,10,.65);color:#fff}
+  .uslot.filled .uhint{display:none}
+  .uslot .uhint{position:relative;z-index:1;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);padding:0 6px}
+  .uslot .urm{position:absolute;top:5px;right:5px;z-index:3;width:22px;height:22px;border-radius:50%;border:0;background:rgba(8,8,10,.7);color:#fff;font-size:12px;display:none;place-items:center;cursor:pointer}
+  .uslot.filled .urm{display:grid}
+  .uploads-hint{font-family:var(--mono);font-size:10px;color:var(--text-faint);letter-spacing:.04em;margin-top:-6px}
+  .frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .frow.three{grid-template-columns:1fr 1fr 1fr}
+  @media(max-width:520px){.frow,.frow.three{grid-template-columns:1fr}}
+  .fld{display:flex;flex-direction:column;gap:6px}
+  .fld label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint)}
+  .fld input,.fld select,.fld textarea{background:var(--surface);border:1px solid var(--line-2);color:var(--text);padding:11px 13px;font-family:var(--sans);font-size:14px;border-radius:6px;width:100%}
+  .fld input:focus,.fld select:focus,.fld textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+  .fld .hint{font-family:var(--mono);font-size:9.5px;color:var(--text-faint);letter-spacing:.04em}
+  .dfoot{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:16px clamp(20px,3vw,32px);display:flex;gap:10px}
+  .grouplabel{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-top:6px;padding-top:14px;border-top:1px solid var(--line)}
+  .err{color:#e0708a;font-family:var(--mono);font-size:11px;min-height:14px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN GATE -->
+<div class="gate" id="gate">
+  <form class="card" id="loginForm">
+    <div class="gem"></div>
+    <h1>Artizia Admin</h1>
+    <p>Sign in to manage products</p>
+    <div class="fld"><label>User ID</label><input id="lg_user" autocomplete="username" required></div>
+    <div class="fld"><label>Password</label><input id="lg_pass" type="password" autocomplete="current-password" required></div>
+    <button class="ab primary" type="submit" id="lg_btn">Sign In</button>
+    <div class="err" id="lg_err"></div>
+  </form>
+</div>
+
+<!-- ADMIN (hidden until authenticated) -->
+<div id="app" hidden>
+  <div class="abar">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span class="brand"><span style="display:inline-block;width:11px;height:11px;background:var(--opal);transform:rotate(45deg)"></span> ARTIZIA</span>
+      <span class="tag">Product Admin</span>
+    </div>
+    <div class="abtns">
+      <span class="who" id="who"></span>
+      <button class="ab primary" id="addBtn">+ Add Product</button>
+      <a class="ab" href="collections.html" target="_blank">View Site ↗</a>
+      <button class="ab" id="themeBtn" title="Theme">☀</button>
+      <button class="ab danger" id="logoutBtn">Log out</button>
+    </div>
+  </div>
+  <div class="awrap">
+    <p class="abarmsg" id="msg"></p>
+    <div class="agrid" id="grid"></div>
+  </div>
+</div>
+
+<!-- editor drawer -->
+<div class="drawer" id="drawer">
+  <div class="scrim" id="scrim"></div>
+  <div class="panel">
+    <div class="dhead"><h2 id="dtitle">Edit Product</h2><button class="ab" id="closeBtn">✕ Close</button></div>
+    <div class="dbody">
+      <div class="grouplabel" style="margin-top:0;padding-top:0;border-top:0">Product Images</div>
+      <div class="uploads" id="uploads">
+        <div class="uslot" data-slot="0"><span class="uplus">＋</span><span class="uhint">Full Slab</span><span class="ulabel">Full Slab</span><button class="urm" title="Remove">✕</button></div>
+        <div class="uslot" data-slot="1"><span class="uplus">＋</span><span class="uhint">Close-up</span><span class="ulabel">Close-up</span><button class="urm" title="Remove">✕</button></div>
+        <div class="uslot" data-slot="2"><span class="uplus">＋</span><span class="uhint">Application</span><span class="ulabel">Application</span><button class="urm" title="Remove">✕</button></div>
+        <div class="uslot" data-slot="3"><span class="uplus">＋</span><span class="uhint">Detail</span><span class="ulabel">Detail</span><button class="urm" title="Remove">✕</button></div>
+      </div>
+      <p class="uploads-hint">Upload up to 4 photos. Uploaded to the server and auto-resized to 1500px. First image is the main slab shown everywhere.</p>
+      <input type="file" id="fileInput" accept="image/*" hidden>
+
+      <div class="grouplabel">Identity</div>
+      <div class="frow">
+        <div class="fld"><label>Slug / ID</label><input id="f_slug" placeholder="e.g. calacatta-gold"><span class="hint">lowercase-with-dashes · used in the URL</span></div>
+        <div class="fld"><label>Product Code</label><input id="f_code" placeholder="e.g. 4420"></div>
+      </div>
+      <div class="frow">
+        <div class="fld"><label>Name</label><input id="f_name" placeholder="Calacatta Gold"></div>
+        <div class="fld"><label>Collection</label><select id="f_coll"></select></div>
+      </div>
+      <div class="fld"><label>Description</label><textarea id="f_desc" rows="3" placeholder="A stunning blend of white and gold veining…"></textarea></div>
+
+      <div class="grouplabel">Design Details</div>
+      <div class="frow three">
+        <div class="fld"><label>Vein</label><input id="f_vein" placeholder="Long Vein"></div>
+        <div class="fld"><label>Grain</label><input id="f_grain" placeholder="Medium"></div>
+        <div class="fld"><label>Finish</label><input id="f_finish" placeholder="Polished"></div>
+      </div>
+      <div class="fld"><label>Thickness</label><input id="f_thickness" placeholder="20 · 30 mm"></div>
+      <div class="fld"><label>Applications (one per line)</label><textarea id="f_apps" rows="4" placeholder="Kitchen Countertop&#10;Bathroom Vanity"></textarea></div>
+      <p class="err" id="ferr"></p>
+    </div>
+    <div class="dfoot">
+      <button class="ab danger" id="delBtn">Delete</button>
+      <button class="ab primary" id="saveBtn" style="flex:1;justify-content:center">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/marble.js"></script>
+<script>
+(function(){
+  const GL=window.MarbleGL;const $=id=>document.getElementById(id);
+  const api = (url,opt)=>fetch(url,Object.assign({credentials:'same-origin'},opt));
+  const jsonHeaders={'Content-Type':'application/json'};
+
+  /* theme */
+  document.documentElement.setAttribute('data-theme',localStorage.getItem('artizia_theme')||'dark');
+  const setTheme=()=>$('themeBtn').textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀':'☾';setTheme();
+  $('themeBtn').addEventListener('click',()=>{const n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+    document.documentElement.setAttribute('data-theme',n);localStorage.setItem('artizia_theme',n);setTheme();});
+
+  const COLLS=window.COLLECTIONS.map(c=>c.key);
+  $('f_coll').innerHTML=COLLS.map(c=>`<option>${c}</option>`).join('');
+
+  let products=[];                      // live list from the API
+  const bySlug=s=>products.find(p=>p.slug===s);
+
+  /* hydrate window.MAT so marble fallback (imgFor) works for photo-less products */
+  function hydrate(){
+    Object.keys(window.MAT).forEach(k=>{if(!window.MAT[k].hidden)delete window.MAT[k];});
+    products.forEach(p=>{window.MAT[p.slug]=p;});
+  }
+
+  /* ---------- auth gate ---------- */
+  async function checkAuth(){
+    try{const r=await api('/api/admin/me');const j=await r.json();return j.authenticated?j.user:null;}catch(e){return null;}
+  }
+  function showApp(user){$('gate').style.display='none';$('app').hidden=false;$('who').textContent=user?('Signed in · '+user):'';loadProducts();}
+  function showGate(){$('app').hidden=true;$('gate').style.display='grid';$('lg_user').focus();}
+  $('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('lg_err').textContent='';$('lg_btn').textContent='Signing in…';
+    try{const r=await api('/api/admin/login',{method:'POST',headers:jsonHeaders,body:JSON.stringify({username:$('lg_user').value,password:$('lg_pass').value})});
+      const j=await r.json();
+      if(r.ok&&j.ok){showApp(j.user);}else{$('lg_err').textContent=j.error||'Login failed.';}
+    }catch(err){$('lg_err').textContent='Could not reach the server.';}
+    $('lg_btn').textContent='Sign In';});
+  $('logoutBtn').addEventListener('click',async()=>{await api('/api/admin/logout',{method:'POST'});showGate();});
+
+  /* ---------- product list ---------- */
+  async function loadProducts(){
+    try{const r=await api('/api/products');products=await r.json();}catch(e){products=[];}
+    hydrate();renderGrid();
+  }
+  function renderGrid(){
+    $('grid').innerHTML=products.map(m=>{const hasImg=(m.images||[]).some(Boolean);
+      const thumb=hasImg?`<img src="${m.images.find(Boolean)}" alt="${m.name}">`:GL.imgFor(m.slug,0);
+      return `<div class="aitem"><div class="thumb">${thumb}<span class="coll">${m.coll}</span>${hasImg?'':'<span class="noimg">Auto marble</span>'}</div>
+        <div class="meta"><span class="n">${m.name}</span><span class="c">No. ${m.code||'—'} · ${m.slug}</span></div>
+        <div class="row"><button data-edit="${m.slug}">Edit</button><button class="del" data-del="${m.slug}">Delete</button></div></div>`;}).join('')
+      || '<p class="abarmsg">No products yet. Click “Add Product”.</p>';
+    document.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>openEditor(b.dataset.edit)));
+    document.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>del(b.dataset.del)));
+    $('msg').textContent=products.length+' products · stored in the database and visible to every visitor.';
+  }
+
+  /* ---------- images ---------- */
+  let curImages=[null,null,null,null];let activeSlot=0;
+  function paintSlots(){
+    document.querySelectorAll('.uslot').forEach(el=>{const s=+el.dataset.slot;const src=curImages[s];
+      el.classList.toggle('filled',!!src);let img=el.querySelector('img');
+      if(src){if(!img){img=document.createElement('img');el.prepend(img);}img.src=src;}else if(img){img.remove();}});
+  }
+  document.querySelectorAll('.uslot').forEach(el=>{
+    el.addEventListener('click',e=>{if(e.target.classList.contains('urm'))return;activeSlot=+el.dataset.slot;$('fileInput').value='';$('fileInput').click();});
+    el.querySelector('.urm').addEventListener('click',e=>{e.stopPropagation();curImages[+el.dataset.slot]=null;paintSlots();});
+  });
+  $('fileInput').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;
+    const slotEl=document.querySelector('.uslot[data-slot="'+activeSlot+'"]');slotEl.classList.add('busy');
+    try{const fd=new FormData();fd.append('image',f);
+      const r=await api('/api/upload',{method:'POST',body:fd});const j=await r.json();
+      if(r.ok&&j.url){curImages[activeSlot]=j.url;paintSlots();}
+      else{alert(j.error||'Upload failed.');}
+    }catch(err){alert('Upload failed — are you still signed in?');}
+    slotEl.classList.remove('busy');});
+
+  /* ---------- editor ---------- */
+  const drawer=$('drawer');let editingSlug=null;let editingPalette=null;
+  function openEditor(slug){
+    editingSlug=slug;$('ferr').textContent='';
+    const m=slug?bySlug(slug):{coll:COLLS[0],finish:'Polished',thickness:'20 · 30 mm',
+      apps:['Kitchen Countertop','Bathroom Vanity','Shower Surround','Interior Cladding','Fireplace Mantel','Furniture Tops']};
+    editingPalette=m?{base:m.base,vein:m.vein,glow:m.glow,seed:m.seed,flow:m.flow,sharp:m.sharp,dark:m.dark}:null;
+    $('dtitle').textContent=slug?'Edit — '+m.name:'Add New Product';
+    $('f_slug').value=slug||'';$('f_slug').readOnly=!!slug;
+    $('f_code').value=m.code||'';$('f_name').value=m.name||'';$('f_coll').value=m.coll||COLLS[0];
+    $('f_desc').value=m.desc||'';$('f_vein').value=m.veinText||'';$('f_grain').value=m.grain||'';
+    $('f_finish').value=m.finish||'Polished';$('f_thickness').value=m.thickness||'20 · 30 mm';
+    $('f_apps').value=(m.apps||[]).join('\n');
+    curImages=[0,1,2,3].map(i=>(m.images&&m.images[i])||null);paintSlots();
+    drawer.classList.add('open');
+  }
+  function closeEditor(){drawer.classList.remove('open');}
+  $('closeBtn').addEventListener('click',closeEditor);$('scrim').addEventListener('click',closeEditor);
+  $('addBtn').addEventListener('click',()=>openEditor(null));
+  $('delBtn').addEventListener('click',()=>{if(editingSlug)del(editingSlug);});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeEditor();});
+
+  const slugify=v=>(v||'').trim().toLowerCase().replace(/[^a-z0-9-]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  $('saveBtn').addEventListener('click',async()=>{
+    const slug=slugify($('f_slug').value);const name=$('f_name').value.trim();
+    if(!slug){$('ferr').textContent='Slug is required.';return;}
+    if(!name){$('ferr').textContent='Name is required.';return;}
+    const pal=editingPalette&&editingPalette.base?editingPalette:{base:'#d8d4cd',vein:'#8f8a80',glow:'#cbc4b6',seed:Math.floor(Math.random()*90)+5,flow:.65,sharp:.6,dark:.55};
+    const body=Object.assign({
+      slug,code:$('f_code').value.trim(),name,coll:$('f_coll').value,desc:$('f_desc').value.trim(),
+      veinText:$('f_vein').value.trim(),grain:$('f_grain').value.trim(),
+      finish:$('f_finish').value.trim()||'Polished',thickness:$('f_thickness').value.trim()||'20 · 30 mm',
+      apps:$('f_apps').value.split('\n').map(s=>s.trim()).filter(Boolean),
+      images:curImages.map(x=>x||'')
+    },pal);
+    $('saveBtn').textContent='Saving…';
+    try{
+      const url=editingSlug?('/api/products/'+editingSlug):'/api/products';
+      const method=editingSlug?'PUT':'POST';
+      const r=await api(url,{method,headers:jsonHeaders,body:JSON.stringify(body)});
+      const j=await r.json();
+      if(r.ok){closeEditor();await loadProducts();}
+      else{$('ferr').textContent=j.error||'Save failed.';}
+    }catch(err){$('ferr').textContent='Could not reach the server.';}
+    $('saveBtn').textContent='Save Product';
+  });
+  async function del(slug){const m=bySlug(slug);if(!confirm('Delete “'+(m?m.name:slug)+'”? This is permanent.'))return;
+    try{const r=await api('/api/products/'+slug,{method:'DELETE'});if(r.ok){closeEditor();await loadProducts();}else{const j=await r.json();alert(j.error||'Delete failed.');}}
+    catch(err){alert('Could not reach the server.');}}
+
+  /* ---------- boot ---------- */
+  checkAuth().then(user=>{user?showApp(user):showGate();});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Surface — Artizia Quartz</title>
+<meta name="description" content="Explore this Artizia engineered quartz surface — design details, applications, technical specifications and free samples.">
+<link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="collections">
+
+<!--
+═══════════════════════════════════════════════════════════════════════
+  PRODUCT PAGE CONTENT  —  EDIT EVERYTHING HERE
+═══════════════════════════════════════════════════════════════════════
+  The name, description, specs and photos of each product are NOT here —
+  they come from the database.  Edit those in the admin panel: /admin.html
+
+  What you CAN change below is the wording that surrounds every product.
+═══════════════════════════════════════════════════════════════════════
+-->
+<script>
+window.PRODUCT_PAGE = {
+
+  /* labels under each gallery thumbnail, in upload order */
+  slotLabels: ["Full Slab", "Close-up", "Application", "Detail"],
+
+  /* the note under the sample buttons */
+  sampleNote: "Free samples · Ships in 5–7 days · Up to 4 per order",
+
+  /* one line per application card, matched to the product's application list */
+  applicationBlurbs: [
+    "Heat- and stain-resistant for the hardest-working surface at home.",
+    "Non-porous — resists moisture, soap and daily wear.",
+    "Seamless veined cladding for a spa-grade finish.",
+    "Feature walls that carry stone drama at scale.",
+    "Withstands heat while holding its polish and tone.",
+    "Tables and consoles built to outlast trends."
+  ],
+
+  /* the care & warranty accordion */
+  care: {
+    text:     "Clean with a soft cloth, warm water and mild detergent. Avoid harsh chemicals and abrasive pads; use trivets under hot cookware and boards when cutting.",
+    warranty: "Backed by a <b style=\"color:var(--accent)\">Lifetime Warranty</b> against manufacturing defects — resisting scratches, stains, heat, household chemicals, mould and mildew. <a href=\"warranty.html\" style=\"color:var(--accent)\">Full terms →</a>"
+  }
+};
+</script>
+
+<section class="page-hero compact" id="phero">
+  <div class="ph-vis"><canvas id="phgl"></canvas></div>
+  <div class="wrap">
+    <div class="crumb" id="crumb" style="padding:0 0 18px"></div>
+    <span class="eyebrow" id="pheye"></span>
+    <h1 id="phtitle" style="font-size:clamp(40px,6vw,80px);line-height:.96;margin-top:16px"></h1>
+  </div>
+</section>
+<div class="wrap"><div class="pdp">
+  <div class="pgal">
+    <div class="pmain" id="pmain"></div>
+    <div class="pthumbs" id="pthumbs"></div>
+  </div>
+  <div class="pinfo" id="pinfo"></div>
+</div></div>
+
+<div class="wrap"><div class="psec" id="psec"></div></div>
+
+<section class="pad"><div class="wrap">
+  <div class="sec-head rv" style="margin-bottom:36px"><span class="eyebrow">Pairs Well With</span><h2>Complete <em>the palette.</em></h2></div>
+  <div class="pairs" id="pairs"></div>
+</div></section>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/marble.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const GL=window.MarbleGL,MAT=window.MAT,dpr=GL.dpr,reduce=GL.reduce;
+  const PP=window.PRODUCT_PAGE||{};
+  const params=new URLSearchParams(location.search);
+  const slug=params.get('p');
+  (window.ArtiziaData ? window.ArtiziaData.ready : Promise.resolve()).then(render);
+  function render(){
+  let key=slug; if(!MAT[key]||MAT[key].hidden){ key=(window.productList&&window.productList()[0])||'calacatta-gold'; }
+  const m=MAT[key];
+  if(!m){ document.querySelector('.pdp').innerHTML='<p style="padding:60px 0;color:var(--text-dim);font-family:var(--mono)">Product not found. <a href="collections.html" style="color:var(--accent)">Back to collections →</a></p>'; return; }
+  document.title=m.name+' — Artizia Quartz';
+
+  document.getElementById('crumb').innerHTML=`<a href="index.html">Home</a><span>/</span><a href="collections.html">Collections</a><span>/</span><a href="collections.html?c=${m.coll}">${m.coll}</a><span>/</span><b>${m.name}</b>`;
+
+  /* banner heading */
+  document.getElementById('pheye').textContent=m.coll+' Collection';
+  document.getElementById('phtitle').textContent=m.name;
+
+  /* info */
+  document.getElementById('pinfo').innerHTML=`
+    <div class="code">NO. ${m.code} · QUARTZ SURFACE</div>
+    <p class="pdesc">${m.desc}</p>
+    <div class="scg">
+      <div class="s"><div class="k">Vein</div><div class="v">${m.veinText||m.vein}</div></div>
+      <div class="s"><div class="k">Grain</div><div class="v">${m.grain}</div></div>
+      <div class="s"><div class="k">Finish</div><div class="v">${m.finish}</div></div>
+      <div class="s"><div class="k">Thickness</div><div class="v">${m.thickness}</div></div>
+    </div>
+    <div class="pact">
+      <a class="btn btn-fill mag" href="#" id="addBtn"><span>Add Free Sample <span class="arw">→</span></span></a>
+      <a class="btn btn-line mag" href="#" id="quoteBtn"><span>Get a Quote</span></a>
+    </div>
+    <div class="pnote">${PP.sampleNote||''}</div>`;
+
+  /* gallery — uploaded photos when present, else generated marble */
+  const SLOT_LABELS=PP.slotLabels||['Full Slab','Close-up','Application','Detail'];
+  const photos=(m.images||[]).map((src,i)=>src?{src,lbl:SLOT_LABELS[i]}:null).filter(Boolean);
+  const hasPhotos=photos.length>0;
+  const views = hasPhotos
+    ? photos.map(p=>({type:'photo',src:p.src,lbl:p.lbl}))
+    : [{type:'live',lbl:'Full Slab'},{type:'img',seed:40,lbl:'Macro'},{type:'room',lbl:'In Kitchen'},{type:'img',seed:80,lbl:'Detail'}];
+  let liveCanvas=null,liveCtx=null;
+  function viewHTML(v){
+    if(v.type==='photo')return `<img src="${v.src}" alt="${m.name}">`;
+    if(v.type==='room')return GL.roomHTML(key);
+    if(v.type==='live')return '<canvas id="pmain-gl"></canvas>';
+    return GL.imgTag(key,v.seed);
+  }
+  function thumbHTML(v){
+    if(v.type==='photo')return `<img src="${v.src}" alt="${m.name}">`;
+    if(v.type==='room')return GL.roomHTML(key);
+    return GL.imgTag(key,v.seed||0);
+  }
+  document.getElementById('pthumbs').innerHTML=views.map((v,i)=>`<div class="pth ${i?'':'active'}" data-i="${i}">${thumbHTML(v)}<span class="tl">${v.lbl}</span></div>`).join('');
+  /* Hover to magnify the slab. Moving transform-origin to the cursor means the
+     pixel under the pointer is the one that grows. Only photos zoom — the live
+     WebGL canvas and the room render are not images. */
+  const ZOOM=2.4;
+  function bindZoom(main,on){
+    main.classList.remove('zoomable','zooming');
+    const img=main.querySelector('img');
+    if(!img||!on||GL.reduce||!matchMedia('(hover:hover)').matches){main.style.removeProperty('--z');return;}
+    main.classList.add('zoomable');
+    main.insertAdjacentHTML('beforeend','<span class="zhint">Hover to zoom</span>');
+    const track=e=>{
+      const r=main.getBoundingClientRect();
+      const x=Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100));
+      const y=Math.max(0,Math.min(100,(e.clientY-r.top)/r.height*100));
+      img.style.transformOrigin=x+'% '+y+'%';
+    };
+    main.addEventListener('pointerenter',e=>{
+      if(e.pointerType!=='mouse') return;
+      track(e); main.classList.add('zooming'); img.style.transform='scale('+ZOOM+')';
+    });
+    main.addEventListener('pointermove',e=>{ if(main.classList.contains('zooming')) track(e); });
+    main.addEventListener('pointerleave',()=>{
+      main.classList.remove('zooming'); img.style.transform='';
+    });
+  }
+  function setMain(i){const v=views[i];const main=document.getElementById('pmain');
+    main.innerHTML=viewHTML(v);
+    if(v.type==='live'){liveCanvas=document.getElementById('pmain-gl');liveCtx=GL.makeGL(liveCanvas);}else{liveCanvas=null;}
+    bindZoom(main, v.type==='photo');
+    document.querySelectorAll('.pth').forEach((t,j)=>t.classList.toggle('active',j===i));}
+  document.getElementById('pthumbs').addEventListener('click',e=>{const t=e.target.closest('.pth');if(t)setMain(+t.dataset.i);});
+  setMain(0);
+
+  /* sections */
+  const specs=window.SPECS.map(s=>`<tr><td>${s[0]}</td><td class="st">${s[1]}</td><td class="rs">${s[2]}</td></tr>`).join('');
+  const appD=PP.applicationBlurbs||[];
+  const apps=m.apps.map((a,i)=>`<div class="app"><div><span class="an">0${i+1}</span><h4>${a}</h4></div><p>${appD[i]||''}</p></div>`).join('');
+  document.getElementById('psec').innerHTML=`
+    <details class="acc" open><summary>Where it lives <span class="pm">+</span></summary><div class="body"><div class="apps">${apps}</div></div></details>
+    <details class="acc" open><summary>Technical details <span class="pm">+</span></summary><div class="body"><div class="spwrap"><table class="sp"><thead><tr><th>Property</th><th>Test Standard</th><th style="text-align:right">Result</th></tr></thead><tbody>${specs}</tbody></table></div></div></details>
+    <details class="acc"><summary>Care &amp; warranty <span class="pm">+</span></summary><div class="body">
+      <p style="margin-bottom:14px">${(PP.care||{}).text||''}</p>
+      <p>${(PP.care||{}).warranty||''}</p></div></details>`;
+
+  /* pairs — other surfaces, prefer same collection then others */
+  const pool=window.productList().filter(k=>k!==key);
+  const same=pool.filter(k=>MAT[k].coll===m.coll);
+  const pairs=(same.concat(pool).filter((v,i,a)=>a.indexOf(v)===i)).slice(0,3);
+  document.getElementById('pairs').innerHTML=pairs.map(k=>`<a class="pair" href="product.html?p=${k}"><div class="frame">${GL.imgFor(k,0)}</div><div class="pn">${MAT[k].name}</div><div class="pc">${MAT[k].coll} Collection</div></a>`).join('');
+
+  window.Artizia.refresh();
+  document.getElementById('addBtn').addEventListener('click',e=>{e.preventDefault();window.addSample(key,e.currentTarget);});
+  document.getElementById('quoteBtn').addEventListener('click',e=>{e.preventDefault();window.openModal('quote');});
+
+  /* banner header — uploaded photo if present, else live marble canvas */
+  const bannerPhoto=hasPhotos?photos[0].src:null;
+  let phCanvas=null,phCtx=null;
+  if(bannerPhoto){
+    document.querySelector('#phero .ph-vis').innerHTML=`<img src="${bannerPhoto}" alt="${m.name}">`;
+  }else{
+    phCanvas=document.getElementById('phgl');phCtx=GL.makeGL(phCanvas);
+  }
+
+  /* live loop (only needed for marble canvases) */
+  let t0=performance.now();
+  function loop(now){const time=(now-t0)/1000;
+    if(liveCtx&&liveCanvas&&liveCanvas.clientWidth)GL.draw(liveCtx,liveCanvas,m,time,dpr,1);
+    if(phCtx&&phCanvas.clientWidth)GL.draw(phCtx,phCanvas,m,time,dpr,1.5);
+    if(!reduce)requestAnimationFrame(loop);}
+  if(phCtx)GL.draw(phCtx,phCanvas,m,0,dpr,1.5);
+  if(!hasPhotos||liveCtx||phCtx)requestAnimationFrame(loop);
+  } /* end render() */
+})();
+</script>
+</body>
+</html>

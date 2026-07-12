@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warranty — Artizia Quartz</title>
+<meta name="description" content="Every Artizia engineered quartz surface is backed by a Lifetime Warranty against manufacturing defects — scratches, stains, heat, chemicals, mould and mildew.">
+<link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="warranty">
+
+<!--
+═══════════════════════════════════════════════════════════════════════
+  WARRANTY PAGE CONTENT  —  EDIT EVERYTHING HERE
+═══════════════════════════════════════════════════════════════════════
+  IMAGES  put files in  assets/img/  then write  "assets/img/name.jpg"
+  Leave  image: ""  and a live marble texture is used instead.
+
+  In the comparison table each cell is  ["label", true|false]
+  true  renders a filled ● in accent, false renders a hollow ○.
+═══════════════════════════════════════════════════════════════════════
+-->
+<script>
+window.PAGE = {
+
+  /* ---- banner behind the page heading ---- */
+  banner: {
+    image:    "",                       /* e.g. "assets/img/warranty-banner.jpg" */
+    alt:      "Artizia quartz surface",
+    fallback: "calacatta-gold",
+    zoom:     1.4,
+    eyebrow:  "Resources · Warranty",
+    title:    "Engineered to last <em>a lifetime.</em>",
+    lead:     "Non-porous, low-maintenance and built to endure — every Artizia surface is backed by a Lifetime Warranty against manufacturing defects."
+  },
+
+  /* ---- what's covered (six cards) ---- */
+  covers: [
+    { title: "Scratches",       text: "Mohs hardness 6.5–7.5 stands up to everyday knocks and abrasion." },
+    { title: "Stains",          text: "Non-porous surface — spills wipe away without soaking in." },
+    { title: "Heat",            text: "Rated Class A for surface burning; use trivets for direct cookware." },
+    { title: "Chemicals",       text: "Resists household chemicals, acids and solvents (Class C4)." },
+    { title: "Mould &amp; Mildew", text: "Non-porous and hygienic — nowhere for bacteria to grow." },
+    { title: "Time",            text: "Colour and finish engineered to stay true for the life of the surface." }
+  ],
+
+  /* ---- comparison table ---- */
+  compare: {
+    columns: ["Artizia Quartz", "Granite", "Laminate", "Solid Surface"],
+    rows: [
+      { feature: "Non-porous",         cells: [["Yes", true], ["Sealing needed", false], ["No", false], ["Yes", true]] },
+      { feature: "Scratch resistance", cells: [["High", true], ["High", true], ["Low", false], ["Medium", false]] },
+      { feature: "Heat resistance",    cells: [["Class A", true], ["High", true], ["Low", false], ["Low", false]] },
+      { feature: "Maintenance",        cells: [["Low", true], ["Periodic sealing", false], ["Low", true], ["Low", true]] },
+      { feature: "Lifetime warranty",  cells: [["Yes", true], ["Varies", false], ["No", false], ["Varies", false]] }
+    ]
+  },
+
+  /* ---- the fine print ---- */
+  terms: {
+    eyebrow: "The Fine Print",
+    title:   "Terms &amp; conditions.",
+    body: [
+      "The Artizia Lifetime Warranty covers manufacturing defects in material and workmanship for the original purchaser, in normal residential use, when the surface is professionally installed by a certified partner.",
+      "<b>Not covered:</b> damage from misuse, impact, extreme heat without trivets, improper installation, alteration, or use of abrasive/harsh chemical cleaners. Natural variation in colour and veining is a feature of engineered stone, not a defect.",
+      "To register a claim, contact us with your proof of purchase and installation details. Full warranty documentation is provided with every order."
+    ]
+  }
+};
+</script>
+
+<section class="page-hero">
+  <div class="ph-vis"></div>
+  <div class="wrap">
+    <span class="eyebrow"></span>
+    <h1></h1>
+    <p class="lead"></p>
+  </div>
+</section>
+
+<section class="pad" style="padding-top:clamp(20px,4vw,50px)"><div class="wrap">
+  <div class="sec-head rv" style="margin-bottom:36px"><span class="eyebrow">What's Covered</span><h2>Your surface resists.</h2></div>
+  <div class="value-grid rv" id="covers"></div>
+</div></section>
+
+<section class="pad" style="padding-top:0"><div class="wrap">
+  <div class="sec-head rv" style="margin-bottom:36px"><span class="eyebrow">How It Compares</span><h2>Not all surfaces <em>are equal.</em></h2></div>
+  <div class="compare rv"><table class="cmp">
+    <thead><tr id="cmpHead"></tr></thead>
+    <tbody id="cmpBody"></tbody>
+  </table></div>
+</div></section>
+
+<section class="pad" style="padding-top:0"><div class="wrap"><div class="prose rv">
+  <span class="eyebrow" id="tEye"></span>
+  <h3 id="tTitle"></h3>
+  <div id="tBody"></div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-fill mag" href="contact.html"><span>Register a Claim →</span></a><a class="btn btn-line mag" href="care-and-maintenance.html"><span>Care Guide</span></a></div>
+</div></div></section>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/marble.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const P=window.PAGE,$=id=>document.getElementById(id);
+
+  $('covers').innerHTML=(P.covers||[]).map(c=>`<div class="value-cell"><span class="vi">✦</span><h4>${c.title}</h4><p>${c.text}</p></div>`).join('');
+
+  const cmp=P.compare||{columns:[],rows:[]};
+  $('cmpHead').innerHTML=`<th>Feature</th>`+cmp.columns.map((c,i)=>`<th${i===0?' class="col-artizia"':''}>${c}</th>`).join('');
+  $('cmpBody').innerHTML=cmp.rows.map(r=>`<tr><th>${r.feature}</th>`+r.cells.map(([label,ok],i)=>
+    `<td${i===0?' class="col-artizia"':''}><span class="${ok?'yes':'no'}">${ok?'●':'○'} ${label}</span></td>`).join('')+`</tr>`).join('');
+
+  const t=P.terms||{};
+  $('tEye').textContent=t.eyebrow||''; $('tTitle').innerHTML=t.title||'';
+  $('tBody').innerHTML=(t.body||[]).map(p=>`<p>${p}</p>`).join('');
+
+  window.Artizia.refresh();
+})();
+</script>
+</body>
+</html>

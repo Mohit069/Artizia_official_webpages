@@ -1,0 +1,20 @@
+{
+  "name": "artizia-website",
+  "version": "1.0.0",
+  "description": "Artizia — premium engineered quartz website with Node/Express/SQLite backend",
+  "private": true,
+  "scripts": {
+    "dev": "node --watch --disable-warning=ExperimentalWarning server/server.js",
+    "start": "node --disable-warning=ExperimentalWarning server/server.js",
+    "seed": "node --disable-warning=ExperimentalWarning server/db/seed.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "multer": "^2.2.0",
+    "sharp": "^0.35.3"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1"
+  }
+}

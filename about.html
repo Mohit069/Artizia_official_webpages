@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About — Artizia Quartz</title>
+<meta name="description" content="Artizia emerged from Marudhar Quartz's 35-year heritage — bringing world-class engineered stone to India with European minimalism and Indian warmth.">
+<link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="about">
+
+<!--
+═══════════════════════════════════════════════════════════════════════
+  ABOUT PAGE CONTENT  —  EDIT EVERYTHING HERE
+═══════════════════════════════════════════════════════════════════════
+  IMAGES  put files in  assets/img/  then write  "assets/img/name.jpg"
+  Leave  image: ""  and a live marble texture is used instead.
+  <em>…</em> inside a title renders in the accent italic.
+═══════════════════════════════════════════════════════════════════════
+-->
+<script>
+window.PAGE = {
+
+  /* ---- banner behind the page heading ---- */
+  banner: {
+    image:    "",                       /* e.g. "assets/img/about-banner.jpg" */
+    alt:      "Artizia quartz surface",
+    fallback: "hero",
+    zoom:     1.4,
+    eyebrow:  "Our Story",
+    title:    "Quiet craft,<br><em>bold vision.</em>",
+    lead:     "Where global craftsmanship meets Indian design sensibility — 35 years of engineered-stone heritage, now brought home to India."
+  },
+
+  /* ---- the origin story + its photo ---- */
+  story: {
+    image:    "",                       /* e.g. "assets/img/factory-floor.jpg" */
+    alt:      "Artizia manufacturing in Jaipur",
+    fallback: "calacatta-valleta",
+    zoom:     1,
+    badge:    "Marudhar Quartz · Est. Heritage",
+    eyebrow:  "The Origin",
+    title:    "From a trusted global supplier to an Indian original.",
+    body: [
+      "Artizia emerged from <b>Marudhar Quartz's 35-year heritage</b> as a trusted engineered-stone supplier to North American, UK and Australian markets. Today we bring that expertise home — transforming how India approaches surfaces and interior design.",
+      "We hold <b>25%+ of India's quartz export share</b>, produce <b>38 million square feet</b> annually, and craft every slab on <b>Breton technology</b> — the global benchmark for engineered stone."
+    ]
+  },
+
+  /* ---- the big animated philosophy line ---- */
+  manifesto: "Advanced technology and timeless artistry, creating quartz that doesn't just function but <em>inspires.</em>",
+
+  /* ---- core values (three cards) ---- */
+  values: [
+    { title: "Artistry",     text: "Blending European minimalism with Indian warmth — design that feels natural, comforting and considered." },
+    { title: "Precision",    text: "Breton-engineered consistency in colour, density and strength, slab after slab after slab." },
+    { title: "Timelessness", text: "Surfaces built to last a lifetime — relevant and beautiful long after trends have moved on." }
+  ],
+
+  /* ---- foundations (numbered list) ---- */
+  foundations: [
+    { title: "Craftsmanship",  text: "Precision-made surfaces that reflect intention and quality." },
+    { title: "Innovation",     text: "Breton technology enabling consistent, durable, design-forward surfaces." },
+    { title: "Trust",          text: "Built on decades of global partnerships and reliability." },
+    { title: "Aesthetics",     text: "European minimalism blended with Indian warmth." },
+    { title: "Sustainability", text: "Zero-discharge manufacturing, VOC-free materials and long-lasting design." }
+  ],
+
+  /* ---- the counting statistics ---- */
+  stats: [
+    { value: 38, suffix: "M sq ft", label: "Produced Annually" },
+    { value: 35, suffix: "years",   label: "Of Heritage" },
+    { value: 25, suffix: "%+",      label: "Of India's Exports" },
+    { value: 26, suffix: "designs", label: "Across Four Collections" }
+  ],
+
+  /* ---- closing call-to-action ---- */
+  cta: {
+    eyebrow: "See it for Yourself",
+    title:   "Explore the <em>collections.</em>",
+    text:    "26 engineered quartz surfaces across four collections — each built to last a lifetime."
+  }
+};
+</script>
+
+<section class="page-hero">
+  <div class="ph-vis"></div>
+  <div class="wrap">
+    <span class="eyebrow"></span>
+    <h1></h1>
+    <p class="lead"></p>
+  </div>
+</section>
+
+<section class="pad" style="padding-top:clamp(20px,4vw,50px)"><div class="wrap"><div class="grid-2">
+  <div class="feat-vis rv" id="storyVis"></div>
+  <div class="prose rv d1">
+    <span class="eyebrow" id="storyEye"></span>
+    <h3 id="storyTitle"></h3>
+    <div id="storyBody"></div>
+  </div>
+</div></div></section>
+
+<section class="mani pad"><div class="wrap">
+  <p class="eyebrow rv" style="margin-bottom:34px">Our Philosophy</p>
+  <p class="mani-big" id="mani"></p>
+</div></section>
+
+<section class="pad"><div class="wrap">
+  <div class="sec-head rv" style="margin-bottom:44px"><span class="eyebrow">Core Values</span><h2>Three things <em>we hold to.</em></h2></div>
+  <div class="value-grid rv" id="values"></div>
+</div></section>
+
+<section class="pad" style="padding-top:0"><div class="wrap">
+  <div class="sec-head rv" style="margin-bottom:8px"><span class="eyebrow">What We Stand On</span><h2>Five foundations.</h2></div>
+  <div class="why-list" id="foundations"></div>
+</div></section>
+
+<section class="pad" style="padding-top:0"><div class="wrap"><div class="stats-grid" id="stats"></div></div></section>
+
+<section class="cta pad"><div class="wrap rv">
+  <span class="eyebrow center" id="ctaEye"></span>
+  <h2 style="margin-top:22px" id="ctaTitle"></h2>
+  <p id="ctaText"></p>
+  <div class="row"><a class="btn btn-fill mag" href="collections.html"><span>View Collections <span class="arw">→</span></span></a>
+    <a class="btn btn-line mag" href="contact.html"><span>Contact Us</span></a></div>
+</div></section>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/marble.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const P=window.PAGE,A=window.Artizia,$=id=>document.getElementById(id);
+  const pad=n=>String(n).padStart(2,'0');
+
+  /* origin story */
+  const s=P.story||{};
+  A.visual($('storyVis'),s);
+  if(s.badge) $('storyVis').insertAdjacentHTML('beforeend',`<span class="badge">${s.badge}</span>`);
+  $('storyEye').textContent=s.eyebrow||''; $('storyTitle').textContent=s.title||'';
+  $('storyBody').innerHTML=(s.body||[]).map(p=>`<p>${p}</p>`).join('');
+
+  $('values').innerHTML=(P.values||[]).map((v,i)=>`<div class="value-cell"><span class="vi">${pad(i+1)}</span><h4>${v.title}</h4><p>${v.text}</p></div>`).join('');
+  $('foundations').innerHTML=(P.foundations||[]).map((f,i)=>`<div class="why-row rv"><span class="i">${pad(i+1)}</span><h4>${f.title}</h4><p>${f.text}</p></div>`).join('');
+  $('stats').innerHTML=(P.stats||[]).map((st,i)=>`<div class="stat rv${i?' d'+i:''}"><div class="num" data-to="${st.value}"><span class="v">0</span><span class="suf">${st.suffix}</span></div><div class="lbl">${st.label}</div></div>`).join('');
+
+  const c=P.cta||{}; $('ctaEye').textContent=c.eyebrow||''; $('ctaTitle').innerHTML=c.title||''; $('ctaText').textContent=c.text||'';
+
+  /* manifesto text must be in the DOM before it is split into words */
+  $('mani').innerHTML=P.manifesto||'';
+  A.initManifesto($('mani'));
+  A.refresh();   /* .stat counters are started by the shared reveal observer */
+})();
+</script>
+</body>
+</html>
