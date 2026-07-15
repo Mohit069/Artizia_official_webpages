@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- served from nested URLs (/p/<slug>, /blog/<slug>): without this, every
+     relative link in the shared nav and footer would resolve one level deep -->
+<base href="/">
+<title>Journal — Artizia Quartz</title>
+<meta name="description" content="Design notes, project stories and technical guidance on engineered quartz surfaces — from the Artizia team in Jaipur.">
+<link rel="icon" type="image/png" href="/assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="/assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body data-page="blog">
+
+<!--
+═══════════════════════════════════════════════════════════════════════
+  BLOG INDEX — articles come from the database (admin → Blog tab).
+  Only the heading below is editable here.
+═══════════════════════════════════════════════════════════════════════
+-->
+<script>
+window.PAGE = {
+  banner: {
+    image:    "",
+    alt:      "Artizia quartz surface",
+    fallback: "calacatta-valleta",
+    zoom:     1.4,
+    eyebrow:  "The Journal",
+    title:    "Notes on <em>stone.</em>",
+    lead:     "Design thinking, project stories and straight answers about engineered quartz."
+  }
+};
+</script>
+
+<section class="page-hero">
+  <div class="ph-vis"></div>
+  <div class="wrap">
+    <span class="eyebrow"></span>
+    <h1></h1>
+    <p class="lead"></p>
+  </div>
+</section>
+
+<section class="pad" style="padding-top:clamp(28px,5vw,60px)"><div class="wrap">
+  <div class="tagbar" id="tagbar"></div>
+  <div class="post-grid" id="posts"></div>
+  <nav class="pager" id="pager" aria-label="Article pages" hidden></nav>
+  <p class="mono" id="empty" hidden style="color:var(--text-faint);text-align:center;padding:60px 0">
+    No articles published yet.
+  </p>
+</div></section>
+
+<script src="/assets/js/data.js"></script>
+<script src="/assets/js/marble.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+(function(){
+  const A=window.Artizia, $=id=>document.getElementById(id);
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+  const date=d=>d?new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
+
+  const PER_PAGE=9;                       /* three columns × three rows */
+  let all=[], tag='All', page=1;
+
+  /* an article saved without a cover would otherwise show an empty grey box — give
+     it a generated slab instead. Keys come from the live catalogue, not a hard-coded
+     list: the product slugs change as the admin adds and removes designs, and a
+     stale key silently collapses every card onto the same image. */
+  function cover(p,i){
+    if(p.cover) return `<img src="${esc(p.cover)}" alt="${esc(p.title)}" loading="lazy">`;
+    const keys=Object.keys(window.MAT||{}).filter(k=>k!=='hero');
+    if(!keys.length||!window.MarbleGL) return '';
+    return window.MarbleGL.imgTag(keys[i%keys.length], i);
+  }
+  function card(p,i){
+    return `<a class="pcardx rv" href="/blog/${esc(p.slug)}">
+      <div class="pc-img">${cover(p,i)}</div>
+      <div class="pc-body">
+        <span class="pc-date">${esc(date(p.publishedAt))}${p.tags&&p.tags.length?' · '+esc(p.tags[0]):''}</span>
+        <h3>${esc(p.title)}</h3>
+        <p>${esc(p.excerpt||'')}</p>
+        <span class="pc-go">Read <span class="arw">→</span></span>
+      </div></a>`;
+  }
+
+  const filtered=()=> tag==='All' ? all : all.filter(p=>(p.tags||[]).includes(tag));
+
+  /* 1 … 4 5 [6] 7 8 … 12 — always the ends, always the neighbours, gaps elided */
+  function pageNumbers(total){
+    const out=[], near=n=>n===1||n===total||Math.abs(n-page)<=1;
+    for(let n=1;n<=total;n++){
+      if(near(n)) out.push(n);
+      else if(out[out.length-1]!=='…') out.push('…');
+    }
+    return out;
+  }
+  function paintPager(total){
+    const bar=$('pager');
+    bar.hidden = total<2;                 /* one page needs no controls */
+    if(total<2){ bar.innerHTML=''; return; }
+    bar.innerHTML=
+      `<button class="pg-arw" data-go="${page-1}" ${page===1?'disabled':''} aria-label="Previous page">←</button>`+
+      pageNumbers(total).map(n=> n==='…'
+        ? `<span class="pg-gap">…</span>`
+        : `<button class="pg-n${n===page?' on':''}" data-go="${n}"${n===page?' aria-current="page"':''}>${n}</button>`).join('')+
+      `<button class="pg-arw" data-go="${page+1}" ${page===total?'disabled':''} aria-label="Next page">→</button>`;
+  }
+
+  function paint(scroll){
+    const list=filtered();
+    const total=Math.max(1,Math.ceil(list.length/PER_PAGE));
+    if(page>total) page=total;            /* a tag filter can strand you past the end */
+    const start=(page-1)*PER_PAGE;
+    $('posts').innerHTML=list.slice(start,start+PER_PAGE).map(card).join('');
+    paintPager(total);
+    $('empty').hidden=list.length>0;
+    /* keep the page in the URL so a paged view can be linked and survives reload */
+    const q=new URLSearchParams();
+    if(tag!=='All') q.set('tag',tag);
+    if(page>1) q.set('page',page);
+    history.replaceState(null,'',q.toString()?'?'+q:location.pathname);
+    if(scroll) $('posts').scrollIntoView({behavior:window.MarbleGL.reduce?'auto':'smooth',block:'start'});
+    A.refresh();
+  }
+
+  /* wait for the catalogue too — cover() reads window.MAT, which app.js hydrates
+     from /api/products asynchronously */
+  Promise.all([
+    fetch('/api/posts').then(r=>r.json()),
+    (window.ArtiziaData&&window.ArtiziaData.ready)||Promise.resolve()
+  ]).then(([list])=>{
+    all=Array.isArray(list)?list:[];
+    if(!all.length){ $('empty').hidden=false; A.refresh(); return; }
+
+    const q=new URLSearchParams(location.search);
+    const tags=['All',...new Set(all.flatMap(p=>p.tags||[]))];
+    if(tags.includes(q.get('tag'))) tag=q.get('tag');
+    page=Math.max(1,parseInt(q.get('page'),10)||1);
+
+    $('tagbar').innerHTML=tags.length>1
+      ? tags.map(t=>`<button class="${t===tag?'on':''}" data-t="${esc(t)}">${esc(t)}</button>`).join('') : '';
+    $('tagbar').addEventListener('click',e=>{
+      const b=e.target.closest('[data-t]'); if(!b) return;
+      tag=b.dataset.t; page=1;            /* a new filter starts at its own page 1 */
+      document.querySelectorAll('#tagbar button').forEach(x=>x.classList.toggle('on',x===b));
+      paint();
+    });
+    $('pager').addEventListener('click',e=>{
+      const b=e.target.closest('[data-go]'); if(!b||b.disabled) return;
+      page=+b.dataset.go; paint(true);
+    });
+    paint();
+  }).catch(()=>{ $('empty').hidden=false; A.refresh(); });
+})();
+</script>
+</body>
+</html>

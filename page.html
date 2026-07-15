@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- served from nested URLs (/p/<slug>, /blog/<slug>): without this, every
+     relative link in the shared nav and footer would resolve one level deep -->
+<base href="/">
+<title>Artizia</title>
+<link rel="icon" type="image/png" href="/assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="/assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<!--
+═══════════════════════════════════════════════════════════════════════
+  GENERIC PAGE — do not edit content here.
+  This template renders any page built in the admin panel (Pages tab).
+  The blocks come from the database; the markup comes from
+  assets/js/blocks.js, which the admin editor also reads.
+  URL:  /p/<slug>     (or page.html?p=<slug>)
+═══════════════════════════════════════════════════════════════════════
+-->
+<body data-page="dynamic">
+
+<main id="blocks"></main>
+
+<section class="pad" id="notFound" hidden><div class="wrap" style="text-align:center">
+  <span class="eyebrow center">404</span>
+  <h1 style="font-size:clamp(34px,6vw,72px);margin:20px 0">Page <em style="font-style:italic;color:var(--accent)">not found.</em></h1>
+  <p style="color:var(--text-dim);margin-bottom:30px">That page has moved or was never published.</p>
+  <a class="btn btn-fill mag" href="/index.html"><span>Back Home <span class="arw">→</span></span></a>
+</div></section>
+
+<script src="/assets/js/data.js"></script>
+<script src="/assets/js/marble.js"></script>
+<script src="/assets/js/blocks.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+(function(){
+  const A=window.Artizia, $=id=>document.getElementById(id);
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+
+  /* slug from the pretty URL (/p/foo) or the query string (page.html?p=foo) */
+  const m=location.pathname.match(/\/p\/([a-z0-9-]+)/i);
+  const slug=(m&&m[1]) || new URLSearchParams(location.search).get('p') || '';
+
+  function meta(name,content,prop){
+    if(!content) return;
+    const el=document.createElement('meta');
+    el.setAttribute(prop?'property':'name', name);
+    el.content=content;
+    document.head.appendChild(el);
+  }
+
+  fetch('/api/pages/'+encodeURIComponent(slug))
+    .then(r=>{ if(!r.ok) throw new Error('404'); return r.json(); })
+    .then(p=>{
+      document.title=(p.seoTitle||p.title)+' — Artizia';
+      meta('description', p.seoDesc||'');
+      meta('og:title', p.seoTitle||p.title, true);
+      meta('og:description', p.seoDesc||'', true);
+      if(p.ogImage) meta('og:image', location.origin+p.ogImage, true);
+
+      $('blocks').innerHTML=window.renderBlocks(p.sections);
+      return hydrate();
+    })
+    .catch(()=>{
+      document.title='Not found — Artizia';
+      $('notFound').hidden=false;
+      A.refresh();
+    });
+
+  /* blocks that need data after they are in the DOM */
+  async function hydrate(){
+    const host=document.querySelector('[data-posts]');
+    if(host){
+      try{
+        const posts=await (await fetch('/api/posts?limit='+(+host.dataset.posts||3))).json();
+        host.innerHTML=posts.length
+          ? posts.map(p=>`<a class="pcardx" href="/blog/${esc(p.slug)}">
+              <div class="pc-img">${p.cover?`<img src="${esc(p.cover)}" alt="${esc(p.title)}" loading="lazy">`:''}</div>
+              <div class="pc-body">
+                <span class="pc-date">${p.publishedAt?new Date(p.publishedAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):''}</span>
+                <h3>${esc(p.title)}</h3>
+                <p>${esc(p.excerpt||'')}</p>
+              </div></a>`).join('')
+          : '<p class="mono" style="color:var(--text-faint)">No articles published yet.</p>';
+      }catch{ host.remove(); }
+    }
+    A.refresh();      /* reveals, magnetic buttons, stat counters */
+  }
+})();
+</script>
+</body>
+</html>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Collections — Artizia Quartz Surfaces</title>
-<meta name="description" content="Explore 26 engineered quartz surfaces across four Artizia collections — Signature, Luxury, Premium and Essentials.">
+<meta name="description" content="Explore 53 engineered quartz surfaces across five Artizia collections — Signature, Luxury, Premium, Classic and Essentials.">
 <link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
 <link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
 <link rel="stylesheet" href="assets/css/styles.css">
@@ -31,8 +31,8 @@ window.PAGE = {
     alt:      "Artizia quartz surface",
     fallback: "grigio-cloud",
     zoom:     1.3,
-    eyebrow:  "The Collections · 26 Surfaces",
-    title:    "Four worlds <em>of stone.</em>",
+    eyebrow:  "The Collections · 53 Surfaces",
+    title:    "Five worlds <em>of stone.</em>",
     lead:     "From marble-veined luxury to quiet everyday essentials — every Artizia surface is engineered on Breton technology and backed for a lifetime."
   },
 
@@ -56,6 +56,7 @@ window.PAGE = {
 
 <section class="pad" style="padding-top:clamp(30px,4vw,50px)"><div class="wrap">
   <div class="filters" id="filters"></div>
+  <div class="qbar" id="qbar" hidden></div>
   <div class="mgrid" id="grid"></div>
 </div></section>
 
@@ -101,15 +102,40 @@ window.PAGE = {
         <a class="marw" href="product.html?p=${k}" aria-label="View ${m.name}"><span>→</span></a>
       </div>
     </div>`;}
+  /* ?q= arrives from the nav search — the grid becomes the results page */
+  let query=(params.get('q')||'').trim();
+  const hit=k=>{
+    const m=MAT[k],t=query.toLowerCase();
+    return [m.name,m.code,m.coll,m.desc,m.veinText,m.finish,m.grain,(m.apps||[]).join(' ')]
+      .some(v=>String(v||'').toLowerCase().includes(t));
+  };
+  function paintQuery(list){
+    const bar=document.getElementById('qbar');
+    if(!query){ bar.hidden=true; bar.innerHTML=''; return; }
+    bar.hidden=false;
+    bar.innerHTML=`<span>${list.length} ${list.length===1?'surface':'surfaces'} matching
+      “${query.replace(/[<>&]/g,'')}”</span><button id="qclear">Clear search ✕</button>`;
+    document.getElementById('qclear').addEventListener('click',()=>{
+      query=''; history.replaceState(null,'',active==='All'?location.pathname:'?c='+active); render();
+    });
+  }
   function render(){
-    const list=window.productList().filter(k=>active==='All'||MAT[k].coll===active);
-    document.getElementById('grid').innerHTML=list.map(card).join('');
+    let list=window.productList().filter(k=>active==='All'||MAT[k].coll===active);
+    if(query) list=list.filter(hit);
+    const grid=document.getElementById('grid');
+    grid.innerHTML=list.length
+      ? list.map(card).join('')
+      : `<p class="no-hits">Nothing matches that search. <a href="collections.html">Show every surface →</a></p>`;
+    paintQuery(list);
     document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();window.addSample(b.dataset.add,b);}));
     window.Artizia.refresh();
   }
   document.getElementById('filters').addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(!b)return;
     active=b.dataset.c;document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('active',x.dataset.c===active));
-    history.replaceState(null,'',active==='All'?location.pathname:'?c='+active);render();});
+    const q=new URLSearchParams();
+    if(active!=='All') q.set('c',active);
+    if(query) q.set('q',query);
+    history.replaceState(null,'',q.toString()?'?'+q:location.pathname);render();});
   // wait for live products from the API, then render
   (window.ArtiziaData ? window.ArtiziaData.ready : Promise.resolve()).then(render);
   document.getElementById('ctaSamples').addEventListener('click',e=>{e.preventDefault();window.openTray();});

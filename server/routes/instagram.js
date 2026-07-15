@@ -20,7 +20,7 @@ const fs = require('fs');
 const path = require('path');
 
 const router = express.Router();
-const CACHE_DIR = path.join(__dirname, '..', 'cache');
+const { CACHE: CACHE_DIR } = require('../paths');
 const FEED_FILE = path.join(CACHE_DIR, 'instagram.json');
 const TOKEN_FILE = path.join(CACHE_DIR, 'ig-token.json');
 fs.mkdirSync(CACHE_DIR, { recursive: true });

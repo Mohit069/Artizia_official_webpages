@@ -3,11 +3,11 @@
    Kept isolated so it can be swapped for PostgreSQL later.
    ============================================================ */
 const { DatabaseSync } = require('node:sqlite');
-const path = require('path');
-const fs = require('fs');
+const { DB_PATH, ensureDb } = require('../paths');
 
-const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'artizia.db');
-fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
+/* on a read-only serverless filesystem this copies the shipped database
+   into /tmp first; on a normal server it is a no-op mkdir */
+ensureDb();
 
 const db = new DatabaseSync(DB_PATH);
 db.exec('PRAGMA journal_mode = WAL;');

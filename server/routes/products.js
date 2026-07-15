@@ -13,7 +13,7 @@ const Product = require('../models/Product');
 const { requireAdmin } = require('../auth');
 
 const router = express.Router();
-const UPLOADS = path.join(__dirname, '..', 'uploads');
+const { UPLOADS } = require('../paths');
 
 /* remove an uploaded file (safely, only inside /uploads) when it is no longer used */
 function deleteUpload(url){

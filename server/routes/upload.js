@@ -12,8 +12,8 @@ const sharp = require('sharp');
 const { requireAdmin } = require('../auth');
 
 const router = express.Router();
-const UPLOADS = path.join(__dirname, '..', 'uploads');
-fs.mkdirSync(UPLOADS, { recursive: true });
+const { UPLOADS, ensureDirs } = require('../paths');
+ensureDirs();
 
 const MAX_DIM = parseInt(process.env.UPLOAD_MAX_DIM || '1500', 10);
 

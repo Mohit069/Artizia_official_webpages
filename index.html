@@ -4,9 +4,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Artizia — Premium Engineered Quartz Surfaces</title>
+  <title>Artizia — Quartz Slab Manufacturer & Exporter | Luxury Quartz Surfaces, India</title>
   <meta name="description"
-    content="Artizia crafts premium engineered quartz surfaces — global craftsmanship, Indian design sensibility. 26 designs across four collections, built on Breton technology.">
+    content="Artizia is a quartz slab manufacturer and exporter crafting luxury quartz surfaces in Jaipur, India. Super jumbo quartz slabs, white quartz slabs and 53 designs across five collections — pressed on Breton technology, warranted for life.">
+  <meta property="og:title" content="Artizia — Quartz Slab Manufacturer & Exporter | Luxury Quartz Surfaces">
+  <meta property="og:description"
+    content="Super jumbo quartz slabs and luxury quartz surfaces, engineered in Jaipur and exported worldwide. Free samples, shipped across India in 5–7 days.">
+  <meta property="og:type" content="website">
   <link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
   <link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
   <link rel="stylesheet" href="assets/css/styles.css">
@@ -37,21 +41,24 @@
          href   optional      -> overrides the link (Classic has no products in
                                  the database yet, so it points at the full list) */
       featuredCollections: [
-        { key: "Signature",  image: "assets/img/calacatta-gold-full.jpg", desc: "Statement surfaces with distinctive veining." },
-        { key: "Luxury",     image: "assets/img/grigio-cloud-full.jpg",   desc: "Marble-inspired drama, engineered for a lifetime." },
-        { key: "Premium",    image: "assets/img/carrara-bianco-full.jpg", desc: "Refined, versatile designs for considered interiors." },
+        { key: "Signature",  image: "assets/img/calacatta-gold-full.jpg", desc: "Statement slabs threaded with golden veins — our most photographed surface." },
+        { key: "Luxury",     image: "assets/img/grigio-cloud-full.jpg",   desc: "Marble-inspired drama, engineered to outlive the marble it echoes." },
+        { key: "Premium",    image: "assets/img/carrara-bianco-full.jpg", desc: "Refined white quartz slabs for interiors that reward a second look." },
         { key: "Classic",    image: "assets/img/albestor-concrete-full.jpg", desc: "Solid, understated tones for calm contemporary spaces.", href: "collections.html" },
-        { key: "Essentials", image: "assets/img/sparkle-white-full.jpg",  desc: "Clean, dependable everyday whites, greys & black." }
+        { key: "Essentials", image: "assets/img/sparkle-white-full.jpg",  desc: "Dependable everyday whites, greys and blacks. Quietly perfect." }
       ],
 
-      /* ---- S4 · DESIGNED FOR EVERY SPACE (the six cards) --------------- */
+      /* ---- S4 · DESIGNED FOR EVERY SPACE (the six cards) ---------------
+         These cards are no longer links — they show the space, they do not
+         navigate. Drop a replacement in assets/img/applications/ and repoint
+         image; leave it "" and you get generated marble instead.            */
       applications: [
-        { title: "Kitchen Countertops", image: "", href: "collections.html", fallback: "calacatta-gold" },
-        { title: "Bathroom Vanity", image: "", href: "collections.html", fallback: "oceana" },
-        { title: "Dining Tables", image: "", href: "collections.html", fallback: "mystique" },
-        { title: "Living Rooms", image: "", href: "collections.html", fallback: "grigio-cloud" },
-        { title: "Commercial Spaces", image: "", href: "collections.html", fallback: "volcanic-ash" },
-        { title: "Hotels & Hospitality", image: "", href: "collections.html", fallback: "berrica" }
+        { title: "Kitchen Countertops",  image: "assets/img/applications/kitchen-countertops.jpg", fallback: "calacatta-gold" },
+        { title: "Bathroom Vanity",      image: "assets/img/applications/bathroom-vanity.jpg",     fallback: "oceana" },
+        { title: "Dining Tables",        image: "assets/img/applications/dining-tables.jpg",       fallback: "mystique" },
+        { title: "Living Rooms",         image: "assets/img/applications/living-rooms.jpg",        fallback: "grigio-cloud" },
+        { title: "Commercial Spaces",    image: "assets/img/applications/commercial-spaces.jpg",   fallback: "volcanic-ash" },
+        { title: "Hotels & Hospitality", image: "assets/img/applications/hotels-hospitality.jpg",  fallback: "berrica" }
       ],
 
       /* ---- S3 · ABOUT ------------------------------------------------- */
@@ -73,15 +80,35 @@
         ]
       },
 
-      /* ---- S6 · MANUFACTURING ------------------------------------------
-         Put your factory clip in  assets/video/factory.mp4  and set video.
-         While video is "" you get the image + a play badge instead.        */
-      factory: {
-        video: "assets/video/Artizia_Marudhar_video.mp4",
-        poster: "assets/img/factory-poster.jpg",  /* still frame shown while the video loads */
-        image: "",                       /* used when there is no video    */
-        caption: "Inside the Artizia factory",
-        fallback: "volcanic-ash"
+      /* ---- S6 · MANUFACTURING · THE PROCESS ------------------------------
+         Six stages, each with its own photo. The section pins itself and the
+         stages are scrubbed by scroll — the photo cross-fades, the rail fills
+         and the copy changes as you move down. Add or remove a step and the
+         scroll track lengthens or shortens to match; nothing else to change.
+         Drop a file in assets/img/process/ and point image at it.
+         image: ""  ->  renders a labelled placeholder instead of a broken box,
+                        so a missing photo is obvious rather than invisible.   */
+      process: {
+        steps: [
+          { title: "Raw Materials",        image: "assets/img/process/01-raw-materials.jpg",
+            text: "Premium quartz aggregates and resins, sourced to exacting standards.",
+            alt:  "Raw quartz mineral, the base of every Artizia quartz slab" },
+          { title: "Precision Engineering", image: "assets/img/process/02-precision-engineering.jpg",
+            text: "Exact blends measured for consistent colour, density and strength.",
+            alt:  "Precision engineering of engineered quartz slabs" },
+          { title: "Breton Technology",     image: "assets/img/process/03-breton-technology.jpg",
+            text: "Italian vibro-compaction presses form flawless, uniform slabs.",
+            alt:  "Breton press line forming super jumbo quartz slabs" },
+          { title: "Quality Inspection",    image: "assets/img/process/04-quality-inspection.jpg",
+            text: "Every slab tested against international EN and ASTM benchmarks.",
+            alt:  "Technician measuring a quartz slab during quality inspection" },
+          { title: "Surface Finishing",     image: "assets/img/process/05-surface-finishing.jpg",
+            text: "Polished or honed to a refined, tactile finish.",
+            alt:  "Polished white quartz slab with golden veining" },
+          { title: "Global Delivery",       image: "assets/img/process/06-global-delivery.jpg",
+            text: "Packed and shipped to projects on three continents.",
+            alt:  "Finished quartz slabs racked for export despatch" }
+        ]
       },
 
       /* ---- S11 · GLOBAL PRESENCE ---------------------------------------
@@ -101,7 +128,7 @@
         /* export markets — add { label, lon, lat } and they appear on the world view */
         pins: [],
         stats: [
-          { mark: "◆", label: "Manufacturing in India" },
+          { flag: "in", label: "Manufacturing in India" },
           { value: 25, suffix: "+", label: "Countries · Export Network" },
           { value: 500, suffix: "+", label: "Global Customers" },
           { value: 1000, suffix: "+", label: "Premium Projects" }
@@ -137,7 +164,7 @@
       instagram: {
         eyebrow: "@artizia_by_marudhar",
         title: "Surfaces <em>in the wild.</em>",
-        lead: "Projects, installations and the quiet detail of engineered stone.",
+        lead: "Real installations, real kitchens — our quartz slabs in the spaces they were made for.",
         cta: "Follow on Instagram",
         count: 8                        /* how many posts to show */
       },
@@ -312,20 +339,6 @@
     .hero-inner .wrap {
       pointer-events: auto;
       width: 100%
-    }
-
-    .hero-tag {
-      position: absolute;
-      top: calc(20px + 88px);
-      right: clamp(20px, 5vw, 72px);
-      writing-mode: vertical-rl;
-      z-index: 4;
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: .34em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      pointer-events: none
     }
 
     .hero h1 {
@@ -644,9 +657,15 @@
       }
     }
 
+    /* the rail clips horizontally to hide the off-screen cards, which would also
+       shave the top and bottom off a card as it scales up on hover — the padding
+       gives the zoom somewhere to grow into, the negative margin keeps the layout
+       where it was */
     .fcoll-rail {
       overflow: hidden;
-      cursor: grab
+      cursor: grab;
+      padding: 14px 0;
+      margin: -14px 0
     }
 
     .fcoll-rail.dragging {
@@ -659,15 +678,40 @@
       will-change: transform
     }
 
+    /* the caption sits BELOW the slab, not on top of it: any scrim dark enough to
+       carry white text over a white Calacatta also hides the stone we are selling */
     .fcoll {
       position: relative;
       flex: 0 0 var(--card);
       border-radius: 16px;
       overflow: hidden;
-      aspect-ratio: 3/4;
-      display: block;
+      display: flex;
+      flex-direction: column;
       border: 1px solid var(--line);
-      background: var(--surface)
+      background: var(--surface);
+      transition: transform .6s var(--e), border-color .6s var(--e), box-shadow .6s var(--e)
+    }
+
+    .fcoll:hover {
+      transform: scale(1.035);
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+      box-shadow: 0 24px 60px -22px rgba(0, 0, 0, .55);
+      z-index: 2
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+
+      .fcoll,
+      .fcoll:hover {
+        transform: none
+      }
+    }
+
+    .fcoll .ph {
+      position: relative;
+      display: block;
+      overflow: hidden;
+      aspect-ratio: 3/4
     }
 
     .fcoll-rail.dragging .fcoll {
@@ -763,25 +807,15 @@
       transform: scale(1.04)
     }
 
+    /* gentler than before: the whole card now scales too, and the two zooms
+       compound — 1.12 on top of the card lift read as a lurch */
     .fcoll:hover img {
-      transform: scale(1.12)
-    }
-
-    .fcoll .ov {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(6, 6, 8, .12), transparent 34%, rgba(6, 6, 8, .84));
-      z-index: 1
+      transform: scale(1.09)
     }
 
     .fcoll .c {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 2;
-      padding: 22px;
-      color: #fff
+      padding: 18px 20px 20px;
+      color: var(--text)
     }
 
     .fcoll .c .k {
@@ -789,19 +823,19 @@
       font-size: 10px;
       letter-spacing: .24em;
       text-transform: uppercase;
-      color: var(--pearl)
+      color: var(--text-faint)
     }
 
     .fcoll .c h3 {
       font-family: var(--serif);
       font-size: clamp(22px, 1.9vw, 27px);
       margin: 6px 0 6px;
-      color: #fff
+      color: var(--text)
     }
 
     .fcoll .c p {
       font-size: 12.5px;
-      color: rgba(243, 240, 234, .72);
+      color: var(--text-dim);
       line-height: 1.4
     }
 
@@ -959,6 +993,14 @@
       font-size: 30px
     }
 
+    .metric .flag {
+      display: block;
+      width: 40px;
+      height: auto;
+      border-radius: 3px;
+      color: var(--text)
+    }
+
     .metric .l {
       font-family: var(--mono);
       font-size: 10px;
@@ -987,12 +1029,14 @@
       }
     }
 
+    /* not links — the arrow and the href are gone; these just show the space */
     .appcard {
       position: relative;
       border-radius: 16px;
       overflow: hidden;
       aspect-ratio: 4/3;
       display: block;
+      margin: 0;
       border: 1px solid var(--line)
     }
 
@@ -1024,33 +1068,12 @@
       bottom: 0;
       z-index: 2;
       padding: 20px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 12px;
       color: #fff
     }
 
     .appcard .c h4 {
       font-family: var(--serif);
       font-size: clamp(19px, 1.7vw, 24px)
-    }
-
-    .appcard .arw2 {
-      flex: 0 0 auto;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, .4);
-      display: grid;
-      place-items: center;
-      transition: .4s var(--e)
-    }
-
-    .appcard:hover .arw2 {
-      background: var(--opal);
-      color: #0A0A0C;
-      border-color: transparent
     }
 
     /* S5 Why cards */
@@ -1116,152 +1139,339 @@
       font-size: 14px
     }
 
-    /* S6 Manufacturing timeline */
-    .mfg {
+    /* S6 Manufacturing — the process, scrubbed by scroll.
+       The track is tall; the stage inside it is sticky. Scrolling the extra
+       height moves you through the stages. --steps comes from the JS. */
+    /* The track's height is the pinned stage plus the spacer below it. It must NOT
+       be padding: a sticky element is constrained to its parent's CONTENT box, so
+       padding gives it nowhere to stick and the stage just scrolls away. And it
+       must not be a fixed height either, or a stage taller than the viewport gets
+       its top sliced off. A real spacer element satisfies both. */
+    .proc-track {
+      position: relative
+    }
+
+    .proc-rest {
+      height: calc((var(--steps, 6) - 1) * 58svh)
+    }
+
+    /* min-height, not height: if the content ever outgrows the viewport (a long
+       heading on a short screen) the pin grows with it instead of centring the
+       overflow and slicing the top off */
+    /* the top padding clears the fixed nav: the stage is pinned under it, so on a
+       short screen the first line of copy was sliding beneath the nav bar */
+    .proc-pin {
+      position: sticky;
+      top: 0;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding: 96px 0 clamp(24px, 4vh, 52px)
+    }
+
+    /* start-aligned, not end-aligned: the copy column is taller than the title, so
+       bottom-alignment grew it upward and slid its first line under the fixed nav */
+    .proc-head {
       display: grid;
-      grid-template-columns: .92fr 1.08fr;
-      gap: clamp(30px, 5vw, 70px);
+      grid-template-columns: 1.05fr .95fr;
+      gap: clamp(28px, 4vw, 64px);
+      align-items: start;
+      margin-bottom: clamp(26px, 3.2vw, 44px)
+    }
+
+    .proc-lead {
+      display: flex;
+      flex-direction: column;
+      gap: 16px
+    }
+
+    .proc-lead p {
+      color: var(--text-dim);
+      font-size: clamp(14px, 1.35vw, 16px);
+      line-height: 1.65
+    }
+
+    @media(max-width:900px) {
+      .proc-head {
+        grid-template-columns: 1fr;
+        align-items: start;
+        gap: 20px
+      }
+    }
+
+    /* no pinning when motion is reduced — it becomes a plain, complete section */
+    @media(prefers-reduced-motion:reduce) {
+      .proc-rest {
+        height: 0
+      }
+
+      .proc-pin {
+        position: static;
+        height: auto;
+        min-height: 0;
+        padding: clamp(28px, 4vw, 50px) 0 clamp(40px, 7vw, 90px)
+      }
+    }
+
+    .proc {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: clamp(28px, 4vw, 64px);
       align-items: center
     }
 
-    @media(max-width:860px) {
-      .mfg {
+    @media(max-width:900px) {
+      .proc {
         grid-template-columns: 1fr
       }
     }
 
-    .mfg-vis {
+    .proc-stage {
       position: relative;
-      border-radius: 16px;
+      aspect-ratio: 3/2;
+      border-radius: 18px;
       overflow: hidden;
-      aspect-ratio: 4/5;
       border: 1px solid var(--line);
       background: var(--surface)
     }
 
-    .mfg-vis img,
-    .mfg-vis video {
+    .proc-frames {
+      position: absolute;
+      inset: 0
+    }
+
+    /* Every photo is mounted; scroll position sets opacity and scale directly,
+       so there is no transition to fight the scrub. */
+    .proc-frames figure {
+      position: absolute;
+      inset: 0;
+      margin: 0;
+      opacity: 0;
+      transform: scale(1.05);
+      will-change: opacity, transform
+    }
+
+    .proc-frames figure.on {
+      opacity: 1
+    }
+
+    .proc-frames img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block;
-      transition: transform 1.4s var(--e)
+      display: block
     }
 
-    .mfg-vis:hover img {
-      transform: scale(1.06)
-    }
-
-    /* a real video carries its own subject — don't dim or zoom it */
-    .mfg-vis:has(video)::after {
-      display: none
-    }
-
-    .mfg-vis::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(rgba(6, 6, 8, .15), rgba(6, 6, 8, .45));
-      z-index: 1
-    }
-
-    .mfg-vis .play {
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-      display: grid;
-      place-items: center
-    }
-
-    .mfg-vis .play span {
-      width: 66px;
-      height: 66px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, .55);
+    /* a stage with no photo yet — say so, rather than showing an empty box */
+    .proc-frames .ph {
       display: grid;
       place-items: center;
-      color: #fff;
-      background: rgba(8, 8, 10, .28);
-      backdrop-filter: blur(4px);
-      font-size: 15px;
-      transition: .3s
-    }
-
-    .mfg-vis:hover .play span {
-      background: rgba(8, 8, 10, .5);
-      transform: scale(1.06)
-    }
-
-    .mfg-vis .vtag {
-      position: absolute;
-      left: 16px;
-      bottom: 16px;
-      z-index: 2;
+      gap: 10px;
+      width: 100%;
+      height: 100%;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 14px, rgba(255, 255, 255, .022) 14px 28px),
+        var(--surface);
+      border: 1px dashed var(--line-2);
+      color: var(--text-faint);
       font-family: var(--mono);
       font-size: 10px;
       letter-spacing: .2em;
       text-transform: uppercase;
-      color: #fff;
-      background: rgba(8, 8, 10, .5);
-      padding: 6px 11px
+      text-align: center;
+      padding: 20px
     }
 
-    .timeline {
-      position: relative;
-      margin-top: 6px
+    .proc-frames .ph b {
+      display: block;
+      font-family: var(--serif);
+      font-size: 19px;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--text-dim);
+      margin-bottom: 4px
     }
 
-    .tstep {
-      display: grid;
-      grid-template-columns: 40px 1fr;
-      gap: 16px;
-      padding-bottom: 24px;
+    .proc-scrim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(6, 6, 8, .1) 0%, transparent 34%, rgba(6, 6, 8, .82) 100%);
+      pointer-events: none
+    }
+
+    .proc-cap {
+      position: absolute;
+      left: 22px;
+      bottom: 22px;
+      z-index: 2;
+      display: flex;
+      align-items: baseline;
+      gap: 12px
+    }
+
+    .proc-idx {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .2em;
+      color: var(--accent)
+    }
+
+    .proc-name {
+      font-family: var(--serif);
+      font-size: clamp(20px, 2.2vw, 28px);
+      color: #fff
+    }
+
+    /* how far through the six we are */
+    .proc-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+      z-index: 2;
+      background: rgba(255, 255, 255, .14)
+    }
+
+    .proc-bar span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--accent);
+      transition: width .5s var(--e)
+    }
+
+    /* ---- the six steps ---- */
+    .proc-steps {
+      list-style: none;
+      margin: 0;
+      padding: 0;
       position: relative
     }
 
-    .tstep:last-child {
-      padding-bottom: 0
+    /* the rail behind the numbers, and the accent that fills it as you advance */
+    .proc-steps::before,
+    .proc-steps::after {
+      content: "";
+      position: absolute;
+      left: 17px;
+      top: 18px;
+      bottom: 18px;
+      width: 1px
     }
 
-    .tstep .dot {
-      width: 38px;
-      height: 38px;
+    .proc-steps::before {
+      background: var(--line)
+    }
+
+    /* driven straight from scroll — a transition here would lag the scrub */
+    .proc-steps::after {
+      background: var(--accent);
+      height: var(--fill, 0);
+      bottom: auto
+    }
+
+    .proc-step {
+      display: flex;
+      gap: 18px;
+      padding: 13px 0;
+      cursor: pointer;
+      background: none;
+      border: 0;
+      text-align: left;
+      width: 100%;
+      color: inherit;
+      font: inherit
+    }
+
+    .proc-step .n {
+      flex: 0 0 auto;
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
-      border: 1px solid var(--line-2);
       display: grid;
       place-items: center;
       font-family: var(--mono);
-      font-size: 12px;
-      color: var(--accent);
+      font-size: 11px;
+      border: 1px solid var(--line);
       background: var(--bg);
-      z-index: 1
+      color: var(--text-faint);
+      position: relative;
+      z-index: 1;
+      transition: .45s var(--e)
     }
 
-    .tstep::before {
-      content: "";
-      position: absolute;
-      left: 19px;
-      top: 38px;
-      bottom: 2px;
-      width: 1px;
-      background: var(--line-2)
+    .proc-step .pt {
+      display: block;
+      min-width: 0
     }
 
-    .tstep:last-child::before {
-      display: none
-    }
-
-    .tstep .tc h4 {
+    .proc-step .h {
+      display: block;
       font-family: var(--serif);
-      font-size: 18px
-    }
-
-    .tstep .tc p {
+      font-size: clamp(17px, 1.6vw, 20px);
+      line-height: 1.25;
       color: var(--text-dim);
-      font-size: 13.5px;
-      margin-top: 3px
+      transition: color .4s var(--e)
     }
 
+    .proc-step .d {
+      display: block;
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--text-faint);
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height .5s var(--e), opacity .4s var(--e), padding-top .4s
+    }
+
+    /* only the active step opens its description — the list stays scannable */
+    .proc-step.on .n {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #0A0A0C;
+      transform: scale(1.08)
+    }
+
+    .proc-step.on .h {
+      color: var(--text)
+    }
+
+    .proc-step.on .d {
+      max-height: 90px;
+      opacity: 1;
+      padding-top: 5px
+    }
+
+    .proc-step:hover .h {
+      color: var(--text)
+    }
+
+    .proc-step:hover .n {
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    .proc-step.on:hover .n {
+      color: #0A0A0C
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+
+      .proc-frames figure,
+      .proc-frames figure.on {
+        transition: opacity .2s;
+        transform: none
+      }
+
+      .proc-step .d {
+        max-height: 90px;
+        opacity: 1;
+        padding-top: 5px
+      }
+    }
     /* S11 Global */
     .global {
       display: grid;
@@ -1276,199 +1486,7 @@
       }
     }
 
-    .worldmap {
-      position: relative;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      overflow: hidden;
-      /* must equal the map's own 1000x620, or the pins drift off their cities */
-      aspect-ratio: 1000/620;
-      background: radial-gradient(130% 130% at 50% 20%, var(--surface), var(--bg))
-    }
-
-    /* optional world-map image, sits under the pins */
-    .worldmap img.map {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      opacity: .5
-    }
-
-    /* the live map: one SVG, zoomed by animating its viewBox.
-       non-scaling-stroke keeps every outline hairline-thin at any zoom. */
-    .worldmap svg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%
-    }
-
-    .wm-land {
-      fill: var(--line-2);
-      opacity: .5
-    }
-
-    .wm-india {
-      fill: var(--accent);
-      opacity: .16;
-      stroke: var(--accent);
-      stroke-width: 1;
-      stroke-opacity: .5;
-      vector-effect: non-scaling-stroke
-    }
-
-    .wm-states {
-      fill: none;
-      stroke: var(--accent);
-      stroke-width: .7;
-      stroke-opacity: .38;
-      vector-effect: non-scaling-stroke
-    }
-
-    .wm-raj {
-      fill: var(--accent);
-      opacity: .3;
-      stroke: var(--accent);
-      stroke-width: 1.4;
-      vector-effect: non-scaling-stroke
-    }
-
-    /* drill-down chips */
-    .wm-steps {
-      position: absolute;
-      left: 16px;
-      top: 16px;
-      z-index: 4;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px
-    }
-
-    .wm-steps button {
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(10, 10, 12, .55);
-      backdrop-filter: blur(6px);
-      cursor: pointer;
-      transition: .35s var(--e)
-    }
-
-    :root[data-theme="light"] .wm-steps button {
-      background: rgba(255, 255, 255, .7)
-    }
-
-    .wm-steps button:hover {
-      color: var(--text)
-    }
-
-    .wm-steps button.on {
-      color: var(--obsidian, #0A0A0C);
-      background: var(--accent);
-      border-color: var(--accent)
-    }
-
-    .wm-pins {
-      position: absolute;
-      inset: 0;
-      z-index: 3;
-      pointer-events: none
-    }
-
-    /* sits on top of the accent-filled state, so it needs real contrast —
-       --text-faint disappeared into the fill entirely */
-    .wm-note {
-      position: absolute;
-      z-index: 3;
-      transform: translate(-50%, 16px);
-      font-family: var(--mono);
-      font-size: 9.5px;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--text);
-      white-space: nowrap;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: rgba(8, 8, 10, .55);
-      backdrop-filter: blur(4px)
-    }
-
-    :root[data-theme="light"] .wm-note {
-      background: rgba(255, 255, 255, .72)
-    }
-
-    .worldmap .dots {
-      position: absolute;
-      inset: 0;
-      color: var(--line-2);
-      opacity: .6;
-      background-image: radial-gradient(currentColor 1.1px, transparent 1.4px);
-      background-size: 15px 15px;
-      -webkit-mask-image: radial-gradient(115% 90% at 50% 46%, #000 42%, transparent 76%);
-      mask-image: radial-gradient(115% 90% at 50% 46%, #000 42%, transparent 76%)
-    }
-
-    .pin {
-      position: absolute;
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--accent);
-      transform: translate(-50%, -50%);
-      z-index: 2
-    }
-
-    .pin::after {
-      content: "";
-      position: absolute;
-      inset: -5px;
-      border-radius: 50%;
-      border: 1px solid var(--accent);
-      animation: ping 2.6s var(--e) infinite
-    }
-
-    .pin.d1::after {
-      animation-delay: .6s
-    }
-
-    .pin.d2::after {
-      animation-delay: 1.2s
-    }
-
-    .pin.d3::after {
-      animation-delay: 1.8s
-    }
-
-    @keyframes ping {
-      0% {
-        transform: scale(.5);
-        opacity: .85
-      }
-
-      70%,
-      100% {
-        transform: scale(2.4);
-        opacity: 0
-      }
-    }
-
-    .worldmap .home-pin {
-      position: absolute;
-      z-index: 3;
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--accent);
-      transform: translate(-50%, -160%)
-    }
+    /* S11 world map: see "WORLD MAP" in assets/css/styles.css (shared with the About page) */
 
     /* S14 Instagram feed */
     .ig-sec {
@@ -2021,14 +2039,13 @@
         <div class="slab-cap" id="slabCap">Artizia Quartz · Full Slab · 3200 × 1600 mm</div>
       </div>
       <div class="hero-grad"></div>
-      <span class="hero-tag">Molten Quartz · No. 001</span>
       <div class="hero-inner" id="heroCopy">
         <div class="wrap">
-          <div class="hero-eye"><span class="eyebrow">Engineered Quartz Surfaces · India</span></div>
+          <div class="hero-eye"><span class="eyebrow">Quartz Slab Manufacturer · Jaipur, India</span></div>
           <h1><span class="ln"><i>Quiet Craft.</i></span><span class="ln it"><i>Bold Vision.</i></span></h1>
           <div class="hero-foot">
-            <p class="hero-sub">Global craftsmanship, Indian design sensibility. Surfaces born on Breton technology —
-              engineered to be felt, not just seen.</p>
+            <p class="hero-sub">Artizia is a leading Quartz Slab Manufacturer and Quartz Slab Exporter, delivering
+              premium Super Jumbo Quartz Slabs designed for luxury residential and commercial interiors.</p>
             <div class="hero-cta">
               <a class="btn btn-fill mag" href="collections.html"><span>Explore Collections <span
                     class="arw">→</span></span></a>
@@ -2039,7 +2056,7 @@
       </div>
       <div class="hero-endcap" id="heroEndcap">
         <span class="eyebrow">Installed · Real Kitchens</span>
-        <h4>From quarry to countertop, without compromise.</h4>
+        <h4>Premium Engineered Quartz Surfaces Crafted for Timeless Spaces</h4>
         <a class="mag" href="collections.html">Explore Collections <span class="arw">→</span></a>
       </div>
       <div class="hero-progress"><span id="heroPhase">MACRO</span><span class="bar"><i id="heroBar"></i></span></div>
@@ -2056,8 +2073,10 @@
     <div class="wrap">
       <div class="sec-head center rv" style="margin:0 auto 48px">
         <span class="eyebrow">Featured Collections</span>
-        <h2>Curated worlds <em>of stone.</em></h2>
-        <p>Discover curated collections crafted for timeless interiors.</p>
+        <h2>Featured Quartz <em>Collection</em></h2>
+        <p>Discover our premium engineered quartz collection featuring elegant finishes, contemporary designs, and
+          timeless aesthetics. From a pristine White Quartz Slab to bold veined surfaces, every slab is crafted to
+          elevate modern interiors.</p>
       </div>
       <div class="fcoll-slider rv" id="fcollSlider">
         <div class="fcoll-rail" id="fcollRail">
@@ -2081,24 +2100,23 @@
               Craftsmanship</em></h2>
           <div class="about-points">
             <div class="about-point"><span class="n">01</span>
-              <div><b>35+ Years of Manufacturing Excellence</b>
-                <p>Emerging from Marudhar Quartz's decades of heritage supplying North America, the UK and Australia.
-                </p>
+              <div><b>35+ Years as a Quartz Slab Manufacturer</b>
+                <p>Built on Marudhar Quartz's decades of heritage supplying North America, the UK and Australia.</p>
               </div>
             </div>
             <div class="about-point"><span class="n">02</span>
-              <div><b>Premium Engineered Quartz</b>
-                <p>Surfaces that pair durability with design — made to be felt, not just seen.</p>
+              <div><b>Luxury Quartz Surfaces</b>
+                <p>Slabs that pair lifetime durability with design worth building a room around.</p>
               </div>
             </div>
             <div class="about-point"><span class="n">03</span>
               <div><b>Breton Technology</b>
-                <p>Italian-built precision presses deliver consistent colour, density and strength, slab after slab.</p>
+                <p>Italian precision presses deliver consistent colour, density and strength, slab after slab.</p>
               </div>
             </div>
             <div class="about-point"><span class="n">04</span>
-              <div><b>Global Vision</b>
-                <p>Bringing world-class engineered stone home to India, and to projects worldwide.</p>
+              <div><b>A Trusted Quartz Slab Exporter</b>
+                <p>Export-grade stone for projects worldwide — and now, at last, for India.</p>
               </div>
             </div>
           </div>
@@ -2116,7 +2134,7 @@
       <div class="sec-head center rv" style="margin:0 auto 48px">
         <span class="eyebrow">Applications</span>
         <h2>Designed for <em>Every Space.</em></h2>
-        <p>Beautiful surfaces crafted for every style of living and working.</p>
+        <p>Quartz slabs for kitchen countertops, bathroom vanities, table tops and commercial projects.</p>
       </div>
       <div class="apps-grid rv" id="appsGrid"></div>
     </div>
@@ -2128,6 +2146,8 @@
       <div class="sec-head center rv" style="margin:0 auto 48px">
         <span class="eyebrow">Why Choose Artizia</span>
         <h2>Engineered to <em>outlast.</em></h2>
+        <p>Every Artizia slab is engineered to deliver lasting beauty while meeting the highest standards of
+          performance.</p>
       </div>
       <div class="why6">
         <div class="fcard rv">
@@ -2136,7 +2156,7 @@
               <path d="M9 12l2 2 4-4" />
             </svg></div>
           <h4>Scratch Resistant</h4>
-          <p>Mohs hardness 6.5–7.5 shrugs off everyday knocks and abrasion.</p>
+          <p>Mohs hardness 6.5–7.5 — our quartz slabs shrug off the knocks a kitchen delivers daily.</p>
         </div>
         <div class="fcard rv d1">
           <div class="ic"><svg viewBox="0 0 24 24">
@@ -2158,7 +2178,7 @@
               <path d="M4 12l8 4 8-4" />
             </svg></div>
           <h4>Non-Porous Surface</h4>
-          <p>Sealed for life — never needs resealing, unlike natural stone.</p>
+          <p>Sealed for life. Unlike natural stone, it never needs resealing — ever.</p>
         </div>
         <div class="fcard rv d1">
           <div class="ic"><svg viewBox="0 0 24 24">
@@ -2173,70 +2193,56 @@
               <path d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8z" />
             </svg></div>
           <h4>Low Maintenance</h4>
-          <p>A soft cloth and mild detergent keep it pristine for a lifetime.</p>
+          <p>A soft cloth and mild detergent. That is the entire maintenance schedule.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ===== S6 · MANUFACTURING EXCELLENCE ===== -->
-  <section class="pad" style="padding-top:0">
-    <div class="wrap">
-      <div class="sec-head rv" style="margin-bottom:48px"><span class="eyebrow">Manufacturing Excellence</span>
-        <h2>Precision in <em>Every Surface.</em></h2>
-        <p>Every slab is engineered with innovation, craftsmanship, and uncompromising quality.</p>
-      </div>
-      <div class="mfg">
-        <div class="mfg-vis rv" id="mfgVis"></div>
-        <div class="rv d1">
-          <div class="timeline">
-            <div class="tstep">
-              <div class="dot">01</div>
-              <div class="tc">
-                <h4>Raw Materials</h4>
-                <p>Premium quartz aggregates and resins, sourced to exacting standards.</p>
-              </div>
-            </div>
-            <div class="tstep">
-              <div class="dot">02</div>
-              <div class="tc">
-                <h4>Precision Engineering</h4>
-                <p>Exact blends measured for consistent colour, density and strength.</p>
-              </div>
-            </div>
-            <div class="tstep">
-              <div class="dot">03</div>
-              <div class="tc">
-                <h4>Breton Technology</h4>
-                <p>Italian vibro-compaction presses form flawless, uniform slabs.</p>
-              </div>
-            </div>
-            <div class="tstep">
-              <div class="dot">04</div>
-              <div class="tc">
-                <h4>Quality Inspection</h4>
-                <p>Every slab tested against international EN and ASTM benchmarks.</p>
-              </div>
-            </div>
-            <div class="tstep">
-              <div class="dot">05</div>
-              <div class="tc">
-                <h4>Surface Finishing</h4>
-                <p>Polished or honed to a refined, tactile finish.</p>
-              </div>
-            </div>
-            <div class="tstep">
-              <div class="dot">06</div>
-              <div class="tc">
-                <h4>Global Delivery</h4>
-                <p>Carefully packed and shipped to projects across the world.</p>
-              </div>
-            </div>
+  <!-- A tall scroll track with a pinned stage inside it: scrolling scrubs
+       through the six stages rather than a timer running them. --steps is set
+       from the content block, so adding a seventh step lengthens the track. -->
+  <section class="proc-track" id="procSection">
+    <div class="proc-pin">
+      <div class="wrap">
+        <!-- title left, copy right: stacked, this heading was tall enough to push
+             the photo and the six steps past the pinned viewport and get sliced -->
+        <div class="proc-head rv">
+          <div class="sec-head"><span class="eyebrow">Manufacturing Excellence</span>
+            <h2>Precision in <em>Every Surface.</em></h2>
           </div>
-          <div style="margin-top:34px"><a class="btn btn-fill mag" href="about.html"><span>Explore Our Manufacturing
-                <span class="arw">→</span></span></a></div>
+          <div class="proc-lead">
+            <p>Our advanced manufacturing facilities combine cutting-edge technology with skilled craftsmanship to
+              produce premium engineered quartz surfaces that meet international quality standards.</p>
+            <p>From raw material selection to precision polishing and quality inspection, every Super Jumbo Quartz Slab
+              undergoes rigorous testing to ensure exceptional consistency, durability, and aesthetic excellence before
+              reaching customers worldwide.</p>
+          </div>
+        </div>
+        <div class="proc rv">
+          <!-- the stage: all six photos stacked, cross-faded by scroll position -->
+          <div class="proc-stage" id="procStage">
+            <div class="proc-frames" id="procFrames"></div>
+            <div class="proc-scrim"></div>
+            <div class="proc-cap">
+              <span class="proc-idx" id="procIdx">01</span>
+              <span class="proc-name" id="procName"></span>
+            </div>
+            <div class="proc-bar"><span id="procBar"></span></div>
+          </div>
+          <!-- the six steps; the filled rail tracks where you are -->
+          <ol class="proc-steps" id="procSteps"></ol>
         </div>
       </div>
+    </div>
+    <!-- the scroll the pinned stage is scrubbed against -->
+    <div class="proc-rest" aria-hidden="true"></div>
+  </section>
+  <section class="pad" style="padding-top:0">
+    <div class="wrap">
+      <div class="rv"><a class="btn btn-fill mag" href="about.html"><span>Explore Our Manufacturing <span
+              class="arw">→</span></span></a></div>
     </div>
   </section>
 
@@ -2249,9 +2255,10 @@
           <span class="eyebrow">Global Presence</span>
           <h2 style="font-size:clamp(28px,3.8vw,48px);line-height:1.05;margin-top:16px">Crafted in India. <em>Trusted
               Worldwide.</em></h2>
-          <p style="color:var(--text-dim);margin:22px 0 0;max-width:46ch">From our state-of-the-art facility at Mahindra
-            World City, Jaipur, Artizia surfaces reach homes, showrooms and landmark projects across the globe —
-            carrying Indian craftsmanship to the world.</p>
+          <p style="color:var(--text-dim);margin:22px 0 0;max-width:46ch">Artizia proudly serves architects, designers,
+            distributors, fabricators, and project developers across multiple international markets. As an established
+            Quartz Slab Exporter, we continue to deliver premium engineered quartz solutions for residential,
+            hospitality, retail, and commercial developments around the globe.</p>
           <div class="metrics" id="globalMetrics" style="margin-top:30px;grid-template-columns:1fr 1fr"></div>
         </div>
       </div>
@@ -2284,7 +2291,8 @@
       <div class="wrap rv">
         <span class="eyebrow">Let's Build Together</span>
         <h2>Ready to Create <em>Extraordinary Spaces?</em></h2>
-        <p>Connect with our experts and discover premium engineered quartz crafted for projects that inspire.</p>
+        <p>Talk to our team about luxury quartz surfaces for your project — free samples, shipped across India in 5–7
+          days.</p>
         <div class="btns">
           <a class="btn btn-fill mag" href="collections.html"><span>Explore Collections <span
                 class="arw">→</span></span></a>
@@ -2315,6 +2323,7 @@
   <script src="assets/js/data.js"></script>
   <script src="assets/js/marble.js"></script>
   <script src="assets/js/map.js"></script>
+  <script src="assets/js/worldmap.js"></script>
   <script src="assets/js/app.js"></script>
   <script>
     (function () {
@@ -2336,7 +2345,26 @@
       function media(src, alt, fallbackKey, seed) {
         return src ? `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy">` : GL.imgFor(safeMat(fallbackKey), seed || 0);
       }
+      /* drawn, not an emoji: Windows ships no flag glyphs at all, so 🇮🇳 renders
+         there as the bare letters "IN" */
+      const FLAGS = {
+        in: `<svg class="flag" viewBox="0 0 36 24" role="img" aria-label="India">
+          <rect width="36" height="24" rx="2" fill="#fff"/>
+          <path d="M2 0h32a2 2 0 0 1 2 2v6H0V2a2 2 0 0 1 2-2z" fill="#FF9933"/>
+          <path d="M0 16h36v6a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-6z" fill="#138808"/>
+          <circle cx="18" cy="12" r="3.1" fill="none" stroke="#000080" stroke-width=".8"/>
+          <g stroke="#000080" stroke-width=".35">
+            <path d="M18 8.9v6.2M14.9 12h6.2M15.8 9.8l4.4 4.4M20.2 9.8l-4.4 4.4"/>
+            <path d="M18.1 8.95 17.9 15.05M14.95 12.1l6.1-.2M15.9 9.7l4.2 4.6M20.1 9.7l-4.2 4.6" opacity=".55"/>
+          </g>
+          <circle cx="18" cy="12" r=".55" fill="#000080"/>
+          <rect x=".5" y=".5" width="35" height="23" rx="1.8" fill="none" stroke="currentColor" stroke-opacity=".18"/>
+        </svg>`
+      };
+
       function metricHTML(m) {
+        if (m.flag && FLAGS[m.flag])
+          return `<div class="metric"><div class="v mark">${FLAGS[m.flag]}</div><div class="l">${esc(m.label)}</div></div>`;
         return m.mark
           ? `<div class="metric"><div class="v mark">${esc(m.mark)}</div><div class="l">${esc(m.label)}</div></div>`
           : `<div class="metric" data-to="${+m.value || 0}"><div class="v"><span class="num">0</span><span class="suf">${esc(m.suffix || '')}</span></div><div class="l">${esc(m.label)}</div></div>`;
@@ -2451,109 +2479,110 @@
         place(0, false);
       }
 
-      /* ---- S11 world map --------------------------------------------------
-         One SVG, zoomed by animating its viewBox from the world down to Jaipur.
-         The frame and every view share the map's 1000x620 aspect, so a map
-         coordinate maps to a plain percentage of the box — which is how the
-         HTML pins stay glued to their location at any zoom. */
-      function buildWorldMap(host, g, M) {
-        const AR = M.h / M.w, RAD = Math.PI / 180;
+      /* ---- S11 world map: assets/js/worldmap.js (shared with the About page) ---- */
+      /* ---- S6 the manufacturing process ------------------------------------
+         Six stages. The stage panel cross-fades to the active step's photo and
+         the rail fills to match. It advances on its own while the section is on
+         screen, and hands control over the moment anyone touches it. */
+      function buildProcess(cfg) {
+        const steps = cfg.steps || [];
+        const frames = $('procFrames'), list = $('procSteps'), stage = $('procStage');
+        if (!frames || !list || !steps.length) return;
+        const pad = n => String(n + 1).padStart(2, '0');
 
-        /* Natural Earth 1, the same projection the geometry was baked with —
-           so a lat/lon in the content block lands exactly where it should. */
-        function project(lon, lat) {
-          const l = lon * RAD, p = lat * RAD, p2 = p * p, p4 = p2 * p2;
-          const x = l * (0.8707 - 0.131979 * p2 + p4 * (-0.013791 + p4 * (0.003971 - 0.001529 * p2)));
-          const y = p * (1.007226 + p2 * (0.015085 + p4 * (-0.044475 + 0.028874 * p2 - 0.005916 * p4)));
-          return [M.t[0] + M.k * x, M.t[1] - M.k * y];
+        frames.innerHTML = steps.map((s, i) => `<figure${i ? '' : ' class="on"'}>${s.image
+          ? `<img src="${esc(s.image)}" alt="${esc(s.alt || s.title)}" loading="lazy">`
+          : `<div class="ph"><span><b>${esc(s.title)}</b>photo to come</span></div>`
+          }</figure>`).join('');
+
+        /* spans, not h4/p — a <button> may only contain phrasing content, and a
+           bare .tc would collide with the testimonial-card class in styles.css */
+        list.innerHTML = steps.map((s, i) => `<li><button type="button" class="proc-step${i ? '' : ' on'}" data-i="${i}"
+          aria-label="Step ${pad(i)} — ${esc(s.title)}"><span class="n">${pad(i)}</span>
+          <span class="pt"><span class="h">${esc(s.title)}</span><span class="d">${esc(s.text || '')}</span></span></button></li>`).join('');
+
+        const figs = [...frames.children], btns = [...list.querySelectorAll('.proc-step')];
+        const track = $('procSection'), pin = track.querySelector('.proc-pin');
+        const n = steps.length;
+        track.style.setProperty('--steps', n);      /* the CSS sizes the track from this */
+
+        /* the middle of each step's number, in rail coordinates — where the
+           accent fill should reach when that step is fully active */
+        let mids = [];
+        function measure() {
+          const lr = list.getBoundingClientRect();
+          mids = btns.map(b => {
+            const br = b.getBoundingClientRect();
+            return Math.max(0, br.top - lr.top + br.height / 2 - 18);
+          });
         }
 
-        const stops = (g.stops && g.stops.length) ? g.stops : [{ view: 'world', label: 'World' }];
-        const home = g.home || {};
-        const marks = (home.lat != null ? [Object.assign({ home: true }, home)] : []).concat(g.pins || []);
+        const cl = v => Math.max(0, Math.min(1, v));
+        const smooth = (a, b, x) => { const t = cl((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+        let active = -1;
 
-        host.innerHTML = `<div class="dots"></div>
-        <svg viewBox="0 0 ${M.w} ${M.h}" aria-hidden="true">
-          <path class="wm-land" d="${M.land}"/>
-          <path class="wm-india" d="${M.india}"/>
-          <path class="wm-states" d="${M.states}"/>
-          <path class="wm-raj" d="${M.rajasthan}"/>
-        </svg>
-        <div class="wm-pins">${marks.map((p, i) => p.home
-          ? `<span class="home-pin" data-i="${i}" data-role="home">${esc(p.label || '')}</span><span class="pin" data-i="${i}" data-role="home"></span>${p.note ? `<span class="wm-note" data-i="${i}" data-role="home">${esc(p.note)}</span>` : ''}`
-          : `<span class="pin d${(i % 3) + 1}" data-i="${i}" data-role="away" title="${esc(p.label || '')}"></span>`).join('')}</div>
-        <div class="wm-steps">${stops.map((s, i) => `<button type="button" data-v="${esc(s.view)}"${i ? '' : ' class="on"'}>${esc(s.label)}</button>`).join('')}</div>`;
+        /* p is 0..1 across the whole track; t = p*n walks the six stages */
+        function paint(p) {
+          const t = cl(p) * n;
+          const i = Math.min(n - 1, Math.floor(t));
+          const sub = t - i;                        /* 0..1 within this stage */
 
-        const svg = host.querySelector('svg');
-        const states = host.querySelector('.wm-states');
-        const raj = host.querySelector('.wm-raj');
-        const steps = host.querySelector('.wm-steps');
-        const pins = [...host.querySelectorAll('[data-i]')];
-        const pts = marks.map(p => project(p.lon, p.lat));
+          /* cross-fade into the next photo over the last quarter of each stage */
+          const next = Math.min(n - 1, i + 1);
+          const blend = i === n - 1 ? 0 : smooth(0.72, 1, sub);
+          figs.forEach((f, j) => {
+            const op = j === i ? 1 - blend : (j === next && j !== i ? blend : 0);
+            f.style.opacity = op;
+            /* the live frame drifts slowly as you scroll it — a scrubbed Ken Burns */
+            if (op > 0.001) f.style.transform = `scale(${(1.05 + (j === i ? sub : 0) * 0.09).toFixed(4)})`;
+          });
 
-        const ramp = (a, b, v) => Math.max(0, Math.min(1, (v - a) / (b - a)));
-        let vb = M.views.world.slice(), raf = 0, auto = true;
+          $('procBar').style.width = (cl(p) * 100).toFixed(2) + '%';
 
-        function paint() {
-          svg.setAttribute('viewBox', vb.map(n => n.toFixed(2)).join(' '));
-          const z = M.w / vb[2];                       /* 1 at world, ~33 at Jaipur */
-          states.style.opacity = ramp(1.7, 3.6, z) * .38;
-          raj.style.opacity = ramp(3.4, 8, z) * .30;
-          const homeOp = ramp(2.4, 5, z), awayOp = 1 - ramp(2.5, 5, z);
-          for (const el of pins) {
-            const [px, py] = pts[+el.dataset.i];
-            el.style.left = ((px - vb[0]) / vb[2] * 100) + '%';
-            el.style.top = ((py - vb[1]) / vb[3] * 100) + '%';
-            el.style.opacity = el.dataset.role === 'home' ? homeOp : awayOp;
+          /* the rail fills continuously between step midpoints, not in jumps */
+          if (!mids.length) measure();
+          const from = mids[i], to = mids[Math.min(n - 1, i + 1)];
+          list.style.setProperty('--fill', (from + (to - from) * sub).toFixed(1) + 'px');
+
+          const cur = blend > 0.5 ? next : i;
+          if (cur !== active) {
+            active = cur;
+            btns.forEach((b, j) => b.classList.toggle('on', j === cur));
+            $('procIdx').textContent = pad(cur);
+            $('procName').textContent = steps[cur].title;
+            measure();                              /* the open description changes the heights */
           }
         }
 
-        /* zoom geometrically, not linearly — a straight lerp from a 1000-wide
-           view to a 30-wide one lurches at the end */
-        function goTo(view, animate) {
-          const to = M.views[view] || M.views.world;
-          cancelAnimationFrame(raf);
-          if (!animate || reduce) { vb = to.slice(); paint(); return; }
-          const from = vb.slice(), t0 = performance.now(), DUR = 1200;
-          const ax = from[0] + from[2] / 2, ay = from[1] + from[3] / 2, aw = from[2];
-          const bx = to[0] + to[2] / 2, by = to[1] + to[3] / 2, bw = to[2];
-          (function step(now) {
-            const p = Math.min(1, (now - t0) / DUR);
-            const e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
-            const w = aw * Math.pow(bw / aw, e);
-            const cx = ax + (bx - ax) * e, cy = ay + (by - ay) * e;
-            vb = [cx - w / 2, cy - w * AR / 2, w, w * AR];
-            paint();
-            if (p < 1) raf = requestAnimationFrame(step);
-          })(t0);
+        /* the pin is the first thing in the track, so the scrub runs from the
+           track's top. Do NOT reach for pin.offsetTop here: on a sticky element
+           it grows as the element sticks, so it silently eats the travel. */
+        const travelOf = () => track.offsetHeight - pin.offsetHeight;
+
+        function onScroll() {
+          const travel = travelOf();
+          const p = travel > 0 ? -track.getBoundingClientRect().top / travel : 0;
+          paint(p);
         }
 
-        const mark = v => [...steps.children].forEach(b => b.classList.toggle('on', b.dataset.v === v));
-        steps.addEventListener('click', e => {
-          const b = e.target.closest('button');
-          if (!b) return;
-          auto = false;                     /* a click ends the guided tour */
-          mark(b.dataset.v);
-          goTo(b.dataset.v, true);
-        });
+        /* clicking a step scrolls to it, so the list still works as navigation */
+        btns.forEach(b => b.addEventListener('click', () => {
+          const j = +b.dataset.i;
+          const top = track.getBoundingClientRect().top + scrollY;
+          scrollTo({ top: top + travelOf() * ((j + 0.5) / n), behavior: reduce ? 'auto' : 'smooth' });
+        }));
 
-        paint();
-        /* drill in once, the first time the map is actually looked at */
-        if (!reduce && stops.length > 1) {
-          const io = new IntersectionObserver(en => {
-            if (!en[0].isIntersecting) return;
-            io.disconnect();
-            let i = 0;
-            const hop = () => {
-              if (!auto || ++i >= stops.length) return;
-              mark(stops[i].view);
-              goTo(stops[i].view, true);
-              setTimeout(hop, 1900);
-            };
-            setTimeout(hop, 900);        /* let it read as a world map first */
-          }, { threshold: .35 });
-          io.observe(host);
+        if (reduce) {                                /* no pin, no scrub — just show it */
+          figs.forEach((f, j) => { f.style.opacity = j ? 0 : 1; });
+          btns[0].classList.add('on');
+          $('procName').textContent = steps[0].title;
+          return;
         }
+
+        measure();
+        paint(0);
+        addEventListener('scroll', onScroll, { passive: true });
+        addEventListener('resize', () => { measure(); onScroll(); }, { passive: true });
       }
 
       function renderSections() {
@@ -2564,7 +2593,7 @@
         const card = c => {
           const art = c.image ? `<img src="${esc(c.image)}" alt="${esc(c.key)} collection" loading="lazy">` : GL.imgFor(repFor(c.key), 0);
           const href = c.href || `collections.html?c=${encodeURIComponent(c.key)}`;
-          return `<a class="fcoll" href="${esc(href)}"><div class="ov"></div>${art}
+          return `<a class="fcoll" href="${esc(href)}"><span class="ph">${art}</span>
         <div class="c"><span class="k">Collection</span><h3>${esc(c.key)}</h3><p>${esc(c.desc || '')}</p><span class="go">Explore →</span></div></a>`;
         };
         /* three copies so the rail can wrap in either direction; only the middle
@@ -2572,8 +2601,9 @@
         const set = hidden => `<div class="fc-set"${hidden ? ' aria-hidden="true"' : ''} style="display:contents">${fc.map(card).join('')}</div>`;
         $('fcollTrack').innerHTML = set(true) + set(false) + set(true);
         initFcollSlider(fc.length);
-        $('appsGrid').innerHTML = (C.applications || []).map(a => `<a class="appcard" href="${esc(a.href || 'collections.html')}"><div class="ov"></div>${media(a.image, a.title, a.fallback, 2)}
-      <div class="c"><h4>${esc(a.title)}</h4><span class="arw2">→</span></div></a>`).join('');
+        /* figures, not links — these cards show a space, they don't go anywhere */
+        $('appsGrid').innerHTML = (C.applications || []).map(a => `<figure class="appcard"><div class="ov"></div>${media(a.image, a.title, a.fallback, 2)}
+      <figcaption class="c"><h4>${esc(a.title)}</h4></figcaption></figure>`).join('');
 
         const ab = C.about || {}, av = $('aboutVis');
         if (av) {
@@ -2588,13 +2618,7 @@
           av.innerHTML = `<span class="cap">${esc(ab.caption || '')}</span>${art}`;
         }
 
-        /* factory: a real video when supplied, otherwise the image + play badge */
-        const f = C.factory || {}, mv = $('mfgVis');
-        if (mv) {
-          mv.innerHTML = f.video
-            ? `<video src="${esc(f.video)}"${f.poster ? ` poster="${esc(f.poster)}"` : ''} muted loop playsinline preload="metadata"${reduce ? ' controls' : ' autoplay'}></video><span class="vtag">${esc(f.caption || '')}</span>`
-            : `${media(f.image, 'Artizia manufacturing', f.fallback, 0)}<div class="play"><span>▶</span></div><span class="vtag">${esc(f.caption || '')}</span>`;
-        }
+        buildProcess(C.process || {});
 
         const cbg = $('ctaBg');
         if (cbg) cbg.innerHTML = (C.cta && C.cta.image) ? media(C.cta.image, '', null, 0) : GL.imgFor('hero', 0);

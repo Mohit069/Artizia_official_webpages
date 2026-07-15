@@ -1,12 +1,40 @@
 node_modules/
 .env
-# SQLite database files (WAL/SHM included)
-server/db/*.db
+
+# Built by scripts/vercel-build.js — never commit the output
+public/
+
+# SQLite journal files are machine-local and must never be committed.
+# NOTE: server/db/artizia.db IS committed on purpose. A git-deployed preview
+# (Vercel) has no persistent disk, so the database has to ship inside the
+# deployment or the site comes up empty. On real hosting with a disk, put
+# `server/db/*.db` back in this list.
 server/db/*.db-wal
 server/db/*.db-shm
-# Uploaded images (runtime content) — keep the folder, ignore its contents
-server/uploads/*
-!server/uploads/.gitkeep
+
+# Uploaded product images and the catalogue also ship with the deployment,
+# for the same reason — server/uploads/ is committed on purpose.
+
+# Product-photo import sources: ~880MB, referenced by no page. Master copies
+# stay on your machine; they must never enter the repository.
+assets/img/Calacatta & Exotic Series/
+assets/img/Basic Series/
+assets/img/Carrara Series/
+assets/img/Natural Series/
+assets/img/Solid Series/
+
+# Unoptimised camera originals (5–12MB each). Every page references the
+# compressed copies in assets/img/process/ instead.
+assets/img/Raw_material.JPG
+assets/img/Precision_engineering.png
+assets/img/Breton_technology.JPG
+assets/img/Quality_inspection.JPG
+assets/img/Surface_finishing.JPG
+assets/img/Global_delivery.JPG
+
+# transient upload staging
+server/cache/tmp/
+
 # OS / editor
 .DS_Store
 Thumbs.db

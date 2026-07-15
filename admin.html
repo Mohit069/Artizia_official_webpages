@@ -19,11 +19,22 @@
   .ab{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:11px 16px;border:1px solid var(--line-2);
     background:none;color:var(--text);cursor:pointer;transition:.25s;display:inline-flex;gap:8px;align-items:center}
   .ab:hover{border-color:var(--accent);color:var(--accent)}
+  /* .ab sets display:inline-flex, which silently beats the hidden attribute */
+  [hidden]{display:none!important}
   .ab.primary{background:var(--accent);color:#0A0A0C;border-color:var(--accent)}
   .ab.primary:hover{opacity:.88;color:#0A0A0C}
   .ab.danger:hover{border-color:#e0708a;color:#e0708a}
   .awrap{max-width:1200px;margin:0 auto;padding:clamp(20px,4vw,40px)}
   .abarmsg{font-family:var(--mono);font-size:11px;color:var(--text-dim);margin-bottom:20px}
+  .asearch{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding:10px 14px;
+    border:1px solid var(--line-2);border-radius:10px;background:var(--surface);transition:border-color .3s}
+  .asearch:focus-within{border-color:var(--accent)}
+  .asearch svg{width:17px;height:17px;flex:none;color:var(--text-faint)}
+  .asearch input{flex:1;min-width:0;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:14px}
+  .asearch input::placeholder{color:var(--text-faint)}
+  .asearch input::-webkit-search-cancel-button{display:none}   /* ours is the ✕ below */
+  .asearch button{background:none;border:0;color:var(--text-faint);cursor:pointer;font-size:13px;padding:2px 4px;transition:color .3s}
+  .asearch button:hover{color:var(--accent)}
   .agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
   .aitem{border:1px solid var(--line);background:var(--surface);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
   .aitem .thumb{aspect-ratio:4/3;overflow:hidden;position:relative;background:var(--bg-2)}
@@ -73,8 +84,207 @@
   .uslot .ulabel{position:absolute;left:0;right:0;bottom:0;z-index:2;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:5px 4px;background:rgba(8,8,10,.65);color:#fff}
   .uslot.filled .uhint{display:none}
   .uslot .uhint{position:relative;z-index:1;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);padding:0 6px}
+
+  /* ---- tabs ---- */
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:22px}
+  .tab{background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;padding:12px 18px;
+    font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-faint);
+    display:flex;align-items:center;gap:8px;transition:.25s}
+  .tab:hover{color:var(--text)}
+  .tab.on{color:var(--text);border-bottom-color:var(--accent)}
+  .tab .pill{min-width:18px;height:18px;padding:0 6px;border-radius:9px;background:var(--accent);color:#0A0A0C;
+    font-size:10px;font-weight:700;display:grid;place-items:center;letter-spacing:0}
+  .pane{display:none}
+  .pane.on{display:block}
+
+  /* ---- crop editor ----
+     Must sit ABOVE the product drawer (z-index 120) — it is opened from inside
+     the drawer, and at an equal z-index the drawer's scrim swallowed every click. */
+  .crop{position:fixed;inset:0;z-index:140;display:none}
+  .crop.on{display:block}
+  .crop .cscrim{position:absolute;inset:0;background:rgba(4,4,6,.86);backdrop-filter:blur(4px)}
+  .crop .cpanel{position:absolute;inset:clamp(16px,3vw,44px);display:flex;flex-direction:column;
+    background:var(--bg);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .crop .chead{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;border-bottom:1px solid var(--line)}
+  .crop .chead h2{font-size:18px;margin:0}
+  .crop .chead .sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--text-faint);margin-top:3px}
+  .crop .ctools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--line)}
+  .crop .ctools .sep{width:1px;height:20px;background:var(--line);margin:0 6px}
+  .crop .ratio{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    padding:7px 11px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--text-faint);cursor:pointer;transition:.25s}
+  .crop .ratio:hover{color:var(--text)}
+  .crop .ratio.on{background:var(--accent);border-color:var(--accent);color:#0A0A0C}
+  /* the stage: the image is fitted, the crop box lives in stage coordinates */
+  .crop .cstage{flex:1;position:relative;overflow:hidden;background:
+    repeating-conic-gradient(#15151b 0 25%, #0e0e13 0 50%) 0 0/22px 22px;display:grid;place-items:center;user-select:none;touch-action:none}
+  .crop .cimg{position:absolute;transform-origin:center;pointer-events:none;image-rendering:auto}
+  .crop .cbox{position:absolute;border:1px solid #fff;box-shadow:0 0 0 9999px rgba(4,4,6,.62);cursor:move}
+  .crop .cbox::before,.crop .cbox::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(to right,transparent 33.3%,rgba(255,255,255,.28) 33.3% 33.4%,transparent 33.4% 66.6%,rgba(255,255,255,.28) 66.6% 66.7%,transparent 66.7%)}
+  .crop .cbox::after{background:linear-gradient(to bottom,transparent 33.3%,rgba(255,255,255,.28) 33.3% 33.4%,transparent 33.4% 66.6%,rgba(255,255,255,.28) 66.6% 66.7%,transparent 66.7%)}
+  .crop .h{position:absolute;width:14px;height:14px;background:#fff;border-radius:2px;z-index:2}
+  .crop .h.nw{left:-7px;top:-7px;cursor:nwse-resize}
+  .crop .h.ne{right:-7px;top:-7px;cursor:nesw-resize}
+  .crop .h.sw{left:-7px;bottom:-7px;cursor:nesw-resize}
+  .crop .h.se{right:-7px;bottom:-7px;cursor:nwse-resize}
+  .crop .cfoot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 20px;border-top:1px solid var(--line)}
+  .crop .cinfo{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--text-faint)}
+  .crop .cbtns{display:flex;gap:8px;flex-wrap:wrap}
+
+  /* ---- pages & blog ---- */
+  .drawer.wide .panel{width:min(920px,100%)}
+  .dfoot{position:sticky;bottom:0;z-index:2;display:flex;justify-content:space-between;gap:12px;
+    padding:16px clamp(20px,3vw,32px);background:var(--bg);border-top:1px solid var(--line)}
+  .clist{display:flex;flex-direction:column;gap:10px}
+  .crow{display:grid;grid-template-columns:1fr auto auto;gap:16px;align-items:center;
+    padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+  .crow .t{font-family:var(--serif);font-size:19px}
+  .crow .s{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--text-faint);margin-top:4px}
+  .crow .badge{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+    padding:4px 9px;border-radius:999px;border:1px solid var(--line-2);color:var(--text-faint)}
+  .crow .badge.live{background:var(--accent);border-color:var(--accent);color:#0A0A0C}
+  .crow .acts{display:flex;gap:6px}
+  @media(max-width:640px){.crow{grid-template-columns:1fr}}
+
+  .secthead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+    margin-top:10px;padding-top:18px;border-top:1px solid var(--line)}
+  .secthead h3{font-family:var(--serif);font-size:20px}
+  .blocklist{display:flex;flex-direction:column;gap:10px}
+  .bitem{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+  .bitem.dragging{opacity:.4}
+  .bitem.over{border-color:var(--accent)}
+  .bhead{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;user-select:none}
+  .bhead .grip{cursor:grab;color:var(--text-faint);font-size:13px;letter-spacing:-2px}
+  .bhead .ic{width:24px;height:24px;display:grid;place-items:center;border-radius:6px;
+    background:var(--bg);border:1px solid var(--line);color:var(--accent);font-size:11px}
+  .bhead .nm{flex:1;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+  .bhead .sm{font-size:12px;color:var(--text-faint);font-family:var(--sans);letter-spacing:0;
+    text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:38%}
+  .bhead button{background:none;border:0;color:var(--text-faint);cursor:pointer;padding:4px 6px;font-size:12px}
+  .bhead button:hover{color:var(--accent)}
+  .bhead button.x:hover{color:#e0708a}
+  .bbody{display:none;padding:6px 14px 16px;border-top:1px solid var(--line);flex-direction:column;gap:14px}
+  .bitem.open .bbody{display:flex}
+  .addbar{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+  .addbar button{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    padding:9px 12px;border-radius:999px;border:1px dashed var(--line-2);background:none;color:var(--text-dim);cursor:pointer;transition:.25s}
+  .addbar button:hover{border-style:solid;border-color:var(--accent);color:var(--accent)}
+
+  .listitem{border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+  .listitem .lhead{display:flex;justify-content:space-between;align-items:center}
+  .listitem .lhead span{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--text-faint)}
+  .imgpick{display:flex;align-items:center;gap:12px}
+  .imgpick .ipv{width:74px;height:52px;border-radius:8px;border:1px solid var(--line);background:var(--bg);
+    background-size:cover;background-position:center;flex:0 0 auto}
+  .imgpick .ipv.on{border-color:var(--accent)}
+  .chk{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+  .chk input{width:16px;height:16px;flex:0 0 auto;accent-color:var(--accent)}
+  /* .fld label is uppercase mono; a checkbox caption is a sentence, not a field name */
+  .fld .chk label,.dbody .chk label{display:inline;margin:0;text-transform:none;letter-spacing:0;
+    font-family:var(--sans);font-size:13px;color:var(--text-dim);cursor:pointer}
+  .seo{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--surface)}
+  .seo summary{cursor:pointer;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+  .seo[open] summary{margin-bottom:14px}
+  .seo .fld+.fld{margin-top:12px}
+
+  /* rich-text editor */
+  .rt{border:1px solid var(--line-2);border-radius:10px;overflow:hidden;background:var(--bg)}
+  .rt-bar{display:flex;flex-wrap:wrap;gap:2px;padding:8px;border-bottom:1px solid var(--line);background:var(--surface)}
+  .rt-bar button{min-width:32px;height:30px;padding:0 8px;background:none;border:1px solid transparent;border-radius:6px;
+    color:var(--text-dim);cursor:pointer;font-size:12px;font-family:var(--mono)}
+  .rt-bar button:hover{background:var(--bg);color:var(--text);border-color:var(--line)}
+  .rt-bar .sep{width:1px;background:var(--line);margin:4px 5px}
+  .rt-body{min-height:340px;max-height:60vh;overflow:auto;padding:20px 22px;outline:none;max-width:none}
+  .rt-body:focus{box-shadow:inset 0 0 0 2px var(--accent)}
+  .rt-body:empty::before{content:"Start writing…";color:var(--text-faint)}
+
+  /* ---- catalogue ---- */
+  .cat-box{max-width:640px}
+  .cat-now{margin-bottom:18px}
+  .cat-card{display:flex;align-items:center;gap:16px;padding:18px 20px;border:1px solid var(--line);
+    border-radius:12px;background:var(--surface)}
+  .cat-card .kind{width:46px;height:46px;flex:0 0 auto;border-radius:10px;display:grid;place-items:center;
+    background:var(--bg);border:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--accent)}
+  .cat-card .meta{flex:1;min-width:0}
+  .cat-card .nm{font-weight:600;word-break:break-all}
+  .cat-card .sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--text-faint);margin-top:4px}
+  .cat-none{padding:16px 18px;border:1px dashed var(--line-2);border-radius:12px;
+    font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--text-faint)}
+  .cat-drop{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;
+    padding:38px 24px;border:1px dashed var(--line-2);border-radius:14px;cursor:pointer;
+    background:var(--bg);transition:.3s}
+  .cat-drop:hover,.cat-drop.over{border-color:var(--accent);background:var(--surface)}
+  .cat-drop .ic{font-size:26px;color:var(--accent);line-height:1}
+  .cat-drop .hint{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--text-faint)}
+  .cat-drop.busy{opacity:.55;pointer-events:none}
+  .cat-msg{margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.04em;min-height:16px}
+
+  /* ---- enquiries ---- */
+  .filters2{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .chip{background:none;border:1px solid var(--line-2);border-radius:999px;padding:7px 14px;color:var(--text-dim);
+    font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;transition:.25s}
+  .chip:hover{color:var(--text);border-color:var(--accent)}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#0A0A0C}
+  .enq-list{display:flex;flex-direction:column;gap:12px}
+  .enq{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:18px 20px;transition:.25s}
+  .enq.unread{border-left:3px solid var(--accent)}
+  .enq-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .enq-who{min-width:0}
+  .enq-who h4{font-family:var(--serif);font-size:19px;margin:0 0 3px}
+  .enq-meta{font-family:var(--mono);font-size:11px;color:var(--text-faint);display:flex;gap:10px;flex-wrap:wrap}
+  .enq-meta a{color:var(--accent)}
+  .badge{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+    padding:4px 9px;border-radius:999px;border:1px solid var(--line-2);color:var(--text-dim);white-space:nowrap}
+  .badge.sample{border-color:#8FD6C4;color:#8FD6C4}
+  .badge.quote{border-color:#F0BFA6;color:#F0BFA6}
+  .badge.contact{border-color:#C6B4E8;color:#C6B4E8}
+  .enq-body{margin-top:12px;font-size:14px;color:var(--text-dim);line-height:1.6;white-space:pre-wrap}
+  .enq-prods{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+  .enq-prods span{font-family:var(--mono);font-size:10px;letter-spacing:.08em;padding:4px 9px;border-radius:6px;
+    background:var(--surface-2);border:1px solid var(--line);color:var(--text-dim)}
+  .enq-acts{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+  .enq-when{font-family:var(--mono);font-size:10.5px;color:var(--text-faint);white-space:nowrap}
+
+  /* ---- users ---- */
+  .utable{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .urow{display:grid;grid-template-columns:1.4fr .8fr 1fr 1fr auto;gap:16px;align-items:center;
+    padding:15px 20px;border-bottom:1px solid var(--line)}
+  .urow:last-child{border-bottom:0}
+  .urow.head{background:var(--surface);font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--text-faint)}
+  .urow b{font-weight:600}
+  .urole{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    padding:4px 9px;border-radius:999px;border:1px solid var(--line-2);color:var(--text-dim);justify-self:start}
+  .urole.admin{border-color:var(--accent);color:var(--accent)}
+  .umeta{font-family:var(--mono);font-size:11px;color:var(--text-faint)}
+  .uacts{display:flex;gap:6px;justify-content:flex-end}
+  .you{font-family:var(--mono);font-size:9.5px;color:var(--text-faint);letter-spacing:.1em}
+  @media(max-width:820px){
+    .urow{grid-template-columns:1fr auto;gap:8px}
+    .urow.head{display:none}
+    .umeta{display:none}
+  }
+  .empty{padding:56px 20px;text-align:center;color:var(--text-faint);font-family:var(--mono);
+    font-size:11px;letter-spacing:.16em;text-transform:uppercase}
   .uslot .urm{position:absolute;top:5px;right:5px;z-index:3;width:22px;height:22px;border-radius:50%;border:0;background:rgba(8,8,10,.7);color:#fff;font-size:12px;display:none;place-items:center;cursor:pointer}
   .uslot.filled .urm{display:grid}
+  /* recrop an image that is already on the product */
+  .uslot .ued{position:absolute;top:5px;right:32px;z-index:3;width:22px;height:22px;border-radius:50%;border:0;
+    background:rgba(8,8,10,.7);color:#fff;font-size:11px;display:none;place-items:center;cursor:pointer;transition:.2s}
+  .uslot.filled .ued{display:grid}
+  .uslot .ued:hover,.uslot .urm:hover{background:var(--accent);color:#0A0A0C}
+  /* reassign an image's role: the label becomes a picker once a slot is filled */
+  .uslot .urole{display:none;position:absolute;left:0;right:0;bottom:0;z-index:3;width:100%;
+    -webkit-appearance:none;appearance:none;border:0;cursor:pointer;
+    padding:5px 4px;background:rgba(8,8,10,.72);color:#fff;text-align:center;text-align-last:center;
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase}
+  .uslot.filled .urole{display:block}
+  .uslot.filled .ulabel{display:none}
+  .uslot .urole:hover{background:var(--accent);color:#0A0A0C}
+  .uslot .urole option{background:var(--surface);color:var(--text);text-transform:none;letter-spacing:0}
+  .uslot.filled{cursor:grab}
+  .uslot.dragging{opacity:.45}
+  .uslot.dropzone{border-color:var(--accent);border-style:solid}
   .uploads-hint{font-family:var(--mono);font-size:10px;color:var(--text-faint);letter-spacing:.04em;margin-top:-6px}
   .frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .frow.three{grid-template-columns:1fr 1fr 1fr}
@@ -114,14 +324,229 @@
     <div class="abtns">
       <span class="who" id="who"></span>
       <button class="ab primary" id="addBtn">+ Add Product</button>
+      <button class="ab primary" id="addUserBtn" hidden>+ Add User</button>
+      <button class="ab primary" id="addPageBtn" hidden>+ New Page</button>
+      <button class="ab primary" id="addPostBtn" hidden>+ New Article</button>
       <a class="ab" href="collections.html" target="_blank">View Site ↗</a>
       <button class="ab" id="themeBtn" title="Theme">☀</button>
       <button class="ab danger" id="logoutBtn">Log out</button>
     </div>
   </div>
+
   <div class="awrap">
+    <nav class="tabs" id="tabs">
+      <button class="tab on" data-tab="products">Products</button>
+      <button class="tab" data-tab="enquiries">Enquiries <span class="pill" id="enqPill" hidden>0</span></button>
+      <button class="tab" data-tab="pages">Pages</button>
+      <button class="tab" data-tab="blog">Blog</button>
+      <button class="tab" data-tab="users">Users</button>
+      <button class="tab" data-tab="catalogue">Catalogue</button>
+    </nav>
+
     <p class="abarmsg" id="msg"></p>
-    <div class="agrid" id="grid"></div>
+
+    <section class="pane on" id="pane-products">
+      <div class="asearch">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"
+          stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><line x1="15.8" y1="15.8" x2="20" y2="20"/></svg>
+        <input id="pSearch" type="search" autocomplete="off" spellcheck="false"
+          placeholder="Search products — name, code, slug, collection…" aria-label="Search products">
+        <button id="pClear" hidden aria-label="Clear search">✕</button>
+      </div>
+      <div class="agrid" id="grid"></div>
+    </section>
+
+    <section class="pane" id="pane-enquiries">
+      <div class="filters2" id="enqFilters">
+        <button class="chip on" data-status="">All</button>
+        <button class="chip" data-status="new">Unread</button>
+        <button class="chip" data-status="read">Read</button>
+        <button class="chip" data-status="archived">Archived</button>
+      </div>
+      <div class="enq-list" id="enqList"></div>
+    </section>
+
+    <section class="pane" id="pane-pages">
+      <div class="clist" id="pageList"></div>
+    </section>
+
+    <section class="pane" id="pane-blog">
+      <div class="clist" id="postList"></div>
+    </section>
+
+    <section class="pane" id="pane-users">
+      <div class="utable" id="userList"></div>
+    </section>
+
+    <section class="pane" id="pane-catalogue">
+      <div class="cat-box">
+        <div class="cat-now" id="catNow"></div>
+        <label class="cat-drop" id="catDrop">
+          <input type="file" id="catFile" accept="application/pdf,image/jpeg,image/png" hidden>
+          <span class="ic">↥</span>
+          <b>Drop your catalogue here, or click to choose</b>
+          <span class="hint">PDF or JPG · up to 500 MB. Uploading replaces the current catalogue.</span>
+        </label>
+        <p class="cat-msg" id="catMsg"></p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- PAGE BUILDER -->
+<div class="drawer wide" id="pdrawer">
+  <div class="scrim" data-close="pdrawer"></div>
+  <div class="panel">
+    <div class="dhead">
+      <h2 id="pgTitle">Edit Page</h2>
+      <div style="display:flex;gap:8px">
+        <a class="ab" id="pg_view" target="_blank" rel="noopener" hidden>View ↗</a>
+        <button class="ab" data-close="pdrawer">✕ Close</button>
+      </div>
+    </div>
+    <div class="dbody">
+      <div class="g2">
+        <div class="fld"><label>Page title</label><input id="pg_title" placeholder="e.g. Projects"></div>
+        <div class="fld"><label>Address (slug)</label><input id="pg_slug" placeholder="e.g. projects">
+          <span class="hint">the page will live at <code>/p/<span id="pg_slugPrev">slug</span></code></span></div>
+      </div>
+      <div class="g2">
+        <div class="fld"><label>Status</label>
+          <select id="pg_status"><option value="draft">Draft — only you can see it</option><option value="published">Published — live on the site</option></select>
+        </div>
+        <div class="fld"><label>Navigation</label>
+          <div class="chk"><input type="checkbox" id="pg_inNav"><label for="pg_inNav">Show in the main navigation</label></div>
+          <input id="pg_navLabel" placeholder="Nav label (defaults to the title)">
+        </div>
+      </div>
+      <details class="seo">
+        <summary>SEO &amp; sharing</summary>
+        <div class="fld"><label>SEO title</label><input id="pg_seoTitle" placeholder="Defaults to the page title"></div>
+        <div class="fld"><label>Meta description</label><textarea id="pg_seoDesc" rows="2" placeholder="One or two sentences for Google"></textarea></div>
+        <div class="fld"><label>Share image</label>
+          <div class="imgpick" id="pg_ogPick"><button class="ab" type="button" data-pick="pg_ogImage">Choose image</button><span class="ipv" id="pg_ogImage_v"></span></div>
+          <input type="hidden" id="pg_ogImage">
+        </div>
+      </details>
+
+      <div class="secthead"><h3>Sections</h3><span class="hint" id="pg_count">0 sections</span></div>
+      <div class="blocklist" id="pg_blocks"></div>
+      <div class="addbar" id="pg_add"></div>
+
+      <p class="ferr" id="pg_err"></p>
+    </div>
+    <div class="dfoot">
+      <button class="ab danger" id="pg_del">Delete page</button>
+      <button class="ab primary" id="pg_save">Save page</button>
+    </div>
+  </div>
+</div>
+
+<!-- ARTICLE EDITOR -->
+<div class="drawer wide" id="bdrawer">
+  <div class="scrim" data-close="bdrawer"></div>
+  <div class="panel">
+    <div class="dhead">
+      <h2 id="bgTitle">Write Article</h2>
+      <div style="display:flex;gap:8px">
+        <a class="ab" id="bg_view" target="_blank" rel="noopener" hidden>View ↗</a>
+        <button class="ab" data-close="bdrawer">✕ Close</button>
+      </div>
+    </div>
+    <div class="dbody">
+      <div class="fld"><label>Headline</label><input id="bg_title" placeholder="e.g. How to choose a quartz countertop"></div>
+      <div class="g2">
+        <div class="fld"><label>Address (slug)</label><input id="bg_slug" placeholder="how-to-choose-a-quartz-countertop">
+          <span class="hint">/blog/<span id="bg_slugPrev">slug</span></span></div>
+        <div class="fld"><label>Status</label>
+          <select id="bg_status"><option value="draft">Draft</option><option value="published">Published</option></select>
+        </div>
+      </div>
+      <div class="g2">
+        <div class="fld"><label>Author</label><input id="bg_author" placeholder="e.g. Artizia Team"></div>
+        <div class="fld"><label>Tags</label><input id="bg_tags" placeholder="Design, Care, Projects — comma separated"></div>
+      </div>
+      <div class="fld"><label>Excerpt</label><textarea id="bg_excerpt" rows="2" placeholder="One or two lines, shown on the article card"></textarea></div>
+      <div class="fld"><label>Cover image</label>
+        <div class="imgpick" id="bg_coverPick"><button class="ab" type="button" data-pick="bg_cover">Choose image</button><span class="ipv" id="bg_cover_v"></span></div>
+        <input type="hidden" id="bg_cover">
+      </div>
+
+      <div class="fld"><label>Article</label>
+        <div class="rt">
+          <div class="rt-bar" id="bg_bar">
+            <button type="button" data-cmd="formatBlock" data-val="h2" title="Heading">H2</button>
+            <button type="button" data-cmd="formatBlock" data-val="h3" title="Subheading">H3</button>
+            <button type="button" data-cmd="formatBlock" data-val="p" title="Paragraph">¶</button>
+            <span class="sep"></span>
+            <button type="button" data-cmd="bold" title="Bold"><b>B</b></button>
+            <button type="button" data-cmd="italic" title="Italic"><i>I</i></button>
+            <span class="sep"></span>
+            <button type="button" data-cmd="insertUnorderedList" title="Bulleted list">•</button>
+            <button type="button" data-cmd="insertOrderedList" title="Numbered list">1.</button>
+            <button type="button" data-cmd="formatBlock" data-val="blockquote" title="Quote">❝</button>
+            <span class="sep"></span>
+            <button type="button" id="rtLink" title="Link">🔗</button>
+            <button type="button" id="rtImg" title="Insert image">▣</button>
+            <button type="button" data-cmd="removeFormat" title="Clear formatting">⨯</button>
+          </div>
+          <div class="rt-body prose-long" id="bg_body" contenteditable="true"></div>
+        </div>
+      </div>
+
+      <details class="seo">
+        <summary>SEO &amp; sharing</summary>
+        <div class="fld"><label>SEO title</label><input id="bg_seoTitle" placeholder="Defaults to the headline"></div>
+        <div class="fld"><label>Meta description</label><textarea id="bg_seoDesc" rows="2" placeholder="Defaults to the excerpt"></textarea></div>
+      </details>
+
+      <p class="ferr" id="bg_err"></p>
+    </div>
+    <div class="dfoot">
+      <button class="ab danger" id="bg_del">Delete article</button>
+      <button class="ab primary" id="bg_save">Save article</button>
+    </div>
+  </div>
+</div>
+
+<!-- crop editor — opens whenever an image is chosen for a product slot -->
+<div class="crop" id="crop">
+  <div class="cscrim" id="cropScrim"></div>
+  <div class="cpanel">
+    <div class="chead">
+      <div>
+        <h2 id="cropTitle">Crop image</h2>
+        <div class="sub" id="cropFile"></div>
+      </div>
+      <button class="ab" id="cropX">✕ Cancel</button>
+    </div>
+
+    <div class="ctools">
+      <button class="ratio on" data-ar="free">Free</button>
+      <button class="ratio" data-ar="2">Slab 2:1</button>
+      <button class="ratio" data-ar="1">Square</button>
+      <button class="ratio" data-ar="1.3333">4:3</button>
+      <button class="ratio" data-ar="1.7778">16:9</button>
+      <span class="sep"></span>
+      <button class="ab" id="cropRot">⟳ Rotate 90°</button>
+      <button class="ab" id="cropReset">Reset</button>
+    </div>
+
+    <div class="cstage" id="cropStage">
+      <img class="cimg" id="cropImg" alt="">
+      <div class="cbox" id="cropBox">
+        <span class="h nw" data-h="nw"></span><span class="h ne" data-h="ne"></span>
+        <span class="h sw" data-h="sw"></span><span class="h se" data-h="se"></span>
+      </div>
+    </div>
+
+    <div class="cfoot">
+      <span class="cinfo" id="cropInfo"></span>
+      <div class="cbtns">
+        <button class="ab" id="cropSkip">Upload uncropped</button>
+        <button class="ab primary" id="cropGo">Crop &amp; Upload</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -133,12 +558,13 @@
     <div class="dbody">
       <div class="grouplabel" style="margin-top:0;padding-top:0;border-top:0">Product Images</div>
       <div class="uploads" id="uploads">
-        <div class="uslot" data-slot="0"><span class="uplus">＋</span><span class="uhint">Full Slab</span><span class="ulabel">Full Slab</span><button class="urm" title="Remove">✕</button></div>
-        <div class="uslot" data-slot="1"><span class="uplus">＋</span><span class="uhint">Close-up</span><span class="ulabel">Close-up</span><button class="urm" title="Remove">✕</button></div>
-        <div class="uslot" data-slot="2"><span class="uplus">＋</span><span class="uhint">Application</span><span class="ulabel">Application</span><button class="urm" title="Remove">✕</button></div>
-        <div class="uslot" data-slot="3"><span class="uplus">＋</span><span class="uhint">Detail</span><span class="ulabel">Detail</span><button class="urm" title="Remove">✕</button></div>
+        <div class="uslot" data-slot="0"><span class="uplus">＋</span><span class="uhint">Full Slab</span><span class="ulabel">Full Slab</span><button class="ued" title="Crop / rotate this image">✎</button><button class="urm" title="Remove">✕</button></div>
+        <div class="uslot" data-slot="1"><span class="uplus">＋</span><span class="uhint">Close-up</span><span class="ulabel">Close-up</span><button class="ued" title="Crop / rotate this image">✎</button><button class="urm" title="Remove">✕</button></div>
+        <div class="uslot" data-slot="2"><span class="uplus">＋</span><span class="uhint">Application</span><span class="ulabel">Application</span><button class="ued" title="Crop / rotate this image">✎</button><button class="urm" title="Remove">✕</button></div>
+        <div class="uslot" data-slot="3"><span class="uplus">＋</span><span class="uhint">Detail</span><span class="ulabel">Detail</span><button class="ued" title="Crop / rotate this image">✎</button><button class="urm" title="Remove">✕</button></div>
       </div>
-      <p class="uploads-hint">Upload up to 4 photos. Uploaded to the server and auto-resized to 1500px. First image is the main slab shown everywhere.</p>
+      <p class="uploads-hint">Upload up to 4 photos, auto-resized to 1500px on the server. The Full Slab image is the one shown everywhere on the site.<br>
+        ✎ crops or rotates · drag an image onto another slot to swap them · or change a role from the label under it.</p>
       <input type="file" id="fileInput" accept="image/*" hidden>
 
       <div class="grouplabel">Identity</div>
@@ -170,6 +596,7 @@
 </div>
 
 <script src="assets/js/data.js"></script>
+<script src="assets/js/blocks.js"></script>
 <script src="assets/js/marble.js"></script>
 <script>
 (function(){
@@ -199,7 +626,13 @@
   async function checkAuth(){
     try{const r=await api('/api/admin/me');const j=await r.json();return j.authenticated?j.user:null;}catch(e){return null;}
   }
-  function showApp(user){$('gate').style.display='none';$('app').hidden=false;$('who').textContent=user?('Signed in · '+user):'';loadProducts();}
+  let ME={};
+  async function showApp(user){
+    $('gate').style.display='none';$('app').hidden=false;
+    $('who').textContent=user?('Signed in · '+user):'';
+    try{ME=await (await api('/api/admin/me')).json();}catch(e){ME={};}
+    loadProducts();loadEnquiries();refreshBadge();
+  }
   function showGate(){$('app').hidden=true;$('gate').style.display='grid';$('lg_user').focus();}
   $('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('lg_err').textContent='';$('lg_btn').textContent='Signing in…';
     try{const r=await api('/api/admin/login',{method:'POST',headers:jsonHeaders,body:JSON.stringify({username:$('lg_user').value,password:$('lg_pass').value})});
@@ -214,37 +647,307 @@
     try{const r=await api('/api/products');products=await r.json();}catch(e){products=[];}
     hydrate();renderGrid();
   }
+  let pQuery='';
+  const pHit=m=>{
+    const t=pQuery.toLowerCase();
+    return [m.name,m.code,m.slug,m.coll,m.desc,m.finish,m.veinText]
+      .some(v=>String(v||'').toLowerCase().includes(t));
+  };
   function renderGrid(){
-    $('grid').innerHTML=products.map(m=>{const hasImg=(m.images||[]).some(Boolean);
+    const list=pQuery?products.filter(pHit):products;
+    $('grid').innerHTML=list.map(m=>{const hasImg=(m.images||[]).some(Boolean);
       const thumb=hasImg?`<img src="${m.images.find(Boolean)}" alt="${m.name}">`:GL.imgFor(m.slug,0);
       return `<div class="aitem"><div class="thumb">${thumb}<span class="coll">${m.coll}</span>${hasImg?'':'<span class="noimg">Auto marble</span>'}</div>
         <div class="meta"><span class="n">${m.name}</span><span class="c">No. ${m.code||'—'} · ${m.slug}</span></div>
         <div class="row"><button data-edit="${m.slug}">Edit</button><button class="del" data-del="${m.slug}">Delete</button></div></div>`;}).join('')
-      || '<p class="abarmsg">No products yet. Click “Add Product”.</p>';
+      || (pQuery
+        ? '<p class="abarmsg">No products match that search.</p>'
+        : '<p class="abarmsg">No products yet. Click “Add Product”.</p>');
     document.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>openEditor(b.dataset.edit)));
     document.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>del(b.dataset.del)));
-    $('msg').textContent=products.length+' products · stored in the database and visible to every visitor.';
+    $('pClear').hidden=!pQuery;
+    /* the count has to reflect what is on screen — otherwise a filtered grid still
+       claims "53 products" and it looks like the search silently deleted them */
+    $('msg').textContent = pQuery
+      ? `${list.length} of ${products.length} products matching “${pQuery}”.`
+      : `${products.length} products · stored in the database and visible to every visitor.`;
   }
+  $('pSearch').addEventListener('input',e=>{pQuery=e.target.value.trim();renderGrid();});
+  $('pClear').addEventListener('click',()=>{$('pSearch').value='';pQuery='';renderGrid();$('pSearch').focus();});
 
   /* ---------- images ---------- */
+  const ROLES=['Full Slab','Close-up','Application','Detail'];
   let curImages=[null,null,null,null];let activeSlot=0;
+
+  /* Roles are slots, not tags — the four DB columns ARE the four roles. So
+     "rename this image to Close-up" means "move it into the Close-up slot",
+     and whatever sits there swaps back. Nothing is ever silently overwritten. */
+  function swapSlots(a,b){
+    if(a===b) return;
+    const t=curImages[a]; curImages[a]=curImages[b]; curImages[b]=t;
+    paintSlots();
+  }
+
   function paintSlots(){
     document.querySelectorAll('.uslot').forEach(el=>{const s=+el.dataset.slot;const src=curImages[s];
       el.classList.toggle('filled',!!src);let img=el.querySelector('img');
-      if(src){if(!img){img=document.createElement('img');el.prepend(img);}img.src=src;}else if(img){img.remove();}});
+      if(src){if(!img){img=document.createElement('img');el.prepend(img);}img.src=src;}else if(img){img.remove();}
+      el.draggable=!!src;
+      /* the role picker: selecting another role swaps the two slots */
+      let sel=el.querySelector('.urole');
+      if(!sel){
+        sel=document.createElement('select');
+        sel.className='urole';
+        sel.title='Change this image’s role';
+        sel.innerHTML=ROLES.map((r,i)=>`<option value="${i}">${r}</option>`).join('');
+        sel.addEventListener('click',e=>e.stopPropagation());   /* don't open the file picker */
+        sel.addEventListener('change',e=>{
+          e.stopPropagation();
+          swapSlots(+el.dataset.slot, +sel.value);
+        });
+        el.appendChild(sel);
+      }
+      sel.value=String(s);
+    });
   }
   document.querySelectorAll('.uslot').forEach(el=>{
-    el.addEventListener('click',e=>{if(e.target.classList.contains('urm'))return;activeSlot=+el.dataset.slot;$('fileInput').value='';$('fileInput').click();});
+    el.addEventListener('click',e=>{
+      if(e.target.classList.contains('urm')||e.target.classList.contains('ued')||e.target.classList.contains('urole'))return;
+      activeSlot=+el.dataset.slot;$('fileInput').value='';$('fileInput').click();
+    });
+
+    /* drag an image onto another slot to swap the two */
+    el.addEventListener('dragstart',e=>{
+      const s=+el.dataset.slot;
+      if(!curImages[s]){ e.preventDefault(); return; }
+      e.dataTransfer.setData('text/plain',String(s));
+      e.dataTransfer.effectAllowed='move';
+      el.classList.add('dragging');
+    });
+    el.addEventListener('dragend',()=>{
+      el.classList.remove('dragging');
+      document.querySelectorAll('.uslot').forEach(x=>x.classList.remove('dropzone'));
+    });
+    el.addEventListener('dragover',e=>{ e.preventDefault(); e.dataTransfer.dropEffect='move'; el.classList.add('dropzone'); });
+    el.addEventListener('dragleave',()=>el.classList.remove('dropzone'));
+    el.addEventListener('drop',e=>{
+      e.preventDefault();
+      el.classList.remove('dropzone');
+      const from=parseInt(e.dataTransfer.getData('text/plain'),10);
+      if(Number.isInteger(from)) swapSlots(from, +el.dataset.slot);
+    });
     el.querySelector('.urm').addEventListener('click',e=>{e.stopPropagation();curImages[+el.dataset.slot]=null;paintSlots();});
+    /* ✎ — re-crop an image that is already on the product.
+       The file is same-origin (/uploads/...), so it can be pulled back as a blob
+       and drawn to a canvas without tainting it. */
+    el.querySelector('.ued').addEventListener('click',async e=>{
+      e.stopPropagation();
+      const slot=+el.dataset.slot, url=curImages[slot];
+      if(!url) return;
+      el.classList.add('busy');
+      try{
+        const r=await fetch(url,{credentials:'same-origin',cache:'no-store'});
+        if(!r.ok) throw new Error('could not load');
+        const blob=await r.blob();
+        const name=url.split('/').pop();
+        openCrop(new File([blob],name,{type:blob.type||'image/jpeg'}), slot, true);
+      }catch(err){
+        alert('Could not open that image for editing.');
+      }
+      el.classList.remove('busy');
+    });
   });
-  $('fileInput').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;
-    const slotEl=document.querySelector('.uslot[data-slot="'+activeSlot+'"]');slotEl.classList.add('busy');
-    try{const fd=new FormData();fd.append('image',f);
-      const r=await api('/api/upload',{method:'POST',body:fd});const j=await r.json();
-      if(r.ok&&j.url){curImages[activeSlot]=j.url;paintSlots();}
-      else{alert(j.error||'Upload failed.');}
-    }catch(err){alert('Upload failed — are you still signed in?');}
-    slotEl.classList.remove('busy');});
+  /* choosing a file opens the cropper — nothing is uploaded until you confirm */
+  $('fileInput').addEventListener('change',e=>{
+    const f=e.target.files[0];
+    if(f) openCrop(f,activeSlot);
+  });
+
+  /* When the cropper is opened from a block or an article rather than a product
+     slot, the finished URL goes to this callback instead of into curImages. */
+  let cropCB=null;
+
+  async function uploadBlob(blob,filename,slot){
+    const cb=cropCB; cropCB=null;
+    const slotEl=cb?null:document.querySelector('.uslot[data-slot="'+slot+'"]');
+    if(slotEl) slotEl.classList.add('busy');
+    try{
+      const fd=new FormData();
+      fd.append('image',blob,filename);
+      const r=await api('/api/upload',{method:'POST',body:fd});
+      const j=await r.json();
+      if(r.ok&&j.url){ if(cb) cb(j.url); else { curImages[slot]=j.url; paintSlots(); } }
+      else alert(j.error||'Upload failed.');
+    }catch(err){ alert('Upload failed — are you still signed in?'); }
+    if(slotEl) slotEl.classList.remove('busy');
+  }
+
+  /* generic image picker used by page blocks and the article editor */
+  const genericInput=document.createElement('input');
+  genericInput.type='file'; genericInput.accept='image/*'; genericInput.hidden=true;
+  document.body.appendChild(genericInput);
+  genericInput.addEventListener('change',e=>{
+    const f=e.target.files[0];
+    genericInput.value='';
+    if(f) openCrop(f,-1);
+  });
+  function pickImage(cb){ cropCB=cb; genericInput.click(); }
+
+  /* ---------- crop editor ----------
+     The image is displayed "contain"-fitted inside the stage; the crop box lives
+     in stage pixels. On confirm we scale the box back into natural pixels and
+     draw that region to a canvas — so the crop is exact regardless of zoom. */
+  const CROP = (function(){
+    const el=$('crop'), stage=$('cropStage'), img=$('cropImg'), box=$('cropBox');
+    /* the slab card is 2:1, so default the Full Slab slot to that ratio */
+    const SLOT_AR=[2,null,null,null];
+    const SLOT_NAME=['Full Slab','Close-up','Application','Detail'];
+    const nameOf=i=>SLOT_NAME[i]||'Image';   /* slot -1 = a block or article image */
+    let file=null, slot=0, ar=null, srcURL=null;
+    let fit={x:0,y:0,w:0,h:0};              // where the image sits inside the stage
+    let rect={x:0,y:0,w:0,h:0};             // crop box, in stage pixels
+    let nat={w:0,h:0};                      // natural size of the (possibly rotated) source
+
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+    function layout(){
+      const sw=stage.clientWidth, sh=stage.clientHeight;
+      const scale=Math.min(sw/nat.w, sh/nat.h, 1);
+      fit.w=Math.round(nat.w*scale); fit.h=Math.round(nat.h*scale);
+      fit.x=Math.round((sw-fit.w)/2); fit.y=Math.round((sh-fit.h)/2);
+      img.style.width=fit.w+'px'; img.style.height=fit.h+'px';
+      img.style.left=fit.x+'px';   img.style.top=fit.y+'px';
+    }
+    function reset(){
+      layout();
+      if(ar){
+        /* largest box of this ratio that fits the image */
+        let w=fit.w, h=w/ar;
+        if(h>fit.h){ h=fit.h; w=h*ar; }
+        rect={x:fit.x+(fit.w-w)/2, y:fit.y+(fit.h-h)/2, w, h};
+      } else {
+        rect={x:fit.x, y:fit.y, w:fit.w, h:fit.h};
+      }
+      paint();
+    }
+    function paint(){
+      box.style.left=rect.x+'px'; box.style.top=rect.y+'px';
+      box.style.width=rect.w+'px'; box.style.height=rect.h+'px';
+      const s=nat.w/fit.w;
+      const pw=Math.round(rect.w*s), ph=Math.round(rect.h*s);
+      $('cropInfo').textContent=`${nameOf(slot)} · source ${nat.w}×${nat.h} · crop ${pw}×${ph} px`;
+    }
+    /* keep the box inside the image, and honour the locked ratio */
+    function normalise(){
+      if(ar){
+        rect.h=rect.w/ar;
+        if(rect.h>fit.h){ rect.h=fit.h; rect.w=rect.h*ar; }
+        if(rect.w>fit.w){ rect.w=fit.w; rect.h=rect.w/ar; }
+      }
+      rect.w=clamp(rect.w,40,fit.w);
+      rect.h=clamp(rect.h,40,fit.h);
+      rect.x=clamp(rect.x,fit.x,fit.x+fit.w-rect.w);
+      rect.y=clamp(rect.y,fit.y,fit.y+fit.h-rect.h);
+    }
+
+    /* ---- pointer drag: move the box, or resize from a corner ---- */
+    let drag=null;
+    stage.addEventListener('pointerdown',e=>{
+      const handle=e.target.dataset && e.target.dataset.h;
+      if(!handle && e.target!==box) return;
+      stage.setPointerCapture(e.pointerId);
+      drag={handle, sx:e.clientX, sy:e.clientY, r:Object.assign({},rect)};
+      e.preventDefault();
+    });
+    stage.addEventListener('pointermove',e=>{
+      if(!drag) return;
+      const dx=e.clientX-drag.sx, dy=e.clientY-drag.sy, r=drag.r;
+      if(!drag.handle){
+        rect.x=r.x+dx; rect.y=r.y+dy;
+      } else {
+        /* resize from the grabbed corner; the opposite corner stays pinned */
+        const right=r.x+r.w, bottom=r.y+r.h;
+        if(drag.handle==='se'){ rect.w=r.w+dx; rect.h=ar?(r.w+dx)/ar:r.h+dy; rect.x=r.x; rect.y=r.y; }
+        if(drag.handle==='sw'){ rect.w=r.w-dx; rect.h=ar?(r.w-dx)/ar:r.h+dy; rect.x=right-rect.w; rect.y=r.y; }
+        if(drag.handle==='ne'){ rect.w=r.w+dx; rect.h=ar?(r.w+dx)/ar:r.h-dy; rect.x=r.x; rect.y=bottom-rect.h; }
+        if(drag.handle==='nw'){ rect.w=r.w-dx; rect.h=ar?(r.w-dx)/ar:r.h-dy; rect.x=right-rect.w; rect.y=bottom-rect.h; }
+      }
+      normalise(); paint();
+    });
+    stage.addEventListener('pointerup',()=>{drag=null;});
+    stage.addEventListener('pointercancel',()=>{drag=null;});
+
+    /* ---- ratio chips ---- */
+    document.querySelectorAll('.crop .ratio').forEach(b=>b.addEventListener('click',()=>{
+      document.querySelectorAll('.crop .ratio').forEach(x=>x.classList.toggle('on',x===b));
+      ar = b.dataset.ar==='free' ? null : parseFloat(b.dataset.ar);
+      reset();
+    }));
+
+    /* Rotating re-bakes the pixels rather than tracking an angle — the crop maths
+       stays honest, and EXIF-sideways phone photos become straightforward. */
+    $('cropRot').addEventListener('click',()=>{
+      const c=document.createElement('canvas');
+      c.width=nat.h; c.height=nat.w;
+      const g=c.getContext('2d');
+      g.translate(c.width/2,c.height/2); g.rotate(Math.PI/2);
+      g.drawImage(img,-nat.w/2,-nat.h/2,nat.w,nat.h);
+      c.toBlob(b=>{
+        if(srcURL) URL.revokeObjectURL(srcURL);
+        srcURL=URL.createObjectURL(b);
+        img.onload=()=>{ nat={w:img.naturalWidth,h:img.naturalHeight}; reset(); };
+        img.src=srcURL;
+      },'image/jpeg',0.95);
+    });
+    $('cropReset').addEventListener('click',reset);
+
+    function close(){
+      el.classList.remove('on');
+      if(srcURL){ URL.revokeObjectURL(srcURL); srcURL=null; }
+      $('fileInput').value='';
+    }
+    $('cropX').addEventListener('click',close);
+    $('cropScrim').addEventListener('click',close);
+    addEventListener('keydown',e=>{ if(e.key==='Escape'&&el.classList.contains('on')) close(); });
+    addEventListener('resize',()=>{ if(el.classList.contains('on')) reset(); });
+
+    $('cropSkip').addEventListener('click',()=>{ const f=file, s=slot; close(); uploadBlob(f,f.name,s); });
+
+    $('cropGo').addEventListener('click',()=>{
+      const s=nat.w/fit.w;                       // stage px -> natural px
+      const sx=Math.round((rect.x-fit.x)*s), sy=Math.round((rect.y-fit.y)*s);
+      const sw=Math.round(rect.w*s),          sh=Math.round(rect.h*s);
+      const c=document.createElement('canvas');
+      c.width=sw; c.height=sh;
+      c.getContext('2d').drawImage(img, sx,sy,sw,sh, 0,0,sw,sh);
+      const name=(file.name||'image').replace(/\.[^.]+$/,'')+'-crop.jpg';
+      const sl=slot;
+      c.toBlob(b=>{ close(); uploadBlob(b,name,sl); }, 'image/jpeg', 0.92);
+    });
+
+    return function open(f,slotIndex,existing){
+      file=f; slot=slotIndex;
+      $('cropTitle').textContent=(existing?'Re-crop — ':'Crop — ')+nameOf(slot);
+      const size=f.size>1048576?(f.size/1048576).toFixed(1)+' MB':Math.round(f.size/1024)+' KB';
+      /* be honest about what is being edited: the stored copy is already capped
+         at 1500px, so a re-crop cannot recover detail the original had */
+      $('cropFile').textContent = existing
+        ? f.name+' · '+size+' · editing the stored copy — re-cropping tightly will lose detail'
+        : f.name+' · '+size;
+      /* an existing image has usually been framed already — don't re-impose a ratio */
+      ar = existing ? null : (SLOT_AR[slot]||null);
+      document.querySelectorAll('.crop .ratio').forEach(b=>{
+        const v=b.dataset.ar==='free'?null:parseFloat(b.dataset.ar);
+        b.classList.toggle('on', v===ar || (ar===null&&b.dataset.ar==='free'));
+      });
+      if(srcURL) URL.revokeObjectURL(srcURL);
+      srcURL=URL.createObjectURL(f);
+      el.classList.add('on');
+      img.onload=()=>{ nat={w:img.naturalWidth,h:img.naturalHeight}; reset(); };
+      img.src=srcURL;
+    };
+  })();
+  function openCrop(f,slot,existing){ CROP(f,slot,existing); }
 
   /* ---------- editor ---------- */
   const drawer=$('drawer');let editingSlug=null;let editingPalette=null;
@@ -295,6 +998,654 @@
   async function del(slug){const m=bySlug(slug);if(!confirm('Delete “'+(m?m.name:slug)+'”? This is permanent.'))return;
     try{const r=await api('/api/products/'+slug,{method:'DELETE'});if(r.ok){closeEditor();await loadProducts();}else{const j=await r.json();alert(j.error||'Delete failed.');}}
     catch(err){alert('Could not reach the server.');}}
+
+  /* ---------- tabs ---------- */
+  $('tabs').addEventListener('click',e=>{
+    const t=e.target.closest('.tab'); if(!t) return;
+    const name=t.dataset.tab;
+    document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
+    document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='pane-'+name));
+    /* the header button belongs to whichever tab you are on */
+    $('addBtn').hidden   = name!=='products';
+    $('addUserBtn').hidden = name!=='users';
+    $('msg').textContent='';
+    $('addPageBtn').hidden = name!=='pages';
+    $('addPostBtn').hidden = name!=='blog';
+    if(name==='enquiries') loadEnquiries();
+    if(name==='users')     loadUsers();
+    if(name==='catalogue') loadCatalogue();
+    if(name==='pages')     loadPages();
+    if(name==='blog')      loadPosts();
+  });
+
+  /* ═══════════════════════════════════════════════════════════
+     PAGES — a page is an ordered list of blocks. The block types,
+     their fields and their markup all live in assets/js/blocks.js,
+     so this editor builds its form from the same definition the
+     front end renders from. They cannot drift apart.
+     ═══════════════════════════════════════════════════════════ */
+  const toSlug=s=>String(s||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  const closeDrawer=id=>$(id).classList.remove('open');
+  document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeDrawer(b.dataset.close)));
+
+  let pages=[], editingPage=null, pgSections=[];
+
+  async function loadPages(){
+    try{
+      const r=await api('/api/pages/admin/all');
+      pages=await r.json();
+      $('pageList').innerHTML=pages.length?pages.map(p=>`
+        <div class="crow">
+          <div><div class="t">${esc(p.title)}</div>
+            <div class="s">/p/${esc(p.slug)} · ${p.sections.length} section${p.sections.length===1?'':'s'}${p.inNav?' · in nav':''}</div></div>
+          <span class="badge${p.status==='published'?' live':''}">${p.status}</span>
+          <div class="acts">
+            <button class="ab" data-pgedit="${esc(p.slug)}">Edit</button>
+            <a class="ab" href="/p/${esc(p.slug)}" target="_blank" rel="noopener">View</a>
+          </div>
+        </div>`).join('')
+        : '<p class="abarmsg">No pages yet. Click “New Page” to build one.</p>';
+      document.querySelectorAll('[data-pgedit]').forEach(b=>b.addEventListener('click',()=>openPage(b.dataset.pgedit)));
+      $('msg').textContent=pages.length+' page'+(pages.length===1?'':'s')+' · built from blocks, rendered at /p/<slug>.';
+    }catch{ $('pageList').innerHTML='<p class="abarmsg">Could not load pages.</p>'; }
+  }
+
+  $('addPageBtn').addEventListener('click',()=>openPage(null));
+
+  function openPage(slug){
+    const p = slug ? pages.find(x=>x.slug===slug) : null;
+    editingPage = p ? p.slug : null;
+    pgSections = p ? JSON.parse(JSON.stringify(p.sections)) : [];
+    $('pgTitle').textContent = p ? 'Edit — '+p.title : 'New Page';
+    $('pg_title').value=p?p.title:'';
+    $('pg_slug').value=p?p.slug:'';
+    $('pg_slug').readOnly=!!p;                 /* changing a live URL would break every link to it */
+    $('pg_status').value=p?p.status:'draft';
+    $('pg_inNav').checked=p?!!p.inNav:false;
+    $('pg_navLabel').value=p?(p.navLabel||''):'';
+    $('pg_seoTitle').value=p?(p.seoTitle||''):'';
+    $('pg_seoDesc').value=p?(p.seoDesc||''):'';
+    setPickValue('pg_ogImage', p?(p.ogImage||''):'');
+    $('pg_del').hidden=!p;
+    $('pg_view').hidden=!p;
+    if(p) $('pg_view').href='/p/'+p.slug;
+    $('pg_err').textContent='';
+    $('pg_slugPrev').textContent=(p?p.slug:'slug');
+    renderAddBar();
+    renderBlocks();
+    $('pdrawer').classList.add('open');
+  }
+
+  $('pg_title').addEventListener('input',()=>{
+    if(!editingPage && !$('pg_slug').dataset.touched){
+      $('pg_slug').value=toSlug($('pg_title').value);
+      $('pg_slugPrev').textContent=$('pg_slug').value||'slug';
+    }
+  });
+  $('pg_slug').addEventListener('input',()=>{
+    $('pg_slug').dataset.touched='1';
+    $('pg_slug').value=toSlug($('pg_slug').value);
+    $('pg_slugPrev').textContent=$('pg_slug').value||'slug';
+  });
+
+  function renderAddBar(){
+    $('pg_add').innerHTML=Object.keys(window.BLOCKS).map(t=>
+      `<button type="button" data-add="${t}">+ ${window.BLOCKS[t].label}</button>`).join('');
+    document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>{
+      pgSections.push(window.blockBlank(b.dataset.add));
+      renderBlocks(pgSections.length-1);      /* open the one just added */
+    }));
+  }
+
+  /* A one-line summary so a collapsed block is still identifiable.
+     Only real content counts — a dropdown's value ("left", "3") is not a summary. */
+  function blockSummary(b){
+    const d=window.BLOCKS[b.type];
+    for(const f of d.fields){
+      if(f.kind==='list'){ const n=(b[f.k]||[]).length; if(n) return n+' item'+(n===1?'':'s'); continue; }
+      if(!['text','textarea','rich'].includes(f.kind)) continue;
+      const v=b[f.k];
+      if(v && typeof v==='string'){
+        const t=v.replace(/<[^>]*>/g,'').trim();
+        if(t) return t.length>60?t.slice(0,60)+'…':t;
+      }
+    }
+    return '';
+  }
+
+  function renderBlocks(openIdx){
+    const host=$('pg_blocks');
+    $('pg_count').textContent=pgSections.length+' section'+(pgSections.length===1?'':'s');
+    host.innerHTML=pgSections.map((b,i)=>{
+      const d=window.BLOCKS[b.type];
+      if(!d) return '';
+      return `<div class="bitem${i===openIdx?' open':''}" data-i="${i}" draggable="true">
+        <div class="bhead">
+          <span class="grip">⣿</span>
+          <span class="ic">${d.icon}</span>
+          <span class="nm">${d.label}</span>
+          <span class="sm">${esc(blockSummary(b))}</span>
+          <button type="button" data-up="${i}" title="Move up">↑</button>
+          <button type="button" data-down="${i}" title="Move down">↓</button>
+          <button type="button" class="x" data-rm="${i}" title="Remove section">✕</button>
+        </div>
+        <div class="bbody" data-body="${i}"></div>
+      </div>`;
+    }).join('') || '<p class="abarmsg">No sections yet — add one below.</p>';
+
+    /* fields are built as real DOM so they can hold live handlers */
+    pgSections.forEach((b,i)=>{
+      const body=host.querySelector(`[data-body="${i}"]`);
+      if(body) fieldsFor(window.BLOCKS[b.type].fields, b, body);
+    });
+
+    host.querySelectorAll('.bhead').forEach(h=>h.addEventListener('click',e=>{
+      if(e.target.closest('button')) return;
+      h.parentElement.classList.toggle('open');
+    }));
+    host.querySelectorAll('[data-rm]').forEach(b=>b.addEventListener('click',e=>{
+      e.stopPropagation();
+      const i=+b.dataset.rm;
+      if(confirm('Remove this '+window.BLOCKS[pgSections[i].type].label+' section?')){
+        pgSections.splice(i,1); renderBlocks();
+      }
+    }));
+    host.querySelectorAll('[data-up]').forEach(b=>b.addEventListener('click',e=>{
+      e.stopPropagation(); const i=+b.dataset.up;
+      if(i>0){ [pgSections[i-1],pgSections[i]]=[pgSections[i],pgSections[i-1]]; renderBlocks(i-1); }
+    }));
+    host.querySelectorAll('[data-down]').forEach(b=>b.addEventListener('click',e=>{
+      e.stopPropagation(); const i=+b.dataset.down;
+      if(i<pgSections.length-1){ [pgSections[i+1],pgSections[i]]=[pgSections[i],pgSections[i+1]]; renderBlocks(i+1); }
+    }));
+
+    /* drag to reorder */
+    let from=null;
+    host.querySelectorAll('.bitem').forEach(el=>{
+      el.addEventListener('dragstart',e=>{ from=+el.dataset.i; el.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
+      el.addEventListener('dragend',()=>{ el.classList.remove('dragging'); host.querySelectorAll('.bitem').forEach(x=>x.classList.remove('over')); });
+      el.addEventListener('dragover',e=>{ e.preventDefault(); el.classList.add('over'); });
+      el.addEventListener('dragleave',()=>el.classList.remove('over'));
+      el.addEventListener('drop',e=>{
+        e.preventDefault();
+        const to=+el.dataset.i;
+        if(from===null||from===to) return;
+        const [moved]=pgSections.splice(from,1);
+        pgSections.splice(to,0,moved);
+        from=null; renderBlocks(to);
+      });
+    });
+  }
+
+  /* build the inputs for one block's fields, bound straight to the object */
+  function fieldsFor(fields, obj, host){
+    host.innerHTML='';
+    fields.forEach(f=>{
+      const wrap=document.createElement('div');
+      wrap.className='fld';
+      const lab=document.createElement('label');
+      lab.textContent=f.label;
+      wrap.appendChild(lab);
+
+      if(f.kind==='text'||f.kind==='textarea'){
+        const el=document.createElement(f.kind==='text'?'input':'textarea');
+        if(f.kind==='textarea') el.rows=3;
+        el.value=obj[f.k]||'';
+        el.addEventListener('input',()=>{obj[f.k]=el.value;});
+        wrap.appendChild(el);
+      }
+      else if(f.kind==='rich'){
+        const ed=document.createElement('div');
+        ed.className='rt-body prose-long';
+        ed.style.minHeight='160px';
+        ed.contentEditable='true';
+        ed.innerHTML=obj[f.k]||'';
+        ed.addEventListener('input',()=>{obj[f.k]=ed.innerHTML;});
+        const bar=miniBar(ed);
+        const box=document.createElement('div'); box.className='rt';
+        box.append(bar,ed);
+        wrap.appendChild(box);
+      }
+      else if(f.kind==='select'){
+        const el=document.createElement('select');
+        (f.options||[]).forEach(o=>{ const op=document.createElement('option'); op.value=o; op.textContent=o; el.appendChild(op); });
+        el.value=obj[f.k]||f.def||f.options[0];
+        obj[f.k]=el.value;
+        el.addEventListener('change',()=>{obj[f.k]=el.value;});
+        wrap.appendChild(el);
+      }
+      else if(f.kind==='image'){
+        const row=document.createElement('div'); row.className='imgpick';
+        const btn=document.createElement('button'); btn.type='button'; btn.className='ab'; btn.textContent=obj[f.k]?'Replace':'Choose image';
+        const prev=document.createElement('span'); prev.className='ipv';
+        const paint=()=>{ if(obj[f.k]){ prev.style.backgroundImage=`url("${obj[f.k]}")`; prev.classList.add('on'); btn.textContent='Replace'; } };
+        paint();
+        btn.addEventListener('click',()=>pickImage(url=>{ obj[f.k]=url; paint(); }));
+        const clr=document.createElement('button'); clr.type='button'; clr.className='ab'; clr.textContent='Clear';
+        clr.addEventListener('click',()=>{ obj[f.k]=''; prev.style.backgroundImage=''; prev.classList.remove('on'); btn.textContent='Choose image'; });
+        row.append(btn,clr,prev);
+        wrap.appendChild(row);
+      }
+      else if(f.kind==='list'){
+        if(!Array.isArray(obj[f.k])) obj[f.k]=[];
+        const box=document.createElement('div');
+        box.style.cssText='display:flex;flex-direction:column;gap:10px';
+        const draw=()=>{
+          box.innerHTML='';
+          obj[f.k].forEach((it,idx)=>{
+            const li=document.createElement('div'); li.className='listitem';
+            const head=document.createElement('div'); head.className='lhead';
+            const n=document.createElement('span'); n.textContent='#'+(idx+1);
+            const del=document.createElement('button'); del.type='button'; del.className='ab'; del.textContent='Remove';
+            del.addEventListener('click',()=>{ obj[f.k].splice(idx,1); draw(); });
+            head.append(n,del);
+            li.appendChild(head);
+            const inner=document.createElement('div');
+            inner.style.cssText='display:flex;flex-direction:column;gap:10px';
+            fieldsFor(f.item, it, inner);
+            li.appendChild(inner);
+            box.appendChild(li);
+          });
+          const add=document.createElement('button');
+          add.type='button'; add.className='ab'; add.textContent='+ Add item';
+          add.addEventListener('click',()=>{
+            const blank={}; f.item.forEach(x=>blank[x.k]=x.def||'');
+            obj[f.k].push(blank); draw();
+          });
+          box.appendChild(add);
+        };
+        draw();
+        wrap.appendChild(box);
+      }
+
+      if(f.hint){ const h=document.createElement('span'); h.className='hint'; h.textContent=f.hint; wrap.appendChild(h); }
+      host.appendChild(wrap);
+    });
+  }
+
+  /* small formatting bar for a rich field inside a block */
+  function miniBar(ed){
+    const bar=document.createElement('div'); bar.className='rt-bar';
+    const B=[['bold','B'],['italic','I'],['insertUnorderedList','•'],['createLink','🔗']];
+    B.forEach(([cmd,label])=>{
+      const b=document.createElement('button'); b.type='button'; b.textContent=label;
+      b.addEventListener('mousedown',e=>e.preventDefault());     /* don't steal the selection */
+      b.addEventListener('click',()=>{
+        ed.focus();
+        if(cmd==='createLink'){ const u=prompt('Link URL'); if(u) document.execCommand(cmd,false,u); }
+        else document.execCommand(cmd,false,null);
+        ed.dispatchEvent(new Event('input'));
+      });
+      bar.appendChild(b);
+    });
+    return bar;
+  }
+
+  function setPickValue(id,val){
+    $(id).value=val||'';
+    const prev=$(id+'_v');
+    if(prev){ prev.style.backgroundImage=val?`url("${val}")`:''; prev.classList.toggle('on',!!val); }
+  }
+  document.querySelectorAll('[data-pick]').forEach(b=>b.addEventListener('click',()=>{
+    pickImage(url=>setPickValue(b.dataset.pick,url));
+  }));
+
+  $('pg_save').addEventListener('click',async()=>{
+    const slug=toSlug($('pg_slug').value);
+    const title=$('pg_title').value.trim();
+    if(!title){ $('pg_err').textContent='Give the page a title.'; return; }
+    if(!slug){ $('pg_err').textContent='Give the page an address.'; return; }
+    const payload={
+      slug, title,
+      navLabel:$('pg_navLabel').value.trim()||null,
+      inNav:$('pg_inNav').checked,
+      status:$('pg_status').value,
+      seoTitle:$('pg_seoTitle').value.trim()||null,
+      seoDesc:$('pg_seoDesc').value.trim()||null,
+      ogImage:$('pg_ogImage').value||null,
+      sections:pgSections
+    };
+    const r=await api(editingPage?'/api/pages/'+editingPage:'/api/pages',
+      {method:editingPage?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const j=await r.json();
+    if(!r.ok){ $('pg_err').textContent=j.error||'Could not save.'; return; }
+    closeDrawer('pdrawer');
+    loadPages();
+    $('msg').textContent='✓ Saved “'+j.title+'” ('+j.status+').';
+  });
+
+  $('pg_del').addEventListener('click',async()=>{
+    if(!editingPage) return;
+    if(!confirm('Delete this page permanently?')) return;
+    const r=await api('/api/pages/'+editingPage,{method:'DELETE'});
+    if(r.ok){ closeDrawer('pdrawer'); loadPages(); $('msg').textContent='Page deleted.'; }
+  });
+
+  /* ═══════════════════════════════════════════════════════════
+     BLOG
+     ═══════════════════════════════════════════════════════════ */
+  let posts=[], editingPost=null;
+
+  async function loadPosts(){
+    try{
+      const r=await api('/api/posts/admin/all');
+      posts=await r.json();
+      $('postList').innerHTML=posts.length?posts.map(p=>{
+        const when=p.publishedAt?new Date(p.publishedAt).toLocaleDateString():'—';
+        return `<div class="crow">
+          <div><div class="t">${esc(p.title)}</div>
+            <div class="s">/blog/${esc(p.slug)} · ${esc(when)}${p.author?' · '+esc(p.author):''}</div></div>
+          <span class="badge${p.status==='published'?' live':''}">${p.status}</span>
+          <div class="acts">
+            <button class="ab" data-bgedit="${esc(p.slug)}">Edit</button>
+            <a class="ab" href="/blog/${esc(p.slug)}" target="_blank" rel="noopener">View</a>
+          </div></div>`;
+      }).join('') : '<p class="abarmsg">No articles yet. Click “New Article”.</p>';
+      document.querySelectorAll('[data-bgedit]').forEach(b=>b.addEventListener('click',()=>openPost(b.dataset.bgedit)));
+      $('msg').textContent=posts.length+' article'+(posts.length===1?'':'s')+' · published ones appear at /blog.';
+    }catch{ $('postList').innerHTML='<p class="abarmsg">Could not load articles.</p>'; }
+  }
+
+  $('addPostBtn').addEventListener('click',()=>openPost(null));
+
+  function openPost(slug){
+    const p = slug ? posts.find(x=>x.slug===slug) : null;
+    editingPost = p ? p.slug : null;
+    $('bgTitle').textContent = p ? 'Edit — '+p.title : 'Write Article';
+    $('bg_title').value=p?p.title:'';
+    $('bg_slug').value=p?p.slug:'';
+    $('bg_slug').readOnly=!!p;
+    $('bg_slug').dataset.touched='';
+    $('bg_status').value=p?p.status:'draft';
+    $('bg_author').value=p?(p.author||''):'Artizia Team';
+    $('bg_tags').value=p?(p.tags||[]).join(', '):'';
+    $('bg_excerpt').value=p?(p.excerpt||''):'';
+    setPickValue('bg_cover', p?(p.cover||''):'');
+    $('bg_body').innerHTML=p?(p.body||''):'';
+    $('bg_seoTitle').value=p?(p.seoTitle||''):'';
+    $('bg_seoDesc').value=p?(p.seoDesc||''):'';
+    $('bg_del').hidden=!p;
+    $('bg_view').hidden=!p;
+    if(p) $('bg_view').href='/blog/'+p.slug;
+    $('bg_err').textContent='';
+    $('bg_slugPrev').textContent=p?p.slug:'slug';
+    $('bdrawer').classList.add('open');
+  }
+
+  $('bg_title').addEventListener('input',()=>{
+    if(!editingPost && !$('bg_slug').dataset.touched){
+      $('bg_slug').value=toSlug($('bg_title').value);
+      $('bg_slugPrev').textContent=$('bg_slug').value||'slug';
+    }
+  });
+  $('bg_slug').addEventListener('input',()=>{
+    $('bg_slug').dataset.touched='1';
+    $('bg_slug').value=toSlug($('bg_slug').value);
+    $('bg_slugPrev').textContent=$('bg_slug').value||'slug';
+  });
+
+  /* toolbar. document.execCommand is deprecated but is the only thing every
+     browser still implements for contenteditable, and this is an internal tool. */
+  $('bg_bar').addEventListener('mousedown',e=>{ if(e.target.closest('button')) e.preventDefault(); });
+  $('bg_bar').addEventListener('click',e=>{
+    const b=e.target.closest('button[data-cmd]'); if(!b) return;
+    $('bg_body').focus();
+    document.execCommand(b.dataset.cmd,false,b.dataset.val||null);
+  });
+  $('rtLink').addEventListener('mousedown',e=>e.preventDefault());
+  $('rtLink').addEventListener('click',()=>{
+    const u=prompt('Link URL','https://');
+    if(!u) return;
+    $('bg_body').focus();
+    document.execCommand('createLink',false,u);
+  });
+  $('rtImg').addEventListener('mousedown',e=>e.preventDefault());
+  $('rtImg').addEventListener('click',()=>{
+    /* the caret is lost while the file dialog is open — remember where we were */
+    const sel=window.getSelection();
+    const range=sel.rangeCount?sel.getRangeAt(0).cloneRange():null;
+    pickImage(url=>{
+      $('bg_body').focus();
+      if(range){ sel.removeAllRanges(); sel.addRange(range); }
+      document.execCommand('insertHTML',false,`<img src="${url}" alt="">`);
+    });
+  });
+
+  $('bg_save').addEventListener('click',async()=>{
+    const slug=toSlug($('bg_slug').value);
+    const title=$('bg_title').value.trim();
+    if(!title){ $('bg_err').textContent='Give the article a headline.'; return; }
+    if(!slug){ $('bg_err').textContent='Give the article an address.'; return; }
+    const payload={
+      slug, title,
+      excerpt:$('bg_excerpt').value.trim()||null,
+      cover:$('bg_cover').value||null,
+      author:$('bg_author').value.trim()||null,
+      tags:$('bg_tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+      body:$('bg_body').innerHTML,
+      status:$('bg_status').value,
+      seoTitle:$('bg_seoTitle').value.trim()||null,
+      seoDesc:$('bg_seoDesc').value.trim()||null
+    };
+    const r=await api(editingPost?'/api/posts/'+editingPost:'/api/posts',
+      {method:editingPost?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const j=await r.json();
+    if(!r.ok){ $('bg_err').textContent=j.error||'Could not save.'; return; }
+    closeDrawer('bdrawer');
+    loadPosts();
+    $('msg').textContent='✓ Saved “'+j.title+'” ('+j.status+').';
+  });
+
+  $('bg_del').addEventListener('click',async()=>{
+    if(!editingPost) return;
+    if(!confirm('Delete this article permanently?')) return;
+    const r=await api('/api/posts/'+editingPost,{method:'DELETE'});
+    if(r.ok){ closeDrawer('bdrawer'); loadPosts(); $('msg').textContent='Article deleted.'; }
+  });
+
+  /* ---------- catalogue ---------- */
+  const kb=n=>n>=1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
+
+  async function loadCatalogue(){
+    const host=$('catNow');
+    host.innerHTML='<div class="cat-none">Loading…</div>';
+    try{
+      const c=await (await fetch('/api/catalogue',{credentials:'same-origin'})).json();
+      if(!c.configured){
+        host.innerHTML='<div class="cat-none">No catalogue uploaded yet — the sticky “Catalogue” tab stays hidden on the site until you add one.</div>';
+        return;
+      }
+      const when=new Date(c.updatedAt).toLocaleString();
+      host.innerHTML=`<div class="cat-card">
+        <span class="kind">${c.type==='pdf'?'PDF':'JPG'}</span>
+        <div class="meta">
+          <div class="nm">${esc(c.name||'catalogue')}</div>
+          <div class="sub">${kb(c.size)} · updated ${esc(when)} · live on the site</div>
+        </div>
+        <a class="ab" href="${esc(c.url)}" target="_blank" rel="noopener">View</a>
+        <button class="ab danger" id="catDel">Remove</button>
+      </div>`;
+      $('catDel').addEventListener('click',async()=>{
+        if(!confirm('Remove the catalogue? The sticky tab will disappear from the site.')) return;
+        const r=await fetch('/api/catalogue',{method:'DELETE',credentials:'same-origin'});
+        $('catMsg').style.color = r.ok ? 'var(--accent)' : '#E0716A';
+        $('catMsg').textContent = r.ok ? '✓ Catalogue removed. The sticky tab is gone from the site.'
+                                       : '✕ Could not remove the catalogue.';
+        if(r.ok) loadCatalogue();
+      });
+    }catch{ host.innerHTML='<div class="cat-none">Could not reach the server.</div>'; }
+  }
+
+  async function sendCatalogue(file){
+    const drop=$('catDrop'), out=$('catMsg');
+    if(!file) return;
+    const ok=file.type==='application/pdf'||/^image\/(jpeg|png)$/.test(file.type);
+    if(!ok){ out.style.color='#E0716A'; out.textContent='✕ Only PDF or JPG files are accepted.'; return; }
+    if(file.size>500*1024*1024){ out.style.color='#E0716A'; out.textContent='✕ That file is '+kb(file.size)+'. The limit is 500 MB.'; return; }
+
+    drop.classList.add('busy');
+    out.style.color='var(--text-faint)'; out.textContent='Uploading '+file.name+' ('+kb(file.size)+')…';
+    try{
+      const fd=new FormData(); fd.append('file',file);
+      const r=await fetch('/api/catalogue',{method:'POST',body:fd,credentials:'same-origin'});
+      const j=await r.json();
+      if(!r.ok) throw new Error(j.error||'Upload failed.');
+      out.style.color='var(--accent)';
+      out.textContent='✓ Catalogue live. The sticky tab now points at '+j.name+'.';
+      loadCatalogue();
+    }catch(e){
+      out.style.color='#E0716A'; out.textContent='✕ '+e.message;
+    }finally{ drop.classList.remove('busy'); $('catFile').value=''; }
+  }
+
+  $('catFile').addEventListener('change',e=>sendCatalogue(e.target.files[0]));
+  ['dragenter','dragover'].forEach(ev=>$('catDrop').addEventListener(ev,e=>{
+    e.preventDefault(); $('catDrop').classList.add('over');
+  }));
+  ['dragleave','drop'].forEach(ev=>$('catDrop').addEventListener(ev,e=>{
+    e.preventDefault(); $('catDrop').classList.remove('over');
+  }));
+  $('catDrop').addEventListener('drop',e=>sendCatalogue(e.dataTransfer.files[0]));
+
+  /* ---------- enquiries ---------- */
+  let enqStatus='';
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+  const when=iso=>{
+    const d=new Date((iso||'').replace(' ','T')+'Z'); if(isNaN(d)) return iso||'';
+    const mins=Math.round((Date.now()-d)/60000);
+    if(mins<1) return 'just now';
+    if(mins<60) return mins+'m ago';
+    if(mins<1440) return Math.round(mins/60)+'h ago';
+    return d.toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});
+  };
+
+  async function refreshBadge(){
+    try{
+      const j=await (await api('/api/enquiries/counts')).json();
+      const pill=$('enqPill');
+      pill.hidden = !j.unread;
+      pill.textContent = j.unread;
+    }catch(e){}
+  }
+
+  async function loadEnquiries(){
+    const host=$('enqList');
+    host.innerHTML='<div class="empty">Loading…</div>';
+    try{
+      const j=await (await api('/api/enquiries'+(enqStatus?'?status='+enqStatus:''))).json();
+      renderEnquiries(j.enquiries||[]);
+      refreshBadge();
+    }catch(e){ host.innerHTML='<div class="empty">Could not load enquiries.</div>'; }
+  }
+
+  function renderEnquiries(list){
+    const host=$('enqList');
+    if(!list.length){
+      host.innerHTML='<div class="empty">No '+(enqStatus||'')+' enquiries yet</div>';
+      return;
+    }
+    host.innerHTML=list.map(e=>{
+      const lines=[];
+      if(e.subject)     lines.push('Subject: '+esc(e.subject));
+      if(e.message)     lines.push(esc(e.message));
+      if(e.address)     lines.push('Ship to: '+esc(e.address));
+      if(e.projectType) lines.push('Project: '+esc(e.projectType)+(e.area?' · '+esc(e.area)+' sq ft':''));
+      return `<article class="enq${e.status==='new'?' unread':''}" data-id="${e.id}">
+        <div class="enq-top">
+          <div class="enq-who">
+            <h4>${esc(e.name||'—')}</h4>
+            <div class="enq-meta">
+              ${e.email?`<a href="mailto:${esc(e.email)}">${esc(e.email)}</a>`:''}
+              ${e.phone?`<a href="tel:${esc(e.phone)}">${esc(e.phone)}</a>`:''}
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="badge ${esc(e.type)}">${esc(e.type)}</span>
+            <span class="enq-when">${esc(when(e.createdAt))}</span>
+          </div>
+        </div>
+        ${lines.length?`<div class="enq-body">${lines.join('\n')}</div>`:''}
+        ${e.products.length?`<div class="enq-prods">${e.products.map(p=>`<span>${esc(p)}</span>`).join('')}</div>`:''}
+        <div class="enq-acts">
+          ${e.status!=='read'    ?`<button class="ab" data-mark="read"     data-id="${e.id}">Mark read</button>`:''}
+          ${e.status!=='new'     ?`<button class="ab" data-mark="new"      data-id="${e.id}">Mark unread</button>`:''}
+          ${e.status!=='archived'?`<button class="ab" data-mark="archived" data-id="${e.id}">Archive</button>`:''}
+          <button class="ab danger" data-delenq="${e.id}">Delete</button>
+        </div>
+      </article>`;
+    }).join('');
+  }
+
+  $('enqList').addEventListener('click',async e=>{
+    const mark=e.target.closest('[data-mark]'), del=e.target.closest('[data-delenq]');
+    if(mark){
+      await api('/api/enquiries/'+mark.dataset.id,{method:'PATCH',headers:jsonHeaders,body:JSON.stringify({status:mark.dataset.mark})});
+      loadEnquiries();
+    }else if(del){
+      if(!confirm('Delete this enquiry? This is permanent.'))return;
+      await api('/api/enquiries/'+del.dataset.delenq,{method:'DELETE'});
+      loadEnquiries();
+    }
+  });
+
+  $('enqFilters').addEventListener('click',e=>{
+    const c=e.target.closest('.chip'); if(!c) return;
+    document.querySelectorAll('#enqFilters .chip').forEach(x=>x.classList.toggle('on',x===c));
+    enqStatus=c.dataset.status;
+    loadEnquiries();
+  });
+
+  /* ---------- users ---------- */
+  async function loadUsers(){
+    const host=$('userList');
+    host.innerHTML='<div class="empty">Loading…</div>';
+    try{
+      const j=await (await api('/api/admin/users')).json();
+      const rows=(j.users||[]).map(u=>`<div class="urow">
+        <div><b>${esc(u.username)}</b> ${u.id===ME.id?'<span class="you">· you</span>':''}</div>
+        <span class="urole ${esc(u.role)}">${esc(u.role)}</span>
+        <span class="umeta">${esc(u.lastLogin?when(u.lastLogin):'never signed in')}</span>
+        <span class="umeta">${esc(when(u.createdAt))}</span>
+        <div class="uacts">
+          <button class="ab" data-pw="${u.id}" data-name="${esc(u.username)}">Reset password</button>
+          <button class="ab danger" data-deluser="${u.id}" data-name="${esc(u.username)}"${u.id===ME.id?' disabled title="You cannot delete the account you are signed in with"':''}>Delete</button>
+        </div>
+      </div>`).join('');
+      host.innerHTML=`<div class="urow head"><span>User</span><span>Role</span><span>Last sign-in</span><span>Created</span><span></span></div>${rows}`;
+    }catch(e){ host.innerHTML='<div class="empty">Could not load users.</div>'; }
+  }
+
+  $('addUserBtn').addEventListener('click',async()=>{
+    const username=prompt('New user — username (min 3 characters):');
+    if(!username) return;
+    const password=prompt('Password for “'+username+'” (min 8 characters):');
+    if(!password) return;
+    const role=confirm('Give this user the ADMIN role?\n\nOK = admin   ·   Cancel = editor') ? 'admin' : 'editor';
+    const r=await api('/api/admin/users',{method:'POST',headers:jsonHeaders,body:JSON.stringify({username,password,role})});
+    const j=await r.json();
+    if(!r.ok){ alert(j.error||'Could not create the user.'); return; }
+    $('msg').textContent='✓ Added user “'+j.username+'” ('+j.role+').';
+    loadUsers();
+  });
+
+  $('userList').addEventListener('click',async e=>{
+    const pw=e.target.closest('[data-pw]'), del=e.target.closest('[data-deluser]');
+    if(pw){
+      const password=prompt('New password for “'+pw.dataset.name+'” (min 8 characters):');
+      if(!password) return;
+      const r=await api('/api/admin/users/'+pw.dataset.pw,{method:'PUT',headers:jsonHeaders,body:JSON.stringify({password})});
+      const j=await r.json();
+      if(!r.ok){ alert(j.error||'Could not change the password.'); return; }
+      $('msg').textContent='✓ Password changed for “'+pw.dataset.name+'”.';
+    }else if(del){
+      if(!confirm('Delete user “'+del.dataset.name+'”? This is permanent.'))return;
+      const r=await api('/api/admin/users/'+del.dataset.deluser,{method:'DELETE'});
+      const j=await r.json();
+      if(!r.ok){ alert(j.error||'Could not delete the user.'); return; }
+      $('msg').textContent='✓ Deleted user “'+del.dataset.name+'”.';
+      loadUsers();
+    }
+  });
 
   /* ---------- boot ---------- */
   checkAuth().then(user=>{user?showApp(user):showGate();});

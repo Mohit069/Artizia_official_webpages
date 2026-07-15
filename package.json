@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "node --watch --disable-warning=ExperimentalWarning server/server.js",
     "start": "node --disable-warning=ExperimentalWarning server/server.js",
-    "seed": "node --disable-warning=ExperimentalWarning server/db/seed.js"
+    "seed": "node --disable-warning=ExperimentalWarning server/db/seed.js",
+    "vercel-build": "node scripts/vercel-build.js"
+  },
+  "engines": {
+    "node": "24.x"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

@@ -33,13 +33,21 @@ window.PAGE = {
     lead:     "Independent certifications that back every Artizia surface — for cleaner air, food-safe use and assured quality."
   },
 
-  /* ---- the certification cards ---- */
+  /* ---- the certification cards ----
+     image: the certificate badge. Leave it "" and the card falls back to the
+     ✦ mark, so a missing badge never leaves a broken box. */
   certs: [
     { name: "GreenGuard",
+      image: "assets/img/certs/greenguard.png",
+      alt:  "UL GREENGUARD Gold certificate — certified for low chemical emissions, UL 2818",
       text: "Certified for low chemical emissions, GreenGuard means Artizia surfaces contribute to healthier indoor air — safe for kitchens, bathrooms and the rooms you live in every day." },
     { name: "NSF Certified",
+      image: "assets/img/certs/nsf.png",
+      alt:  "NSF certification mark for food-contact safe surfaces",
       text: "NSF certification confirms our surfaces meet strict public-health standards for food-contact use — safe wherever you prep, cook and eat." },
     { name: "Kosher",
+      image: "assets/img/certs/kosher.png",
+      alt:  "OU Kosher Certification Service mark",
       text: "Independently certified kosher, our quartz is approved for use in observant homes and commercial food environments." }
   ],
 
@@ -48,8 +56,8 @@ window.PAGE = {
     eyebrow: "Warranty",
     title:   "Backed for a lifetime.",
     text:    "Beyond certification, every Artizia surface carries a <b>Lifetime Warranty</b> against manufacturing defects — resisting scratches, stains, heat, household chemicals, mould and mildew.",
-    image:    "",                       /* e.g. "assets/img/warranty-side.jpg" */
-    alt:      "Artizia quartz detail",
+    image:    "assets/img/carrara-bianco-full.jpg",
+    alt:      "Carrara Bianco — Artizia engineered quartz slab",
     fallback: "mystique",
     zoom:     1
   }
@@ -85,8 +93,15 @@ window.PAGE = {
 <script>
 (function(){
   const P=window.PAGE,A=window.Artizia,$=id=>document.getElementById(id);
-  const certs=(P.certs&&P.certs.length)?P.certs.map(c=>[c.name,c.text]):window.CERTS;
-  $('certs').innerHTML=certs.map(c=>`<div class="cert rv"><div class="cmark">✦</div><h3>${c[0]}</h3><p>${c[1]}</p></div>`).join('');
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[ch]);
+  /* window.CERTS is the built-in fallback: [name, text] pairs, no badge */
+  const certs=(P.certs&&P.certs.length)?P.certs:(window.CERTS||[]).map(c=>({name:c[0],text:c[1]}));
+  $('certs').innerHTML=certs.map(c=>{
+    const mark=c.image
+      ? `<div class="cbadge"><img src="${esc(c.image)}" alt="${esc(c.alt||c.name+' certification')}" loading="lazy"></div>`
+      : `<div class="cmark">✦</div>`;
+    return `<div class="cert rv">${mark}<h3>${esc(c.name)}</h3><p>${esc(c.text)}</p></div>`;
+  }).join('');
   const s=P.side||{};
   $('sideEye').textContent=s.eyebrow||''; $('sideTitle').textContent=s.title||''; $('sideText').innerHTML=s.text||'';
   A.visual($('sideVis'),s);

@@ -41,8 +41,11 @@ function parseCookies(req){
   return out;
 }
 
+/* user: { u: username, id, role } — the id/role ride along so routes can tell
+   who is acting without a database hit on every request */
 function setAuthCookie(res, user){
-  const token = sign({ u: user, exp: Date.now() + TTL_MS });
+  const who = typeof user === 'string' ? { u: user } : (user || {});
+  const token = sign({ ...who, exp: Date.now() + TTL_MS });
   const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
   res.setHeader('Set-Cookie',
     `${COOKIE}=${token}; HttpOnly; Path=/; Max-Age=${Math.floor(TTL_MS/1000)}; SameSite=Lax${secure}`);

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- served from nested URLs (/p/<slug>, /blog/<slug>): without this, every
+     relative link in the shared nav and footer would resolve one level deep -->
+<base href="/">
+<title>Artizia — Journal</title>
+<link rel="icon" type="image/png" href="/assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="/assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<!--
+═══════════════════════════════════════════════════════════════════════
+  ARTICLE — renders one blog post from the database.
+  Written in the admin panel (Blog tab). URL: /blog/<slug>
+═══════════════════════════════════════════════════════════════════════
+-->
+<body data-page="post">
+
+<article id="post" hidden>
+  <header class="art-hero">
+    <div class="art-cover" id="cover"></div>
+    <div class="wrap">
+      <a class="art-back mag" href="/blog">← The Journal</a>
+      <div class="art-meta" id="meta"></div>
+      <h1 id="title"></h1>
+      <!-- the excerpt is the card standfirst on /blog and the meta description;
+           it is deliberately not repeated under the headline here -->
+    </div>
+  </header>
+
+  <div class="pad" style="padding-top:clamp(30px,5vw,60px)">
+    <div class="wrap">
+      <div class="prose-long rv" id="body"></div>
+      <div class="art-foot rv">
+        <a class="btn btn-line mag" href="/blog"><span>← All Articles</span></a>
+        <a class="btn btn-fill mag" href="/contact.html"><span>Talk to Our Team <span class="arw">→</span></span></a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<section class="pad" id="notFound" hidden><div class="wrap" style="text-align:center">
+  <span class="eyebrow center">404</span>
+  <h1 style="font-size:clamp(34px,6vw,72px);margin:20px 0">Article <em style="font-style:italic;color:var(--accent)">not found.</em></h1>
+  <p style="color:var(--text-dim);margin-bottom:30px">That article has moved or was never published.</p>
+  <a class="btn btn-fill mag" href="/blog"><span>The Journal <span class="arw">→</span></span></a>
+</div></section>
+
+<script src="/assets/js/data.js"></script>
+<script src="/assets/js/marble.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+(function(){
+  const A=window.Artizia, $=id=>document.getElementById(id);
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+
+  const m=location.pathname.match(/\/blog\/([a-z0-9-]+)/i);
+  const slug=(m&&m[1]) || new URLSearchParams(location.search).get('p') || '';
+
+  function meta(name,content,prop){
+    if(!content) return;
+    const el=document.createElement('meta');
+    el.setAttribute(prop?'property':'name',name);
+    el.content=content;
+    document.head.appendChild(el);
+  }
+
+  fetch('/api/posts/'+encodeURIComponent(slug))
+    .then(r=>{ if(!r.ok) throw new Error('404'); return r.json(); })
+    .then(p=>{
+      document.title=(p.seoTitle||p.title)+' — Artizia';
+      meta('description',p.seoDesc||p.excerpt||'');
+      meta('og:title',p.seoTitle||p.title,true);
+      meta('og:description',p.seoDesc||p.excerpt||'',true);
+      meta('og:type','article',true);
+      if(p.cover) meta('og:image',location.origin+p.cover,true);
+
+      const when=p.publishedAt?new Date(p.publishedAt).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}):'';
+      $('meta').innerHTML=[when, p.author?'By '+esc(p.author):'', ...(p.tags||[]).map(esc)]
+        .filter(Boolean).map(x=>`<span>${x}</span>`).join('');
+      $('title').textContent=p.title;
+      if(p.cover) $('cover').innerHTML=`<img src="${esc(p.cover)}" alt="${esc(p.title)}" fetchpriority="high">`;
+      /* body was sanitised server-side on save — see server/models/Post.js */
+      $('body').innerHTML=p.body||'';
+      $('post').hidden=false;
+
+      /* article structured data, so Google can show it as an article */
+      const ld=document.createElement('script');
+      ld.type='application/ld+json';
+      ld.textContent=JSON.stringify({
+        "@context":"https://schema.org","@type":"Article",
+        headline:p.title, description:p.seoDesc||p.excerpt||'',
+        datePublished:p.publishedAt||undefined,
+        author:p.author?{"@type":"Person",name:p.author}:{"@type":"Organization",name:"Artizia"},
+        publisher:{"@type":"Organization",name:"Artizia",
+          logo:{"@type":"ImageObject",url:location.origin+"/assets/img/brand/logo-full.png"}},
+        image:p.cover?location.origin+p.cover:undefined
+      });
+      document.head.appendChild(ld);
+      A.refresh();
+    })
+    .catch(()=>{ document.title='Not found — Artizia'; $('notFound').hidden=false; A.refresh(); });
+})();
+</script>
+</body>
+</html>

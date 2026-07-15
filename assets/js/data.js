@@ -7,13 +7,20 @@ window.SITE={
   email:"sales@artizia.co.in",
   address:"Plot No. PA-008-020-023, Mahindra World City Jaipur, Bhambhoriya Sanganer, Jaipur — 302037, Rajasthan",
   mapUrl:"https://maps.google.com/?q=Mahindra+World+City+Jaipur",
+  /* What the embedded map on the contact page points at. Anything Google can
+     search works — but a place name only pins the campus, not our plot.
+     For an exact pin: open Google Maps, right-click the plant, click the
+     lat/lng to copy it, and paste it here, e.g. "26.7461,75.8624".
+     mapZoom: 14 shows the district, 17 shows the building. */
+  mapQuery:"Mahindra World City Jaipur",
+  mapZoom:14,
   hours:[["Monday – Friday","9:00 AM – 6:00 PM"],["Saturday","10:00 AM – 4:00 PM"],["Sunday","Closed"]],
   /* Social links in the footer. Paste the full URL to switch an icon on —
      an empty string hides that icon completely, rather than linking nowhere. */
   social:{
     instagram:"https://www.instagram.com/artizia_by_marudhar/",
     facebook:"",
-    linkedin:""
+    linkedin:"https://www.linkedin.com/company/artizia-by-marudhar/"
   }
 };
 
@@ -91,6 +98,7 @@ window.COLLECTIONS = [
   {key:"Signature",lead:"Statement surfaces with distinctive, characterful veining.",hero:"oceana"},
   {key:"Luxury",lead:"Marble-inspired drama, engineered to last a lifetime.",hero:"calacatta-gold"},
   {key:"Premium",lead:"Refined, versatile designs for considered interiors.",hero:"grigio-cloud"},
+  {key:"Classic",lead:"Solid, understated tones for calm contemporary spaces.",hero:"classic-beige"},
   {key:"Essentials",lead:"Clean, dependable everyday surfaces in whites, greys and black.",hero:"midnight-black"}
 ];
 

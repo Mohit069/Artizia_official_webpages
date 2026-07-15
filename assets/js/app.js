@@ -28,8 +28,14 @@
         </div>
       </div>
       ${navLink('contact.html','Contact','contact')}
+      ${navLink('blog.html','Blog','blog')}
+      <span id="navExtra"></span>
     </div>
     <div class="nav-right">
+      <button class="icn" id="searchBtn" title="Search surfaces" aria-label="Search surfaces">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6"
+          stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><line x1="15.8" y1="15.8" x2="20" y2="20"/></svg>
+      </button>
       <button class="icn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">☀</button>
       <button class="tbtn" id="trayBtn">Samples <span class="tct" id="tct">0</span></button>
       <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -65,8 +71,10 @@
       </div>
       <div class="fcol"><h5>Collections</h5>
         <a href="collections.html?c=Signature">Signature</a><a href="collections.html?c=Luxury">Luxury</a>
-        <a href="collections.html?c=Premium">Premium</a><a href="collections.html?c=Essentials">Essentials</a></div>
-      <div class="fcol"><h5>Resources</h5>
+        <a href="collections.html?c=Premium">Premium</a><a href="collections.html?c=Classic">Classic</a>
+        <a href="collections.html?c=Essentials">Essentials</a></div>
+      <div class="fcol"><h5>Explore</h5>
+        <a href="about.html">About</a><a href="blog.html">Blog</a>
         <a href="technical-details.html">Technical Details</a><a href="certifications.html">Certifications</a>
         <a href="warranty.html">Warranty</a><a href="care-and-maintenance.html">Care &amp; Maintenance</a><a href="faq.html">FAQ</a></div>
       <div class="fcol"><h5>Contact</h5>
@@ -101,10 +109,115 @@
   themeBtn.addEventListener('click',()=>{const n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
     document.documentElement.setAttribute('data-theme',n);localStorage.setItem('artizia_theme',n);setTL();});
 
+  /* ---------- surface search ----------
+     Searches the live catalogue (window.MAT, hydrated from /api/products) by name,
+     code, collection, finish and description. Results link straight to the product
+     page; Enter hands the query to the collections grid, which filters on ?q=. */
+  const search=document.createElement('div');
+  search.className='search';search.id='search';search.setAttribute('role','dialog');
+  search.setAttribute('aria-modal','true');search.setAttribute('aria-label','Search surfaces');
+  search.innerHTML=`
+    <div class="search-panel">
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"
+          stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><line x1="15.8" y1="15.8" x2="20" y2="20"/></svg>
+        <input id="searchInput" type="search" autocomplete="off" spellcheck="false"
+          placeholder="Search surfaces — name, code, collection…" aria-label="Search surfaces">
+        <button class="icn" id="searchClose" aria-label="Close search" style="border:0">✕</button>
+      </div>
+      <div class="search-results" id="searchResults" role="listbox"></div>
+    </div>`;
+  document.body.append(search);
+
+  const sInput=document.getElementById('searchInput');
+  const sResults=document.getElementById('searchResults');
+  let sHits=[],sPick=-1;
+
+  const norm=s=>String(s||'').toLowerCase();
+  function match(q){
+    const t=norm(q).trim();
+    if(!t) return [];
+    const M=window.MAT||{};
+    return Object.keys(M).filter(k=>!M[k].hidden&&k!=='hero').map(k=>{
+      const m=M[k];
+      const name=norm(m.name), code=norm(m.code), coll=norm(m.coll);
+      /* rank: a name that starts with the query beats one that merely contains it,
+         which beats a hit buried in the description — otherwise "car" surfaces a
+         slab whose blurb happens to say "carefully" above Carrara Bianco */
+      let score=0;
+      if(name===t) score=100;
+      else if(name.startsWith(t)) score=80;
+      else if(code===t) score=75;
+      else if(name.includes(t)) score=60;
+      else if(code.includes(t)||coll.includes(t)) score=40;
+      else if([m.desc,m.veinText,m.finish,m.grain,(m.apps||[]).join(' ')].some(v=>norm(v).includes(t))) score=20;
+      return score?{k,m,score}:null;
+    }).filter(Boolean).sort((a,b)=>b.score-a.score||a.m.name.localeCompare(b.m.name)).slice(0,8);
+  }
+  function thumb(k,m){
+    const photo=GL.firstPhoto(k);
+    return photo?`<img src="${photo}" alt="" loading="lazy">`:GL.imgTag(k,0);
+  }
+  function paintSearch(){
+    const q=sInput.value;
+    sHits=match(q); sPick=-1;
+    if(!q.trim()){ sResults.innerHTML=`<p class="search-hint">Search by name, code, collection or finish.</p>`; return; }
+    if(!sHits.length){
+      sResults.innerHTML=`<p class="search-hint">No surfaces match “${q.replace(/[<>&]/g,'')}”.
+        <a href="collections.html">Browse all collections →</a></p>`;
+      return;
+    }
+    sResults.innerHTML=sHits.map(({k,m},i)=>`
+      <a class="sres" role="option" href="product.html?p=${k}" data-i="${i}">
+        <span class="sres-img">${thumb(k,m)}</span>
+        <span class="sres-txt"><b>${m.name}</b><span>${m.coll} · No. ${m.code}</span></span>
+        <span class="sres-go">→</span>
+      </a>`).join('')+
+      `<a class="sres-all" href="collections.html?q=${encodeURIComponent(q.trim())}">See all results in Collections →</a>`;
+  }
+  function highlight(){
+    sResults.querySelectorAll('.sres').forEach((el,i)=>el.classList.toggle('on',i===sPick));
+    const el=sResults.querySelector('.sres.on'); if(el) el.scrollIntoView({block:'nearest'});
+  }
+  function openSearch(){
+    search.classList.add('open');document.body.classList.add('menu-open');
+    sInput.value='';paintSearch();
+    /* the panel animates in; focusing mid-transition scrolls the page on iOS */
+    setTimeout(()=>sInput.focus(),reduce?0:120);
+  }
+  function closeSearch(){search.classList.remove('open');document.body.classList.remove('menu-open');}
+
+  document.getElementById('searchBtn').addEventListener('click',openSearch);
+  document.getElementById('searchClose').addEventListener('click',closeSearch);
+  search.addEventListener('click',e=>{if(e.target===search) closeSearch();});   /* click the backdrop */
+  sInput.addEventListener('input',paintSearch);
+  sInput.addEventListener('keydown',e=>{
+    if(e.key==='ArrowDown'){e.preventDefault();sPick=Math.min(sPick+1,sHits.length-1);highlight();}
+    else if(e.key==='ArrowUp'){e.preventDefault();sPick=Math.max(sPick-1,-1);highlight();}
+    else if(e.key==='Enter'){
+      const q=sInput.value.trim(); if(!q) return;
+      /* a highlighted result goes straight there; otherwise hand the query to the grid */
+      location.href = sPick>=0 ? 'product.html?p='+sHits[sPick].k
+                               : 'collections.html?q='+encodeURIComponent(q);
+    }
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&search.classList.contains('open')){closeSearch();return;}
+    /* ⌘K / Ctrl-K anywhere, and "/" when you are not already typing in a field */
+    const typing=/^(INPUT|TEXTAREA|SELECT)$/.test((e.target.tagName||''))||e.target.isContentEditable;
+    if(((e.key==='k'||e.key==='K')&&(e.metaKey||e.ctrlKey))||(e.key==='/'&&!typing&&!e.metaKey&&!e.ctrlKey)){
+      e.preventDefault();openSearch();
+    }
+  });
+
   /* ---------- mobile menu ---------- */
   const navLinks=document.getElementById('navLinks');
-  document.getElementById('burger').addEventListener('click',()=>navLinks.classList.add('open'));
-  document.getElementById('navClose').addEventListener('click',()=>navLinks.classList.remove('open'));
+  const setMenu=on=>{navLinks.classList.toggle('open',on);document.body.classList.toggle('menu-open',on);};
+  document.getElementById('burger').addEventListener('click',()=>setMenu(true));
+  document.getElementById('navClose').addEventListener('click',()=>setMenu(false));
+  /* in-page links (#anchors) would otherwise leave the menu covering the target */
+  navLinks.addEventListener('click',e=>{if(e.target.closest('a')) setMenu(false);});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape') setMenu(false);});
 
   /* ---------- toast ---------- */
   let tqt;function toast(m){toastEl.textContent=m;toastEl.style.opacity='1';toastEl.style.transform='translateX(-50%) translateY(0)';
@@ -172,22 +285,46 @@
       <p>${q?"We'll come back with pricing and lead time for your selection.":'Physical samples, shipped free. Up to four surfaces.'}</p>
       <div class="msel">Selected surfaces: <b>${list}</b></div>
       <form class="form" id="mform">
-        <div class="g2"><div class="field"><label>Full Name</label><input required placeholder="Your name"></div>
-          <div class="field"><label>Phone</label><input required placeholder="+91"></div></div>
-        <div class="field"><label>Email</label><input type="email" required placeholder="you@email.com"></div>
-        ${q?`<div class="g2"><div class="field"><label>Project Type</label><select><option>Kitchen</option><option>Bathroom</option><option>Commercial</option><option>Full Home</option><option>Other</option></select></div>
-            <div class="field"><label>Approx. Area (sq ft)</label><input placeholder="e.g. 60"></div></div>`
-          :`<div class="field"><label>Shipping Address</label><textarea rows="2" required placeholder="Street, city, PIN"></textarea></div>`}
+        <div class="g2"><div class="field"><label>Full Name</label><input name="name" required placeholder="Your name"></div>
+          <div class="field"><label>Phone</label><input name="phone" required placeholder="+91"></div></div>
+        <div class="field"><label>Email</label><input name="email" type="email" required placeholder="you@email.com"></div>
+        ${q?`<div class="g2"><div class="field"><label>Project Type</label><select name="projectType"><option>Kitchen</option><option>Bathroom</option><option>Commercial</option><option>Full Home</option><option>Other</option></select></div>
+            <div class="field"><label>Approx. Area (sq ft)</label><input name="area" placeholder="e.g. 60"></div></div>`
+          :`<div class="field"><label>Shipping Address</label><textarea name="address" rows="2" required placeholder="Street, city, PIN"></textarea></div>`}
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <p class="mono" id="mErr" style="font-size:11px;color:#E0716A;display:none"></p>
         <div class="mfoot"><button type="button" class="btn btn-line mag" id="mCancel"><span>Cancel</span></button>
-          <button type="submit" class="btn btn-fill mag"><span>${q?'Send Enquiry':'Send My Samples'} →</span></button></div>
+          <button type="submit" class="btn btn-fill mag" id="mSend"><span>${q?'Send Enquiry':'Send My Samples'} →</span></button></div>
       </form>`;
     modal.classList.add('open');
     document.getElementById('mCancel').addEventListener('click',closeModal);
-    document.getElementById('mform').addEventListener('submit',e=>{e.preventDefault();
-      document.getElementById('modal-body').innerHTML=`<div class="msucc"><div class="tick">✓</div><h3>Request received</h3>
-        <p style="color:var(--text-dim);margin:12px 0 26px">In the live site this reaches <b style="color:var(--accent)">${S.email}</b> with your surfaces itemised — plus an optional pre-filled WhatsApp handoff.</p>
-        <button class="btn btn-fill mag" id="mDone"><span>Done</span></button></div>`;
-      document.getElementById('mDone').addEventListener('click',closeModal);bindMag();bindHover();});
+
+    /* real submission — this lands in the database and shows up in the admin panel */
+    document.getElementById('mform').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const f=e.target, btn=document.getElementById('mSend'), err=document.getElementById('mErr');
+      btn.disabled=true; err.style.display='none';
+      const payload={
+        type: q?'quote':'sample',
+        name:f.name.value, phone:f.phone.value, email:f.email.value,
+        address:f.address?f.address.value:'',
+        projectType:f.projectType?f.projectType.value:'',
+        area:f.area?f.area.value:'',
+        products:SAMPLES.map(k=>(window.MAT[k]||{}).name||k),
+        website:f.website.value
+      };
+      try{
+        const r=await fetch('/api/enquiries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        const j=await r.json();
+        if(!r.ok) throw new Error(j.error||'Could not send your request.');
+        document.getElementById('modal-body').innerHTML=`<div class="msucc"><div class="tick">✓</div><h3>Request received</h3>
+          <p style="color:var(--text-dim);margin:12px 0 26px">Thank you, ${(payload.name||'').split(' ')[0]||'there'}. Our team will be in touch on <b style="color:var(--accent)">${payload.email}</b> shortly.</p>
+          <button class="btn btn-fill mag" id="mDone"><span>Done</span></button></div>`;
+        document.getElementById('mDone').addEventListener('click',closeModal);bindMag();bindHover();
+      }catch(ex){
+        err.textContent='✕ '+ex.message; err.style.display='block'; btn.disabled=false;
+      }
+    });
     bindMag();bindHover();
   }
   const closeModal=()=>modal.classList.remove('open');
@@ -216,9 +353,18 @@
     el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect();el.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.25}px,${(e.clientY-r.top-r.height/2)*.35}px)`;});
     el.addEventListener('mouseleave',()=>el.style.transform='');});}
 
-  /* ---------- reveal + counters ---------- */
-  const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');
-    if(en.target.matches('.stat'))countUp(en.target);io.unobserve(en.target);}})},{threshold:.15,rootMargin:'0px 0px -6% 0px'});
+  /* ---------- reveal + counters ----------
+     Two thresholds on purpose. .15 is the one we want — an element reveals once
+     it is meaningfully on screen, not the instant one pixel of it appears. But a
+     ratio can never reach .15 on an element taller than ~6.7 viewports, and even
+     at 1 viewport tall it needs the whole thing on screen; a long article body
+     would sit at opacity 0 forever. So anything nearly viewport-height or taller
+     reveals as soon as it touches the viewport at all. */
+  const io=new IntersectionObserver(es=>{es.forEach(en=>{
+    const tall=en.boundingClientRect.height>innerHeight*.85;
+    if(en.isIntersecting&&(tall||en.intersectionRatio>=.15)){en.target.classList.add('in');
+      if(en.target.matches('.stat'))countUp(en.target);io.unobserve(en.target);}})},
+    {threshold:[0,.15],rootMargin:'0px 0px -6% 0px'});
   function revealScan(){document.querySelectorAll('.rv:not(.in)').forEach(el=>io.observe(el));}
   function countUp(st){const num=st.querySelector('.num');if(!num)return;const to=+num.dataset.to,v=num.querySelector('.v');
     if(reduce){v.textContent=to;return;}let s=null;
@@ -290,6 +436,51 @@
     })
     .catch(() => window.MAT);   // offline / API down → keep built-in defaults
   window.ArtiziaData = { ready };
+
+  /* ---------- sticky catalogue tab ----------
+     Clings to the right edge on every page. Renders only once the server
+     confirms a catalogue exists — no dead link if nothing is uploaded yet.
+     Hidden on the admin page, which is not a shop window. */
+  function catalogueTab(){
+    if(document.body.dataset.page==='admin') return;
+    fetch('/api/catalogue',{credentials:'same-origin'})
+      .then(r=>r.ok?r.json():null)
+      .then(c=>{
+        if(!c||!c.configured) return;
+        const a=document.createElement('a');
+        a.className='cat-tab mag';
+        a.href=c.url;
+        a.target='_blank';
+        a.rel='noopener';
+        /* a PDF opens in the browser's viewer; an image poster downloads */
+        if(c.type!=='pdf') a.download=c.name||'artizia-catalogue';
+        a.setAttribute('aria-label','Open the Artizia catalogue'+(c.type==='pdf'?' (PDF)':''));
+        a.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'
+          +'<path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H15l5 5v12.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 20.5z"/>'
+          +'<path d="M14 3v6h6"/><path d="M8 13h8M8 17h5"/></svg>'
+          +'<span>Catalogue</span>';
+        document.body.appendChild(a);
+        bindHover(); bindMag();
+      })
+      .catch(()=>{});   /* API down → no tab, rather than a broken one */
+  }
+  catalogueTab();
+
+  /* ---------- admin-built pages in the nav ----------
+     Any page marked "Show in navigation" appears here. Published only —
+     a draft is invisible to visitors even if someone knows the URL. */
+  (function customNavLinks(){
+    const host=document.getElementById('navExtra');
+    if(!host || document.body.dataset.page==='admin') return;
+    fetch('/api/pages').then(r=>r.ok?r.json():[]).then(list=>{
+      const here=(location.pathname.match(/\/p\/([a-z0-9-]+)/i)||[])[1];
+      host.outerHTML=(list||[]).filter(p=>p.inNav).map(p=>
+        `<a href="/p/${p.slug}"${here===p.slug?' class="active"':''}>${
+          String(p.navLabel||p.title).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c])}</a>`
+      ).join('');
+      bindHover();
+    }).catch(()=>{ host.remove(); });
+  })();
 
   pageBanner();                       /* no-op on pages without window.PAGE.banner */
   document.addEventListener('DOMContentLoaded',refresh);

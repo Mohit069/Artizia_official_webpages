@@ -38,7 +38,15 @@ window.PAGE = {
   },
 
   /* ---- labels down the left column ---- */
-  labels: { call: "Call", email: "Email", visit: "Visit", hours: "Hours" }
+  labels: { call: "Call", email: "Email", visit: "Visit", hours: "Hours" },
+
+  /* ---- the map below the form.  What it points at lives in
+     assets/js/data.js -> window.SITE.mapQuery / mapZoom ---- */
+  map: {
+    eyebrow: "Find Us",
+    title:   "The plant, <em>on the map.</em>",
+    lead:    "Our quartz slab manufacturing facility at Mahindra World City, Jaipur — 40 minutes from the city centre, 30 from the airport."
+  }
 };
 </script>
 
@@ -64,16 +72,34 @@ window.PAGE = {
   </div>
   <div class="rv d1">
     <form class="form" id="cform">
-      <div class="g2"><div class="field"><label>Full Name</label><input required placeholder="Your name"></div>
-        <div class="field"><label>Phone</label><input required placeholder="+91"></div></div>
-      <div class="field"><label>Email</label><input type="email" required placeholder="you@email.com"></div>
-      <div class="field"><label>Subject</label><input placeholder="How can we help?"></div>
-      <div class="field"><label>Message</label><textarea rows="5" required placeholder="Tell us about your project…"></textarea></div>
-      <button class="btn btn-fill mag" type="submit"><span>Send Message <span class="arw">→</span></span></button>
+      <div class="g2"><div class="field"><label>Full Name</label><input id="c_name" name="name" required placeholder="Your name"></div>
+        <div class="field"><label>Phone</label><input id="c_phone" name="phone" required placeholder="+91"></div></div>
+      <div class="field"><label>Email</label><input id="c_email" name="email" type="email" required placeholder="you@email.com"></div>
+      <div class="field"><label>Subject</label><input id="c_subject" name="subject" placeholder="How can we help?"></div>
+      <div class="field"><label>Message</label><textarea id="c_message" name="message" rows="5" required placeholder="Tell us about your project…"></textarea></div>
+      <!-- honeypot: hidden from people, irresistible to bots -->
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button class="btn btn-fill mag" type="submit" id="cSend"><span>Send Message <span class="arw">→</span></span></button>
       <p class="mono" style="font-size:11px;color:var(--text-faint)" id="cResult"></p>
     </form>
   </div>
 </div></div></section>
+
+<!-- ===== PLANT LOCATION MAP ===== -->
+<section class="pad" style="padding-top:0"><div class="wrap">
+  <div class="sec-head rv" style="margin-bottom:clamp(22px,3vw,36px)">
+    <span class="eyebrow" id="mapEye"></span>
+    <h2 id="mapTitle"></h2>
+    <p id="mapLead"></p>
+  </div>
+  <div class="gmap rv" id="gmap">
+    <div class="gmap-card">
+      <span class="k">Artizia · Marudhar Quartz</span>
+      <p id="gmapAddr"></p>
+      <a class="btn btn-line mag" id="gmapDir" target="_blank" rel="noopener"><span>Get Directions <span class="arw">→</span></span></a>
+    </div>
+  </div>
+</div></section>
 
 <script src="assets/js/data.js"></script>
 <script src="assets/js/marble.js"></script>
@@ -92,10 +118,54 @@ window.PAGE = {
   $('cMap').href=S.mapUrl;
   $('cSamples').addEventListener('click',e=>{e.preventDefault();window.openTray();});
 
-  /* NOTE: this form does not send anywhere yet — it only clears itself. */
-  $('cform').addEventListener('submit',e=>{e.preventDefault();
-    e.target.querySelectorAll('input,textarea').forEach(i=>i.value='');
-    $('cResult').textContent='✓ Message sent — in the live site this reaches '+S.email+'. We\'ll be in touch shortly.';});
+  /* ---- plant location map ----
+     Google's keyless embed endpoint: it takes any search query (a place name
+     or a "lat,lng" pair) and needs no API key or billing account. */
+  (function(){
+    const M=P.map||{}, host=$('gmap');
+    if(!host) return;
+    $('mapEye').textContent=M.eyebrow||''; $('mapTitle').innerHTML=M.title||''; $('mapLead').textContent=M.lead||'';
+    $('gmapAddr').textContent=S.address||'';
+    $('gmapDir').href=S.mapUrl||'#';
+
+    const q=S.mapQuery||S.address||'Mahindra World City Jaipur';
+    const src='https://www.google.com/maps?q='+encodeURIComponent(q)
+            + '&z='+(S.mapZoom||14)+'&hl=en&output=embed';
+
+    /* an iframe here is ~700KB of Google's JS — don't pay for it until the
+       map is actually about to be looked at */
+    const load=()=>{
+      if(host.querySelector('iframe')) return;
+      const f=document.createElement('iframe');
+      f.src=src; f.loading='lazy'; f.title='Artizia quartz slab plant — Mahindra World City, Jaipur';
+      f.referrerPolicy='no-referrer-when-downgrade'; f.allowFullscreen=true;
+      host.prepend(f);
+    };
+    new IntersectionObserver((es,io)=>{
+      if(es[0].isIntersecting){ io.disconnect(); load(); }
+    },{rootMargin:'400px'}).observe(host);
+  })();
+
+  /* Messages are stored in the database and read in the admin panel (Enquiries). */
+  $('cform').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const btn=$('cSend'), out=$('cResult');
+    btn.disabled=true; out.style.color='var(--text-faint)'; out.textContent='Sending…';
+    try{
+      const r=await fetch('/api/enquiries',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({type:'contact',name:$('c_name').value,phone:$('c_phone').value,
+          email:$('c_email').value,subject:$('c_subject').value,message:$('c_message').value,
+          website:e.target.website.value})});
+      const j=await r.json();
+      if(!r.ok) throw new Error(j.error||'Could not send your message.');
+      e.target.reset();
+      out.style.color='var(--accent)';
+      out.textContent='✓ Message received. We’ll be in touch shortly.';
+    }catch(err){
+      out.style.color='#E0716A';
+      out.textContent='✕ '+err.message+' You can also email '+(S.email||'us')+'.';
+    }finally{ btn.disabled=false; }
+  });
 
   window.Artizia.refresh();
 })();
