@@ -135,6 +135,7 @@
   .drawer.wide .panel{width:min(920px,100%)}
   .dfoot{position:sticky;bottom:0;z-index:2;display:flex;justify-content:space-between;gap:12px;
     padding:16px clamp(20px,3vw,32px);background:var(--bg);border-top:1px solid var(--line)}
+  .psub{font-family:var(--serif);font-size:20px;margin:0 0 6px}
   .clist{display:flex;flex-direction:column;gap:10px}
   .crow{display:grid;grid-template-columns:1fr auto auto;gap:16px;align-items:center;
     padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
@@ -193,10 +194,21 @@
   .rt-bar button{min-width:32px;height:30px;padding:0 8px;background:none;border:1px solid transparent;border-radius:6px;
     color:var(--text-dim);cursor:pointer;font-size:12px;font-family:var(--mono)}
   .rt-bar button:hover{background:var(--bg);color:var(--text);border-color:var(--line)}
+  /* the button for the format under the caret lights up, so it is obvious whether
+     you are in a heading or a paragraph */
+  .rt-bar button.on{background:var(--accent);border-color:var(--accent);color:#0A0A0C}
   .rt-bar .sep{width:1px;background:var(--line);margin:4px 5px}
   .rt-body{min-height:340px;max-height:60vh;overflow:auto;padding:20px 22px;outline:none;max-width:none}
   .rt-body:focus{box-shadow:inset 0 0 0 2px var(--accent)}
   .rt-body:empty::before{content:"Start writing…";color:var(--text-faint)}
+  /* the editor shares .prose-long with the live article, so what you see here is
+     what publishes — but a few affordances only make sense while editing */
+  .rt-body:focus{scroll-margin-top:80px}
+  .rt-body code{font-family:var(--mono);font-size:.9em;background:var(--surface);padding:2px 6px;border-radius:4px}
+  .rt-foot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:8px 14px;
+    border-top:1px solid var(--line);background:var(--surface);
+    font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint)}
+  .rt-foot .rt-tip{color:var(--text-faint);opacity:.8;text-transform:none;letter-spacing:0;font-family:var(--sans);font-size:11px}
 
   /* ---- catalogue ---- */
   .cat-box{max-width:640px}
@@ -367,6 +379,11 @@
     </section>
 
     <section class="pane" id="pane-pages">
+      <h3 class="psub">Website pages</h3>
+      <p class="abarmsg">Edit the text and images on your main site pages. “Edit page” opens the live page with an inline editor — click any text to rewrite it, click an image to replace it and set alt text.</p>
+      <div class="clist" id="siteList"></div>
+      <h3 class="psub" style="margin-top:34px">Custom pages</h3>
+      <p class="abarmsg">Extra pages you build from blocks, published at /p/&lt;address&gt;.</p>
       <div class="clist" id="pageList"></div>
     </section>
 
@@ -475,22 +492,31 @@
       <div class="fld"><label>Article</label>
         <div class="rt">
           <div class="rt-bar" id="bg_bar">
-            <button type="button" data-cmd="formatBlock" data-val="h2" title="Heading">H2</button>
-            <button type="button" data-cmd="formatBlock" data-val="h3" title="Subheading">H3</button>
-            <button type="button" data-cmd="formatBlock" data-val="p" title="Paragraph">¶</button>
+            <button type="button" data-block="p" title="Paragraph">¶</button>
+            <button type="button" data-block="h2" title="Heading (H2)">H2</button>
+            <button type="button" data-block="h3" title="Subheading (H3)">H3</button>
+            <button type="button" data-block="h4" title="Small heading (H4)">H4</button>
             <span class="sep"></span>
-            <button type="button" data-cmd="bold" title="Bold"><b>B</b></button>
-            <button type="button" data-cmd="italic" title="Italic"><i>I</i></button>
+            <button type="button" data-cmd="bold" title="Bold  (Ctrl+B)"><b>B</b></button>
+            <button type="button" data-cmd="italic" title="Italic  (Ctrl+I)"><i>I</i></button>
+            <button type="button" data-cmd="underline" title="Underline  (Ctrl+U)"><u>U</u></button>
+            <button type="button" data-cmd="strikeThrough" title="Strikethrough"><s>S</s></button>
+            <button type="button" data-inline="code" title="Inline code">&lt;/&gt;</button>
             <span class="sep"></span>
             <button type="button" data-cmd="insertUnorderedList" title="Bulleted list">•</button>
             <button type="button" data-cmd="insertOrderedList" title="Numbered list">1.</button>
-            <button type="button" data-cmd="formatBlock" data-val="blockquote" title="Quote">❝</button>
+            <button type="button" data-block="blockquote" title="Quote">❝</button>
             <span class="sep"></span>
-            <button type="button" id="rtLink" title="Link">🔗</button>
+            <button type="button" id="rtLink" title="Add / edit link">🔗</button>
+            <button type="button" id="rtUnlink" title="Remove link">⛌</button>
             <button type="button" id="rtImg" title="Insert image">▣</button>
             <button type="button" data-cmd="removeFormat" title="Clear formatting">⨯</button>
+            <span class="sep"></span>
+            <button type="button" data-cmd="undo" title="Undo  (Ctrl+Z)">↶</button>
+            <button type="button" data-cmd="redo" title="Redo  (Ctrl+Y)">↷</button>
           </div>
-          <div class="rt-body prose-long" id="bg_body" contenteditable="true"></div>
+          <div class="rt-body prose-long" id="bg_body" contenteditable="true" spellcheck="true"></div>
+          <div class="rt-foot"><span id="bg_count">0 words</span><span class="rt-tip">Tip: paste from Word or the web — formatting is cleaned automatically.</span></div>
         </div>
       </div>
 
@@ -1030,7 +1056,30 @@
 
   let pages=[], editingPage=null, pgSections=[];
 
+  /* the hand-built marketing pages, editable inline via /assets/js/pageedit.js.
+     Only the first three are wired up so far. */
+  const SITE_PAGES=[
+    { file:'index.html',       title:'Home',         ready:true  },
+    { file:'about.html',       title:'About',        ready:true  },
+    { file:'collections.html', title:'Collections',  ready:true  },
+    { file:'certifications.html', title:'Certifications', ready:false },
+    { file:'faq.html',         title:'FAQ',          ready:false },
+    { file:'contact.html',     title:'Contact',      ready:false }
+  ];
+  function renderSiteList(){
+    $('siteList').innerHTML=SITE_PAGES.map(p=>`
+      <div class="crow">
+        <div><div class="t">${p.title}</div><div class="s">/${p.file}</div></div>
+        <span class="badge${p.ready?' live':''}">${p.ready?'editable':'soon'}</span>
+        <div class="acts">
+          ${p.ready?`<a class="ab primary" href="/${p.file}?edit=1" target="_blank" rel="noopener">Edit page ✎</a>`:''}
+          <a class="ab" href="/${p.file}" target="_blank" rel="noopener">View</a>
+        </div>
+      </div>`).join('');
+  }
+
   async function loadPages(){
+    renderSiteList();
     try{
       const r=await api('/api/pages/admin/all');
       pages=await r.json();
@@ -1362,6 +1411,8 @@
     $('bg_excerpt').value=p?(p.excerpt||''):'';
     setPickValue('bg_cover', p?(p.cover||''):'');
     $('bg_body').innerHTML=p?(p.body||''):'';
+    rtNormalize($('bg_body'));      /* fold any legacy span/br soup into clean blocks */
+    rtSyncFoot(); rtSyncActive();
     $('bg_seoTitle').value=p?(p.seoTitle||''):'';
     $('bg_seoDesc').value=p?(p.seoDesc||''):'';
     $('bg_del').hidden=!p;
@@ -1384,38 +1435,187 @@
     $('bg_slugPrev').textContent=$('bg_slug').value||'slug';
   });
 
-  /* toolbar. document.execCommand is deprecated but is the only thing every
-     browser still implements for contenteditable, and this is an internal tool. */
+  /* ============================================================
+     Rich-text editor.  document.execCommand is deprecated but is still the only
+     thing every browser implements for contenteditable, and this is an internal
+     tool. The value it adds here is a cleaner: content is normalised into the exact
+     tags the server allows, so pasted Word/Docs/web soup becomes real <p>/<h2>
+     blocks — which is what lets "make this a heading" actually stick.
+     ============================================================ */
+  const RT_BODY=$('bg_body');
+
+  /* Enter should start a new <p>, not a <div> — a <div> can't be turned into a
+     heading and reads as a paragraph on the live page */
+  try{ document.execCommand('defaultParagraphSeparator',false,'p'); }catch(e){}
+
+  /* the tags the public sanitiser keeps (server/models/Post.js) — mirror them so
+     the editor never shows formatting that will be stripped on save */
+  const RT_ALLOW={P:[],BR:[],STRONG:[],EM:[],U:[],S:[],H2:[],H3:[],H4:[],
+    BLOCKQUOTE:[],UL:[],OL:[],LI:[],A:['href','title','target','rel'],
+    IMG:['src','alt','title','loading'],FIGURE:[],FIGCAPTION:[],CODE:[],PRE:[]};
+  const RT_MAP={B:'STRONG',I:'EM',STRIKE:'S',DEL:'S',DIV:'P',SECTION:'P',ARTICLE:'P',
+    H1:'H2',H5:'H4',H6:'H4'};
+  const RT_DROP=new Set(['SCRIPT','STYLE','IFRAME','OBJECT','EMBED','FORM','INPUT',
+    'BUTTON','LINK','META','SVG','HEAD','TITLE','NOSCRIPT','O:P']);
+  const RT_BLOCK=new Set(['P','H2','H3','H4','BLOCKQUOTE','UL','OL','PRE','FIGURE']);
+  const RT_INLINE_OK=new Set(['STRONG','EM','U','S','A','CODE','BR','IMG']);
+
+  /* recursively copy a source node into `dest`, keeping only allowed tags and
+     attributes, unwrapping everything else (spans, fonts, styled wrappers) */
+  function rtCopy(node,dest){
+    if(node.nodeType===3){ dest.appendChild(document.createTextNode(node.nodeValue)); return; }
+    if(node.nodeType!==1) return;
+    let tag=node.tagName.toUpperCase();
+    if(RT_DROP.has(tag)) return;
+    if(RT_MAP[tag]) tag=RT_MAP[tag];
+    if(!RT_ALLOW[tag]){                       // span / font / unknown → unwrap
+      node.childNodes.forEach(c=>rtCopy(c,dest)); return;
+    }
+    const el=document.createElement(tag.toLowerCase());
+    RT_ALLOW[tag].forEach(a=>{ if(node.hasAttribute(a)) el.setAttribute(a,node.getAttribute(a)); });
+    if(tag==='A'){
+      const href=el.getAttribute('href')||'';
+      if(/^\s*(javascript|data|vbscript):/i.test(href)) el.removeAttribute('href');
+      if(el.getAttribute('target')==='_blank') el.setAttribute('rel','noopener noreferrer');
+    }
+    if(tag==='IMG'&&/^\s*(javascript|data|vbscript):/i.test(el.getAttribute('src')||'')) return;
+    node.childNodes.forEach(c=>rtCopy(c,el));
+    dest.appendChild(el);
+  }
+
+  /* clean an HTML string into the allow-list, then guarantee the top level is
+     block elements: any loose text or inline run (the span/br soup case) is
+     gathered into a <p> so it becomes selectable, headable content */
+  function rtClean(html){
+    const src=new DOMParser().parseFromString(String(html||''),'text/html').body;
+    const flat=document.createElement('div');
+    src.childNodes.forEach(c=>rtCopy(c,flat));
+    const out=document.createElement('div'); let bucket=null;
+    const flush=()=>{ if(bucket){ if(bucket.textContent.trim()||bucket.querySelector('img,br')) out.appendChild(bucket); bucket=null; } };
+    [...flat.childNodes].forEach(n=>{
+      const isBlock=n.nodeType===1&&RT_BLOCK.has(n.tagName);
+      if(isBlock){ flush(); if(n.tagName==='P'&&!n.textContent.trim()&&!n.querySelector('img')) return; out.appendChild(n); }
+      else { if(!bucket) bucket=document.createElement('p'); bucket.appendChild(n); }
+    });
+    flush();
+    return out.innerHTML;
+  }
+
+  /* normalise the live editor in place, preserving the caret's rough position */
+  function rtNormalize(root){
+    const cleaned=rtClean(root.innerHTML);
+    if(cleaned!==root.innerHTML) root.innerHTML=cleaned;
+    if(!root.firstChild) root.innerHTML='<p><br></p>';
+  }
+
+  /* word count + toolbar active-state ---------------------------------------- */
+  function rtSyncFoot(){
+    const t=RT_BODY.innerText.trim();
+    const n=t?t.split(/\s+/).length:0;
+    $('bg_count').textContent=n+(n===1?' word':' words');
+  }
+  function rtSyncActive(){
+    const sel=document.getSelection();
+    const inEditor=!!(sel.anchorNode&&RT_BODY.contains(sel.anchorNode));
+    let anc=sel.anchorNode; anc=anc&&(anc.nodeType===3?anc.parentElement:anc);
+    /* the block the caret sits in, read from the DOM rather than queryCommandValue
+       (which reports 'div'/'' inconsistently across browsers) */
+    const blockEl=inEditor&&anc?anc.closest('p,h2,h3,h4,blockquote'):null;
+    const block=blockEl?blockEl.tagName.toLowerCase():'';
+    const inCode=!!(inEditor&&anc&&anc.closest('code'));
+    $('bg_bar').querySelectorAll('button').forEach(b=>{
+      let on=false;
+      if(b.dataset.block) on=inEditor&&block===b.dataset.block;
+      else if(['bold','italic','underline','strikeThrough'].includes(b.dataset.cmd||'')){ try{ on=inEditor&&document.queryCommandState(b.dataset.cmd); }catch(e){} }
+      else if(b.dataset.inline==='code') on=inCode;
+      b.classList.toggle('on',!!on);
+    });
+  }
+
+  /* toolbar clicks ----------------------------------------------------------- */
   $('bg_bar').addEventListener('mousedown',e=>{ if(e.target.closest('button')) e.preventDefault(); });
   $('bg_bar').addEventListener('click',e=>{
-    const b=e.target.closest('button[data-cmd]'); if(!b) return;
-    $('bg_body').focus();
-    document.execCommand(b.dataset.cmd,false,b.dataset.val||null);
+    const b=e.target.closest('button'); if(!b) return;
+    RT_BODY.focus();
+    if(b.dataset.block){
+      /* toggle: a second press on the active heading returns it to a paragraph */
+      let cur=''; try{ cur=(document.queryCommandValue('formatBlock')||'').toLowerCase(); }catch(e){}
+      const to=(cur===b.dataset.block&&b.dataset.block!=='p')?'p':b.dataset.block;
+      document.execCommand('formatBlock',false,'<'+to+'>');
+    } else if(b.dataset.inline==='code'){
+      rtWrapInline('code');
+    } else if(b.dataset.cmd){
+      document.execCommand(b.dataset.cmd,false,null);
+    }
+    rtSyncFoot(); rtSyncActive();
   });
+
+  /* wrap / unwrap the selection in an inline tag (used for inline code) */
+  function rtWrapInline(tagName){
+    const sel=document.getSelection(); if(!sel.rangeCount) return;
+    let anc=sel.anchorNode; anc=anc&&(anc.nodeType===3?anc.parentElement:anc);
+    const existing=anc&&anc.closest(tagName);
+    if(existing){ const p=existing.parentNode; while(existing.firstChild) p.insertBefore(existing.firstChild,existing); p.removeChild(existing); return; }
+    if(sel.isCollapsed) return;
+    const range=sel.getRangeAt(0), el=document.createElement(tagName);
+    try{ range.surroundContents(el); }catch(e){ el.appendChild(range.extractContents()); range.insertNode(el); }
+  }
+
+  /* links -------------------------------------------------------------------- */
   $('rtLink').addEventListener('mousedown',e=>e.preventDefault());
   $('rtLink').addEventListener('click',()=>{
-    const u=prompt('Link URL','https://');
-    if(!u) return;
-    $('bg_body').focus();
-    document.execCommand('createLink',false,u);
+    RT_BODY.focus();
+    let anc=document.getSelection().anchorNode; anc=anc&&(anc.nodeType===3?anc.parentElement:anc);
+    const current=anc&&anc.closest('a');
+    const u=prompt('Link URL',current?current.getAttribute('href'):'https://');
+    if(u===null) return;
+    if(!u.trim()){ if(current) document.execCommand('unlink'); return; }
+    document.execCommand('createLink',false,u.trim());
+    rtSyncActive();
   });
+  $('rtUnlink').addEventListener('mousedown',e=>e.preventDefault());
+  $('rtUnlink').addEventListener('click',()=>{ RT_BODY.focus(); document.execCommand('unlink'); rtSyncActive(); });
+
+  /* images ------------------------------------------------------------------- */
   $('rtImg').addEventListener('mousedown',e=>e.preventDefault());
   $('rtImg').addEventListener('click',()=>{
-    /* the caret is lost while the file dialog is open — remember where we were */
     const sel=window.getSelection();
     const range=sel.rangeCount?sel.getRangeAt(0).cloneRange():null;
     pickImage(url=>{
-      $('bg_body').focus();
+      const alt=prompt('Describe this image (for accessibility & SEO):','')||'';
+      RT_BODY.focus();
       if(range){ sel.removeAllRanges(); sel.addRange(range); }
-      document.execCommand('insertHTML',false,`<img src="${url}" alt="">`);
+      document.execCommand('insertHTML',false,`<img src="${url}" alt="${alt.replace(/"/g,'&quot;')}" loading="lazy">`);
+      rtNormalize(RT_BODY); rtSyncFoot();
     });
   });
+
+  /* paste — the actual fix for the reported bug ------------------------------
+     strip the clipboard down to clean blocks before it lands, so headings you
+     apply afterwards attach to real elements instead of nested spans */
+  RT_BODY.addEventListener('paste',e=>{
+    e.preventDefault();
+    const cb=e.clipboardData||window.clipboardData; if(!cb) return;
+    let html=cb.getData('text/html');
+    if(!html){
+      const text=cb.getData('text/plain')||'';
+      html=text.split(/\n{2,}/).map(par=>'<p>'+par.replace(/\n/g,'<br>').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'})[c])+'</p>').join('');
+    }
+    document.execCommand('insertHTML',false,rtClean(html));
+    rtNormalize(RT_BODY); rtSyncFoot(); rtSyncActive();
+  });
+
+  RT_BODY.addEventListener('input',()=>{ rtSyncFoot(); });
+  RT_BODY.addEventListener('keyup',rtSyncActive);
+  RT_BODY.addEventListener('mouseup',rtSyncActive);
+  document.addEventListener('selectionchange',()=>{ if(RT_BODY.contains(document.getSelection().anchorNode)) rtSyncActive(); });
 
   $('bg_save').addEventListener('click',async()=>{
     const slug=toSlug($('bg_slug').value);
     const title=$('bg_title').value.trim();
     if(!title){ $('bg_err').textContent='Give the article a headline.'; return; }
     if(!slug){ $('bg_err').textContent='Give the article an address.'; return; }
+    rtNormalize($('bg_body'));       /* store the same clean HTML the editor shows */
     const payload={
       slug, title,
       excerpt:$('bg_excerpt').value.trim()||null,

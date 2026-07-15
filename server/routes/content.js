@@ -14,7 +14,12 @@
 const express = require('express');
 const Page = require('../models/Page');
 const Post = require('../models/Post');
+const PageContent = require('../models/PageContent');
 const { requireAdmin } = require('../auth');
+
+/* the marketing pages whose text/images can be edited inline */
+const EDITABLE_PAGES = new Set(['index', 'about', 'collections', 'certifications',
+  'contact', 'faq', 'warranty', 'technical-details', 'care-and-maintenance', 'blog']);
 
 const router = express.Router();
 
@@ -98,6 +103,25 @@ router.put('/posts/:slug', requireAdmin, (req, res) => {
 router.delete('/posts/:slug', requireAdmin, (req, res) => {
   if (!Post.remove(req.params.slug)) return res.status(404).json({ error: 'Article not found.' });
   res.json({ ok: true });
+});
+
+/* ═══════════════════ PAGE CONTENT (inline edits) ═══════════════════ */
+
+/* PUBLIC — the override map a marketing page applies to itself on load */
+router.get('/page-content/:page', (req, res) => {
+  const page = String(req.params.page || '').toLowerCase();
+  if (!EDITABLE_PAGES.has(page)) return res.status(404).json({ error: 'Unknown page.' });
+  res.json({ page, data: PageContent.get(page) });
+});
+
+/* ADMIN — save edits made in the inline editor */
+router.put('/page-content/:page', requireAdmin, (req, res) => {
+  const page = String(req.params.page || '').toLowerCase();
+  if (!EDITABLE_PAGES.has(page)) return res.status(404).json({ error: 'Unknown page.' });
+  const patch = req.body && req.body.data;
+  if (!patch || typeof patch !== 'object' || Array.isArray(patch)) return bad(res, 'Expected a data object.');
+  const data = PageContent.setMany(page, patch);
+  res.json({ ok: true, page, data });
 });
 
 module.exports = router;

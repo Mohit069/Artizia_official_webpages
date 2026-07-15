@@ -127,3 +127,17 @@ CREATE TABLE IF NOT EXISTS posts (
 CREATE INDEX IF NOT EXISTS idx_posts_slug      ON posts(slug);
 CREATE INDEX IF NOT EXISTS idx_posts_status    ON posts(status);
 CREATE INDEX IF NOT EXISTS idx_posts_published ON posts(published_at DESC);
+
+-- ============================================================
+--  PAGE CONTENT — inline edits to the hand-built marketing pages
+--  (Home, About, Collections, …). One row per page; `data` is a
+--  JSON map of { "<field-key>": "<value>" } where a field key like
+--  "hero.title" matches a data-edit attribute in that page's markup.
+--  Image fields store the URL; their alt text is a sibling key,
+--  e.g. "hero.image" + "hero.image__alt".
+-- ============================================================
+CREATE TABLE IF NOT EXISTS page_content (
+  page        TEXT PRIMARY KEY,                 -- 'index' | 'about' | 'collections' | …
+  data        TEXT NOT NULL DEFAULT '{}',       -- JSON map of overrides
+  updated_at  TEXT DEFAULT (datetime('now'))
+);

@@ -149,6 +149,7 @@ body.has-banner .nav{top:var(--banner-h)}
 @media(prefers-reduced-motion:reduce){.search,.search-panel{transition:none}}
 
 /* collections: the "results for …" strip shown when the grid is filtered by ?q= */
+.qbar[hidden]{display:none}   /* a class `display` otherwise overrides the hidden attribute */
 .qbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
   margin:0 0 clamp(20px,2.4vw,30px);padding:12px 16px;border:1px solid var(--line);border-radius:10px;
   background:var(--surface);font-family:var(--mono);font-size:11px;letter-spacing:.1em;
@@ -289,13 +290,17 @@ body.menu-open{overflow:hidden}
    frame an odd-shaped slab leaves over is filled by the same photo, blurred. */
 .mcard .mimg{display:block;position:relative;width:100%;aspect-ratio:1480/740;overflow:hidden;
   background:var(--bg)}
-.mcard .mimg img{display:block;width:100%;height:100%;object-fit:contain}
-.mcard .mimg .bed{position:absolute;inset:0;object-fit:cover;
-  filter:blur(24px) saturate(1.15) brightness(.62);transform:scale(1.3)}
-.mcard .mimg .slab{position:relative;z-index:1;transition:transform .9s var(--e);
-  box-shadow:0 10px 34px rgba(0,0,0,.45)}
+/* fill the frame edge-to-edge. Slab photos come in from 1.5:1 to nearly 3:1, so
+   `contain` left most of them floating in a blurred bed instead of filling the
+   card; `cover` crops the overflow so every card reads as one clean, full image.
+   Admins frame the important part with the crop tool in the product editor. */
+.mcard .mimg img{display:block;width:100%;height:100%;object-fit:cover}
+/* the blurred backdrop only existed to pad a contained image — with cover the
+   slab fills the frame and the bed is never seen, so skip painting (and blurring) it */
+.mcard .mimg .bed{display:none}
+.mcard .mimg .slab{position:relative;z-index:1;transition:transform .9s var(--e)}
 .mcard:hover .mimg .slab{transform:scale(1.09)}
-/* generated-marble fallback (no photo yet) — single img, still contained */
+/* generated-marble fallback (no photo yet) — single img, same fill treatment */
 .mcard:hover .mimg img:only-child{transform:scale(1.09);transition:transform .9s var(--e)}
 .mcard .madd{position:absolute;top:14px;right:14px;z-index:3;width:36px;height:36px;border-radius:50%;
   border:1px solid rgba(243,240,234,.35);background:rgba(8,8,10,.4);backdrop-filter:blur(6px);color:#fff;
@@ -824,9 +829,15 @@ footer{border-top:1px solid var(--line);padding:clamp(60px,7vw,96px) 0 36px;marg
 /* long-form rich text (blog body, text blocks) */
 .prose-long{max-width:70ch;color:var(--text-dim);font-size:clamp(16px,1.6vw,17.5px);line-height:1.85}
 .prose-long>*+*{margin-top:1.15em}
-.prose-long h2{font-family:var(--serif);font-size:clamp(26px,3.2vw,38px);color:var(--text);margin-top:1.8em;line-height:1.15}
-.prose-long h3{font-family:var(--serif);font-size:clamp(21px,2.4vw,27px);color:var(--text);margin-top:1.6em}
-.prose-long h4{font-family:var(--serif);font-size:19px;color:var(--text);margin-top:1.4em}
+.prose-long>:first-child{margin-top:0}   /* a heading at the very top shouldn't be pushed down */
+/* heading top margins are in em, so on a 38px H2 the old 1.8em was ~68px of empty
+   space. These are the gap ABOVE a heading; the following paragraph's own 1.15em
+   top margin is the (smaller) gap below it, which keeps the heading tied to its text */
+.prose-long h2{font-family:var(--serif);font-size:clamp(26px,3.2vw,38px);color:var(--text);margin-top:1.15em;line-height:1.18}
+.prose-long h3{font-family:var(--serif);font-size:clamp(21px,2.4vw,27px);color:var(--text);margin-top:1em}
+.prose-long h4{font-family:var(--serif);font-size:19px;color:var(--text);margin-top:.9em}
+/* a heading directly after another heading (H2 then H3) needs only a small gap */
+.prose-long h2+h3,.prose-long h2+h4,.prose-long h3+h4{margin-top:.5em}
 .prose-long strong,.prose-long b{color:var(--text);font-weight:600}
 .prose-long a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 .prose-long a:hover{opacity:.75}
