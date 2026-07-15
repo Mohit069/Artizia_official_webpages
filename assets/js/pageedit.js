@@ -16,7 +16,16 @@
    ============================================================ */
 (function () {
   const PAGE = document.body.dataset.page || '';
-  const MAP = { home: 'index', about: 'about', collections: 'collections' };
+  /* data-page value  ->  server page key. Most match their filename; a couple of
+     pages use a short data-page that differs from the file, so map explicitly.
+     product.html also carries data-page="collections" but never loads this script,
+     so it is never treated as the Collections page. */
+  const MAP = {
+    home: 'index', about: 'about', collections: 'collections',
+    certifications: 'certifications', contact: 'contact', faq: 'faq',
+    warranty: 'warranty', technical: 'technical-details', care: 'care-and-maintenance',
+    blog: 'blog'
+  };
   const pageKey = MAP[PAGE];
   if (!pageKey) return;                       // not a wired-up page
 

@@ -1059,13 +1059,17 @@
   /* the hand-built marketing pages, editable inline via /assets/js/pageedit.js.
      Only the first three are wired up so far. */
   const SITE_PAGES=[
-    { file:'index.html',       title:'Home',         ready:true  },
-    { file:'about.html',       title:'About',        ready:true  },
-    { file:'collections.html', title:'Collections',  ready:true  },
-    { file:'certifications.html', title:'Certifications', ready:false },
-    { file:'faq.html',         title:'FAQ',          ready:false },
-    { file:'contact.html',     title:'Contact',      ready:false }
-  ];
+    { file:'index.html',                title:'Home' },
+    { file:'about.html',                title:'About' },
+    { file:'collections.html',          title:'Collections' },
+    { file:'certifications.html',       title:'Certifications' },
+    { file:'warranty.html',             title:'Warranty' },
+    { file:'technical-details.html',    title:'Technical Details' },
+    { file:'care-and-maintenance.html', title:'Care & Maintenance' },
+    { file:'faq.html',                  title:'FAQ' },
+    { file:'contact.html',              title:'Contact' },
+    { file:'blog.html',                 title:'Blog (index)' }
+  ].map(p=>Object.assign({ready:true},p));   /* every marketing page is now editable */
   function renderSiteList(){
     $('siteList').innerHTML=SITE_PAGES.map(p=>`
       <div class="crow">
