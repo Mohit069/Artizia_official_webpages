@@ -52,6 +52,31 @@ app.use('/api/instagram', require('./routes/instagram'));
 app.use('/api/catalogue', require('./routes/catalogue'));
 app.use('/api',           require('./routes/content'));   /* /api/pages, /api/posts */
 
+/* ---- OPTIONAL: serve the React (Vite) build ----
+   Set SERVE_SPA=1 to serve frontend/dist instead of the legacy static HTML.
+   Additive and off by default: without the env var, behaviour is exactly what
+   it was before. Used when deploying the React app on a Node host (VPS). */
+if (process.env.SERVE_SPA === '1') {
+  const DIST = process.env.SPA_DIR || path.join(ROOT, 'frontend', 'dist');
+  app.use(express.static(DIST, {
+    extensions: ['html'],
+    etag: true,
+    setHeaders(res, filePath) {
+      if (/\.html$/i.test(filePath)) res.setHeader('Cache-Control', 'no-cache');
+      else res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    }
+  }));
+  /* React Router fallback — any non-API, non-upload path renders the SPA shell */
+  app.use((req, res, next) => {
+    if (req.method !== 'GET') return next();
+    if (/^\/(api|uploads)\//.test(req.path)) return next();
+    res.sendFile(path.join(DIST, 'index.html'), err => err && next());
+  });
+  module.exports = app;
+  module.exports.seedResult = seedResult;
+  return;
+}
+
 /* ---- pretty URLs for CMS content ----
    /p/<slug>     -> page.html   (a page built in the admin panel)
    /blog         -> blog.html

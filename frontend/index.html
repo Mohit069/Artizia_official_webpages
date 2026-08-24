@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="/assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="/assets/img/brand/apple-touch-icon.png">
+<!-- Design system, served verbatim (Vite never touches it) -->
+<link rel="stylesheet" href="/assets/css/styles.css">
+<!-- React's root wrapper must not affect layout: sections/nav/footer lay out as if direct children of <body>, exactly like the current site -->
+<style>#root{display:contents}</style>
+<!-- Theme bootstrap BEFORE paint: matches the current site's instant dark default, no FOUC -->
+<script>
+(function(){try{var t=localStorage.getItem('artizia_theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();
+</script>
+<!-- WebGL marble engine — browser-only global (window.MarbleGL), used as the photo fallback across the site -->
+<script src="/assets/js/marble.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

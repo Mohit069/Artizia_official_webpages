@@ -1,0 +1,26 @@
+/* ============================================================
+   HOMEPAGE — "Featured Quartz Collection" slider
+   ------------------------------------------------------------
+   The rail runs its own carousel off pointer events. With no explicit
+   touch-action the browser claims the horizontal gesture for scrolling
+   and fires `pointercancel` right after the first `pointermove`, so the
+   track never moves on a touch device — the slider looks frozen.
+
+   `pan-y` keeps vertical page scrolling native while handing horizontal
+   gestures to the carousel.
+   Measured: pointermove 1 -> 12, pointercancel gone, track advances.
+   ============================================================ */
+.fcoll-rail {
+  touch-action: pan-y;
+}
+
+/* With a mouse, the browser's native link/image drag hijacks the gesture
+   instead, which left the desktop rail unresponsive. Suppressing the native
+   drag keeps the cards fully clickable but lets the carousel own the swipe. */
+.fcoll-rail .fcoll,
+.fcoll-rail .fcoll img,
+.fcoll-rail .fcoll .ph {
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+}

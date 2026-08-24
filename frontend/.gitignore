@@ -1,0 +1,8 @@
+node_modules
+dist
+public/assets
+src/generated
+*.local
+.vite
+.tsbuild
+artizia-dist.zip
