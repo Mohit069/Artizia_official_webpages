@@ -140,6 +140,15 @@ export default function Nav() {
         <button className="tbtn" id="trayBtn" onClick={openTray}>
           Samples <span className="tct" id="tct">{samples.length}</span>
         </button>
+        <span className="nav-marudhar" id="navMarudhar">
+          <img
+            className="logo marudhar-lockup"
+            src="/assets/img/brand/marudhar-logo.png"
+            alt="Marudhar Quartz"
+            height={40}
+            onError={(e) => { (e.currentTarget.parentNode as HTMLElement).style.display = 'none' }}
+          />
+        </span>
         <button className="burger" id="burger" aria-label="Menu" onClick={() => setMenuOpen(true)}>
           <span></span>
           <span></span>

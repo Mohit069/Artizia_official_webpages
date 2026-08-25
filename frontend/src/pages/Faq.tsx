@@ -12,7 +12,7 @@ const PAGE = {
     zoom: 1.4,
     eyebrow: 'Resources · FAQ',
     title: 'Questions, <em>answered.</em>',
-    lead: 'Everything you need to know about our quartz slabs — sizes, finishes, samples, delivery, installation and the lifetime warranty.',
+    lead: 'Everything you need to know about our quartz slabs — sizes, finishes, samples, delivery, installation and the 15-year warranty.',
   },
   faqs: [
     { q: 'What does Artizia manufacture?', a: 'Artizia is a quartz slab manufacturer, exporter and supplier based at Mahindra World City, Jaipur. We engineer premium quartz slabs — including super jumbo quartz slabs at 3200 × 1600 mm — across 100+ designs, all pressed on Breton technology to global standards of durability and finish.' },
@@ -30,7 +30,7 @@ const PAGE = {
     { q: 'Do you offer custom designs or bulk supply?', a: "Yes. As a quartz slab supplier to projects large and small, we handle custom requirements and bulk orders for developers, architects and fabricators. Share the specification and we'll quote it." },
     { q: 'Do you provide installation?', a: "Installation is available through certified fabrication partners, and availability varies by region. Contact our team with your location and we'll connect you with the right installer." },
     { q: 'How do I make sure my slab is installed correctly?', a: 'Use a professional fabricator. Templating, seam placement, cut-outs and support all affect how the finished surface looks and lasts — a super jumbo slab is heavy, and it rewards being handled by someone who does it every day.' },
-    { q: 'What does the warranty cover?', a: 'A Lifetime Warranty against manufacturing defects, covering scratches, stains, heat, household chemicals, mould and mildew. See the warranty page for the full terms.' },
+    { q: 'What does the warranty cover?', a: 'A 15-Year Warranty against manufacturing defects, covering scratches, stains, heat, household chemicals, mould and mildew. See the warranty page for the full terms.' },
   ],
   cta: { eyebrow: 'Still Curious?', title: "We're happy <em>to help.</em>", text: 'Reach our team in Jaipur for anything not covered here.' },
 }
@@ -53,7 +53,7 @@ export default function Faq() {
     <>
       <Seo
         title="FAQ — Quartz Slabs, Sizes, Samples & Installation | Artizia"
-        description="Answers on Artizia quartz slabs — super jumbo 3200 × 1600 mm sizes, white, ivory and beige quartz, samples, delivery, installation and the lifetime warranty. From a leading quartz slab manufacturer and exporter in Jaipur, India."
+        description="Answers on Artizia quartz slabs — super jumbo 3200 × 1600 mm sizes, white, ivory and beige quartz, samples, delivery, installation and the 15-year warranty. From a leading quartz slab manufacturer and exporter in Jaipur, India."
         canonical="https://artizia.co.in/faq.html"
         jsonLd={jsonLd}
       />

@@ -10,8 +10,8 @@ const PAGE = {
     fallback: 'calacatta-gold',
     zoom: 1.4,
     eyebrow: 'Resources · Warranty',
-    title: 'Engineered to last <em>a lifetime.</em>',
-    lead: 'Non-porous, low-maintenance and built to endure — every Artizia surface is backed by a Lifetime Warranty against manufacturing defects.',
+    title: 'Engineered to <em>endure.</em>',
+    lead: 'Non-porous, low-maintenance and built to endure — every Artizia surface is backed by a 15-Year Warranty against manufacturing defects.',
   },
   covers: [
     { title: 'Scratches', text: 'Mohs hardness 6.5–7.5 stands up to everyday knocks and abrasion.' },
@@ -28,14 +28,14 @@ const PAGE = {
       { feature: 'Scratch resistance', cells: [['High', true], ['High', true], ['Low', false], ['Medium', false]] as [string, boolean][] },
       { feature: 'Heat resistance', cells: [['Class A', true], ['High', true], ['Low', false], ['Low', false]] as [string, boolean][] },
       { feature: 'Maintenance', cells: [['Low', true], ['Periodic sealing', false], ['Low', true], ['Low', true]] as [string, boolean][] },
-      { feature: 'Lifetime warranty', cells: [['Yes', true], ['Varies', false], ['No', false], ['Varies', false]] as [string, boolean][] },
+      { feature: '15-year warranty', cells: [['Yes', true], ['Varies', false], ['No', false], ['Varies', false]] as [string, boolean][] },
     ],
   },
   terms: {
     eyebrow: 'The Fine Print',
     title: 'Terms &amp; conditions.',
     body: [
-      'The Artizia Lifetime Warranty covers manufacturing defects in material and workmanship for the original purchaser, in normal residential use, when the surface is professionally installed by a certified partner.',
+      'The Artizia 15-Year Warranty covers manufacturing defects in material and workmanship for the original purchaser, in normal residential use, when the surface is professionally installed by a certified partner.',
       '<b>Not covered:</b> damage from misuse, impact, extreme heat without trivets, improper installation, alteration, or use of abrasive/harsh chemical cleaners. Natural variation in colour and veining is a feature of engineered stone, not a defect.',
       'To register a claim, contact us with your proof of purchase and installation details. Full warranty documentation is provided with every order.',
     ],
@@ -49,7 +49,7 @@ export default function Warranty() {
     <>
       <Seo
         title="Warranty — Artizia Quartz"
-        description="Every Artizia engineered quartz surface is backed by a Lifetime Warranty against manufacturing defects — scratches, stains, heat, chemicals, mould and mildew."
+        description="Every Artizia engineered quartz surface is backed by a 15-Year Warranty against manufacturing defects — scratches, stains, heat, chemicals, mould and mildew."
         canonical="https://artizia.co.in/warranty.html"
       />
       <PageHero banner={PAGE.banner} />

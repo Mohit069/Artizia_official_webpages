@@ -33,9 +33,8 @@ const P: any = {
     cta: { label: 'Explore the Collections', href: 'collections.html' },
     cta2: { label: 'Talk to Our Team', href: 'contact.html' },
     facts: [
-      { value: 35, suffix: 'yrs', label: 'Of Heritage' },
-      { value: 38, suffix: 'M sq ft', label: 'Produced Annually' },
-      { value: 25, suffix: '%+', label: "Of India's Exports" },
+      { value: 40, suffix: 'yrs', label: 'Of Heritage' },
+      { value: 28, suffix: 'M sq ft', label: 'Produced Annually' },
       { value: 53, suffix: 'designs', label: 'Across Five Collections' },
     ],
   },
@@ -47,35 +46,27 @@ const P: any = {
     eyebrow: 'The Origin',
     title: 'From a global quartz slab exporter<br>to an <em>Indian original.</em>',
     body: [
-      "Artizia was born from Marudhar Quartz's 35-year heritage as a quartz slab supplier to North American, UK and Australian markets. For three decades our slabs travelled outward. Artizia is the moment we turned around — and brought that expertise home.",
-      "We hold 25%+ of India's quartz export share, engineer 38 million square feet of quartz slabs a year, and press every one on Breton technology — the global benchmark for engineered stone. White quartz slabs, ivory and beige tones, and modern quartz designs threaded with golden veins.",
-      'Nothing changes when the shipping label reads Jaipur instead of Toronto. The same line, the same tolerances, the same lifetime warranty.',
+      "<b>Crafted for the world. Made for India.</b>",
+      "Artizia is born from the global expertise of Marudhar Quartz—one of India’s leading names in engineered stone.",
+      "For years, our surfaces have travelled across international markets, finding a place in homes and spaces around the world. Today, we bring that same experience, technology and craftsmanship home.",
+      "Every Artizia surface is created with an uncompromising focus on design, precision and performance. From timeless marble-inspired patterns to contemporary designs with striking movement and detail, each collection is crafted to transform everyday spaces into something extraordinary.",
+      "<b>Global expertise. Made for your home.</b>",
+      "Behind every Artizia slab is advanced manufacturing technology, rigorous quality standards and decades of experience in engineered stone.",
+      "Because true luxury isn’t defined by where a product is sold.",
+      "It’s defined by how beautifully it performs, how long it lasts, and how effortlessly it becomes part of your life.",
+      "<b>Artizia Quartz</b>",
     ],
-    pull: 'Every slab that leaves Jaipur has already met the standard of three continents.',
+    pull: "Global craftsmanship. Timeless design. Made for India.",
   },
   manifesto: "Advanced technology and timeless artistry — luxury quartz surfaces that don't simply perform, they <em>inspire.</em>",
-  timeline: {
-    eyebrow: 'The Journey',
-    title: 'A Journey Defined by<br><em>Innovation</em>',
-    lead: 'From our first production line to becoming a trusted global Quartz Slab Supplier, Artizia has continuously invested in technology, skilled craftsmanship, and sustainable manufacturing practices. Today, our premium Super Jumbo Quartz Slabs are trusted by architects, designers, distributors, and fabricators across international markets, reflecting our commitment to quality and innovation.',
-    milestones: [
-      { year: '1990', title: 'It begins in stone', text: 'Marudhar Quartz starts out in Rajasthan — a state that has quarried, cut and polished stone for a thousand years.' },
-      { year: '2005', title: 'The first container', text: 'Our first shipment sails for North America, beginning a run as a quartz slab exporter that has never paused since.' },
-      { year: '2012', title: 'Breton technology', text: "We commission a Breton line — the Italian vibro-compression standard the world's finest engineered quartz is pressed on." },
-      { year: '2018', title: 'Mahindra World City', text: 'The Jaipur plant opens: fully integrated, with quarry-to-container control over every quartz slab we make.' },
-      { year: '2021', title: "A quarter of India's exports", text: "Our parent company crosses 25%+ of India's quartz slab export share, supplying the UK, Australia and North America." },
-      { year: '2024', title: 'Super jumbo quartz slabs', text: 'We move to super jumbo quartz slabs at 3200 × 1600 mm — fewer seams, longer islands, table tops that run unbroken.' },
-      { year: '2025', title: 'Artizia comes home', text: 'The Artizia brand launches for India: 100+ modern quartz designs across five collections, sold direct to you.' },
-    ],
-  },
   why: {
     eyebrow: 'Why Artizia',
     title: 'Why architects choose us as their <em>quartz slab supplier.</em>',
     cards: [
       { icon: 'breton', title: 'Breton Technology', text: "Every slab is vibro-compressed on Breton machinery — the benchmark the world's leading luxury quartz surfaces are made on." },
-      { icon: 'slab', title: 'Super Jumbo Slabs', text: 'Super jumbo quartz slabs at 3200 × 1600 mm, in 20 mm and 30 mm — longer islands, seamless table tops, a cleaner line.' },
+      { icon: 'slab', title: 'Super Jumbo Slabs', text: 'Super jumbo quartz slabs at 3500 × 2000 mm, in 20 mm and 30 mm — longer islands, seamless table tops, a cleaner line.' },
       { icon: 'globe', title: 'Export-Grade, at Home', text: 'The grade we ship to North America, the UK and Australia is the grade we sell in India. There is no second tier.' },
-      { icon: 'shield', title: 'Lifetime Warranty', text: 'Scratch, stain, heat, chemical and mould resistant — and warranted against manufacturing defects for life.' },
+      { icon: 'shield', title: '15 Years of Warranty', text: 'Scratch, stain, heat, chemical and mould resistant — and warranted against manufacturing defects for 15 years.' },
       { icon: 'leaf', title: 'Zero-Discharge Plant', text: 'Water recycled in a closed loop, VOC-free materials, and GreenGuard-certified surfaces that keep indoor air clean.' },
       { icon: 'quarry', title: 'Quarry to Container', text: 'Raw material, engineering, finishing and logistics under one roof — so consistency is a process, not a promise.' },
     ],
@@ -98,8 +89,7 @@ const P: any = {
     pillars: [
       { k: 'Technology', v: 'Breton', l: 'Italian vibro-compression — the engineered-stone benchmark.' },
       { k: 'Quality', v: '100%', l: 'Every slab inspected for colour, density and flatness before it ships.' },
-      { k: 'Exports', v: '25%+', l: "Of India's quartz slab exports leave through our parent company." },
-      { k: 'Production', v: '38M sq ft', l: 'Annual capacity of engineered quartz slabs, in 20 mm and 30 mm.' },
+      { k: 'Production', v: '28M sq ft', l: 'Annual capacity of engineered quartz slabs, in 20 mm and 30 mm.' },
     ],
   },
   global: {
@@ -111,9 +101,8 @@ const P: any = {
     pins: [],
     stats: [
       { value: 3, suffix: 'continents', label: 'Export Markets' },
-      { value: 38, suffix: 'M sq ft', label: 'Annual Capacity' },
-      { value: 35, suffix: 'years', label: 'Of Heritage' },
-      { value: 25, suffix: '%+', label: "Of India's Exports" },
+      { value: 28, suffix: 'M sq ft', label: 'Annual Capacity' },
+      { value: 40, suffix: 'years', label: 'Of Heritage' },
     ],
   },
   values: {
@@ -136,8 +125,8 @@ const P: any = {
       { name: 'Kosher', image: 'assets/img/certs/kosher.png', text: 'Independently certified kosher, for observant homes and commercial food environments alike.' },
     ],
     warranty: {
-      title: 'Backed for a lifetime.',
-      text: 'Beyond certification, every Artizia quartz slab carries a <b>Lifetime Warranty</b> against manufacturing defects — resisting scratches, stains, heat, household chemicals, mould and mildew. Specify it once, and stop thinking about it.',
+      title: 'Backed for 15 years.',
+      text: 'Beyond certification, every Artizia quartz slab carries a <b>15-Year Warranty</b> against manufacturing defects — resisting scratches, stains, heat, household chemicals, mould and mildew. Specify it once, and stop thinking about it.',
     },
   },
   cta: {
@@ -157,7 +146,6 @@ export default function About() {
   const insetRef = useRef<HTMLDivElement>(null)
   const ctaRef = useRef<HTMLElement>(null)
   const ctaBgRef = useRef<HTMLDivElement>(null)
-  const tlRef = useRef<HTMLDivElement>(null)
   const worldRef = useRef<HTMLDivElement>(null)
   const maniRef = useRef<HTMLParagraphElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -237,7 +225,7 @@ export default function About() {
     if (!vid.muted) vid.play().catch(() => {})
   }
 
-  /* parallax + timeline fill (about.html frame loop) */
+  /* parallax (about.html frame loop) */
   useEffect(() => {
     const reduce = window.MarbleGL?.reduce
     const cl = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v))
@@ -264,18 +252,6 @@ export default function About() {
           ctaBg.style.transform = `translate3d(0,${(p * -40).toFixed(1)}px,0)`
         }
       }
-      const tl = tlRef.current
-      if (tl) {
-        const dots = [...tl.querySelectorAll('.ab-mile')]
-        const r = tl.getBoundingClientRect()
-        const p = cl((vh * 0.62 - r.top) / r.height, 0, 1)
-        tl.style.setProperty('--tlp', (p * 100).toFixed(2) + '%')
-        const head = r.top + r.height * p
-        dots.forEach((li) => {
-          const d = (li.querySelector('.dot') as HTMLElement).getBoundingClientRect()
-          li.classList.toggle('on', d.top + d.height / 2 <= head + 2)
-        })
-      }
     }
     let tick = false
     const onScroll = () => {
@@ -288,10 +264,7 @@ export default function About() {
     }
     addEventListener('scroll', onScroll, { passive: true })
     addEventListener('resize', frame, { passive: true })
-    if (reduce && tlRef.current) {
-      tlRef.current.style.setProperty('--tlp', '100%')
-      tlRef.current.querySelectorAll('.ab-mile').forEach((d) => d.classList.add('on'))
-    } else frame()
+    if (!reduce) frame()
     return () => {
       removeEventListener('scroll', onScroll)
       removeEventListener('resize', frame)
@@ -310,7 +283,6 @@ export default function About() {
   }
 
   const S = P.story,
-    T = P.timeline,
     W = P.why,
     M = P.making,
     G = P.global,
@@ -322,11 +294,11 @@ export default function About() {
     <>
       <Seo
         title="About Artizia — Quartz Slab Manufacturer, Exporter & Supplier | Jaipur, India"
-        description="Artizia is a quartz slab manufacturer, exporter and supplier with 35 years of heritage. Super jumbo quartz slabs and luxury quartz surfaces — white, ivory and beige tones with golden veins — for kitchen countertops, bathroom vanities, table tops and commercial projects. Made on Breton technology in Jaipur."
+        description="Artizia is a quartz slab manufacturer, exporter and supplier with 40 years of heritage. Super jumbo quartz slabs and luxury quartz surfaces — white, ivory and beige tones with golden veins — for kitchen countertops, bathroom vanities, table tops and commercial projects. Made on Breton technology in Jaipur."
         canonical="https://artizia.co.in/about.html"
         og={[
           ['og:title', 'About Artizia — Quartz Slab Manufacturer, Exporter & Supplier'],
-          ['og:description', '35 years of engineered-stone heritage. A quartz slab supplier to North America, the UK and Australia — now crafting luxury quartz surfaces and super jumbo quartz slabs for India.'],
+          ['og:description', '40 years of engineered-stone heritage. A quartz slab supplier to North America, the UK and Australia — now crafting luxury quartz surfaces and super jumbo quartz slabs for India.'],
           ['og:type', 'website'],
         ]}
         jsonLd={jsonLd}
@@ -418,37 +390,8 @@ export default function About() {
         </div>
       </section>
 
-      {/* 4 · TIMELINE */}
-      <section className="pad">
-        <div className="wrap">
-          <div className="tl-head rv">
-            <div className="sec-head">
-              <span className="eyebrow" id="tEye">{T.eyebrow}</span>
-              <h2 id="tTitle" dangerouslySetInnerHTML={{ __html: T.title }} />
-            </div>
-            <p id="tLead">{T.lead}</p>
-          </div>
-          <div className="ab-tl" id="tl" ref={tlRef}>
-            <span className="line"></span>
-            <span className="fill"></span>
-            <ol id="tlList">
-              {T.milestones.map((m: any, i: number) => (
-                <li className="ab-mile" key={i}>
-                  <span className="dot"></span>
-                  <div className="card rv">
-                    <span className="yr">{m.year}</span>
-                    <h3>{m.title}</h3>
-                    <p>{m.text}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
-      </section>
-
       {/* 5 · WHY */}
-      <section className="pad" style={{ paddingTop: 0 }}>
+      <section className="pad">
         <div className="wrap">
           <div className="sec-head rv">
             <span className="eyebrow" id="wEye">{W.eyebrow}</span>

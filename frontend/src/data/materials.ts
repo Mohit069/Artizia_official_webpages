@@ -125,7 +125,7 @@ export const FAQS: [string, string][] = [
   ['How long does delivery take?', 'Lead times vary by product and order size. Samples typically ship in 5–7 days; a delivery estimate for full orders is provided on request.'],
   ['Are custom design options available?', 'Yes — custom designs and personalised solutions are available to meet specific project requirements. Contact our team to discuss.'],
   ['Do you provide installation services?', 'Installation may be available depending on your region. We recommend professional installation by certified partners for a perfect fit and finish.'],
-  ['What warranty do you offer?', 'Artizia surfaces are backed by a Lifetime Warranty against manufacturing defects. See our Warranty page for full coverage details.'],
+  ['What warranty do you offer?', 'Artizia surfaces are backed by a 15-Year Warranty against manufacturing defects. See our Warranty page for full coverage details.'],
 ]
 
 export const productList = () => Object.keys(window.MAT).filter((k) => !window.MAT[k].hidden)

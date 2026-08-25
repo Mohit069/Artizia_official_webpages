@@ -22,7 +22,7 @@ export default function Footer() {
             <div className="brand">
               <img className="logo lockup" src="/assets/img/brand/logo-full.png" alt="Artizia — Quartz Masterpieces" width={178} height={44} />
             </div>
-            <p>Premium engineered quartz — global craftsmanship, Indian design sensibility. Built on 35 years of heritage.</p>
+            <p>Premium engineered quartz — global craftsmanship, Indian design sensibility. Built on 40 years of heritage.</p>
             <div className="fsoc">
               {Object.keys(SOCIAL_ICONS)
                 .filter((k) => social[k])

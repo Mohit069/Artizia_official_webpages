@@ -90,6 +90,16 @@ body.has-banner .nav{top:var(--banner-h)}
 @media(max-width:600px){.logo.nav-lockup{height:34px}}
 @media(max-width:420px){.logo.nav-lockup{height:30px}}
 
+/* Marudhar parent-brand mark — sits to the right of the Samples button, which
+   pushes search / theme / Samples left. flex:none so the bar squeezes the gap
+   rather than the mark. Hidden under 600px: the bar only has ~24px of slack at
+   480px and the Artizia lockup is already being compressed there. */
+.nav-marudhar{display:flex;align-items:center;flex:none;
+  margin-left:8px;padding-left:18px;border-left:1px solid var(--line-2)}
+.logo.marudhar-lockup{height:40px}
+/* Red + chrome on transparent — legible on both themes, so no recolouring. */
+@media(max-width:600px){.nav-marudhar{display:none}}
+
 .brand .gem{width:12px;height:12px;background:var(--opal);transform:rotate(45deg);
   box-shadow:0 0 20px color-mix(in srgb,var(--accent) 60%,transparent);animation:spin 9s linear infinite}
 @keyframes spin{to{transform:rotate(405deg)}}
@@ -597,6 +607,8 @@ footer{border-top:1px solid var(--line);padding:clamp(60px,7vw,96px) 0 36px;marg
 .msel{font-family:var(--mono);font-size:11px;color:var(--text-dim);border:1px solid var(--line);padding:13px 15px;margin:6px 0 22px;background:var(--surface)}
 .msel b{color:var(--accent);font-weight:400}
 .mfoot{display:flex;gap:10px;margin-top:8px}.mfoot .btn{flex:1;justify-content:center}
+/* Cancel button — black label, kept black on hover too (the id beats .btn-line) */
+.mfoot #mCancel,.mfoot #mCancel:hover{color:#000}
 .mx{position:absolute;top:16px;right:18px;background:none;border:0;color:var(--text-dim);font-size:24px;line-height:1}
 .msucc{text-align:center;padding:14px 0}
 .msucc .tick{width:58px;height:58px;border:1px solid var(--accent);border-radius:50%;display:grid;place-items:center;margin:0 auto 20px;color:var(--accent);font-size:26px}

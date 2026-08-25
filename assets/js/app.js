@@ -38,6 +38,7 @@
       </button>
       <button class="icn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">☀</button>
       <button class="tbtn" id="trayBtn">Samples <span class="tct" id="tct">0</span></button>
+      <span class="nav-marudhar" id="navMarudhar"><img class="logo marudhar-lockup" src="assets/img/brand/marudhar-logo.png" alt="Marudhar Quartz" height="40" onerror="this.parentNode.style.display='none'"></span>
       <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>`;
   document.body.prepend(nav);
@@ -66,7 +67,7 @@
   footer.innerHTML=`<div class="wrap">
     <div class="ftop">
       <div class="fb"><div class="brand"><img class="logo lockup" src="assets/img/brand/logo-full.png" alt="Artizia — Quartz Masterpieces" width="178" height="44"></div>
-        <p>Premium engineered quartz — global craftsmanship, Indian design sensibility. Built on 35 years of heritage.</p>
+        <p>Premium engineered quartz — global craftsmanship, Indian design sensibility. Built on 40 years of heritage.</p>
         <div class="fsoc">${socialHTML()}</div>
       </div>
       <div class="fcol"><h5>Collections</h5>

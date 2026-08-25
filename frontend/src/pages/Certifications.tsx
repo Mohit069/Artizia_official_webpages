@@ -20,8 +20,8 @@ const PAGE = {
   ],
   side: {
     eyebrow: 'Warranty',
-    title: 'Backed for a lifetime.',
-    text: 'Beyond certification, every Artizia surface carries a <b>Lifetime Warranty</b> against manufacturing defects — resisting scratches, stains, heat, household chemicals, mould and mildew.',
+    title: 'Backed for 15 years.',
+    text: 'Beyond certification, every Artizia surface carries a <b>15-Year Warranty</b> against manufacturing defects — resisting scratches, stains, heat, household chemicals, mould and mildew.',
     image: 'assets/img/carrara-bianco-full.jpg',
     alt: 'Carrara Bianco — Artizia engineered quartz slab',
     fallback: 'mystique',

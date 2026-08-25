@@ -19,7 +19,7 @@ const PP = {
   care: {
     text: 'Clean with a soft cloth, warm water and mild detergent. Avoid harsh chemicals and abrasive pads; use trivets under hot cookware and boards when cutting.',
     warranty:
-      'Backed by a <b style="color:var(--accent)">Lifetime Warranty</b> against manufacturing defects — resisting scratches, stains, heat, household chemicals, mould and mildew. <a href="/warranty.html" style="color:var(--accent)">Full terms →</a>',
+      'Backed by a <b style="color:var(--accent)">15-Year Warranty</b> against manufacturing defects — resisting scratches, stains, heat, household chemicals, mould and mildew. <a href="/warranty.html" style="color:var(--accent)">Full terms →</a>',
   },
 }
 

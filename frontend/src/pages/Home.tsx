@@ -38,7 +38,7 @@ export default function Home() {
     <>
       <Seo
         title="Artizia — Quartz Slab Manufacturer & Exporter | Luxury Quartz Surfaces, India"
-        description="Artizia is a quartz slab manufacturer and exporter crafting luxury quartz surfaces in Jaipur, India. Super jumbo quartz slabs, white quartz slabs and 53 designs across five collections — pressed on Breton technology, warranted for life."
+        description="Artizia is a quartz slab manufacturer and exporter crafting luxury quartz surfaces in Jaipur, India. Super jumbo quartz slabs, white quartz slabs and 53 designs across five collections — pressed on Breton technology, warranted for 15 years."
         canonical="https://artizia.co.in/"
         og={[
           ['og:title', 'Artizia — Quartz Slab Manufacturer & Exporter | Luxury Quartz Surfaces'],
