@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useArtizia } from '../context/ArtiziaContext'
-import './nav-mobile.css'
 
 type NavPage = { slug: string; navLabel?: string; title?: string; inNav?: boolean }
 

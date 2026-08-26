@@ -19,7 +19,8 @@
       ${navLink('collections.html','Collections','collections')}
       <div class="nav-drop">
         <a href="technical-details.html" class="${['certifications','technical','warranty','care','faq'].includes(page)?'active':''}">Resources</a>
-        <div class="nav-drop-menu">
+        <button type="button" class="nav-drop-toggle" aria-expanded="false" aria-controls="nav-sub-resources" aria-label="Expand Resources submenu"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polyline points="6 9 12 15 18 9"/></svg></button>
+        <div class="nav-drop-menu" id="nav-sub-resources">
           <a href="certifications.html">Certifications</a>
           <a href="technical-details.html">Technical Details</a>
           <a href="warranty.html">Warranty</a>
@@ -213,7 +214,27 @@
 
   /* ---------- mobile menu ---------- */
   const navLinks=document.getElementById('navLinks');
-  const setMenu=on=>{navLinks.classList.toggle('open',on);document.body.classList.toggle('menu-open',on);};
+  /* The Resources group collapses on mobile. Desktop keeps its hover dropdown —
+     the toggle is display:none above 940px, so none of this can fire there. */
+  const RES=['certifications','technical','warranty','care','faq'];
+  const navDrop=navLinks.querySelector('.nav-drop');
+  const dropToggle=navDrop&&navDrop.querySelector('.nav-drop-toggle');
+  const setSub=on=>{
+    if(!navDrop) return;
+    navDrop.classList.toggle('open',on);
+    if(dropToggle){
+      dropToggle.setAttribute('aria-expanded',String(on));
+      dropToggle.setAttribute('aria-label',(on?'Collapse':'Expand')+' Resources submenu');
+    }
+  };
+  if(dropToggle) dropToggle.addEventListener('click',e=>{
+    e.preventDefault();e.stopPropagation();
+    setSub(!navDrop.classList.contains('open'));
+  });
+  /* opening the menu pre-expands the group when you are already on one of its
+     pages; closing it always collapses again */
+  const setMenu=on=>{navLinks.classList.toggle('open',on);document.body.classList.toggle('menu-open',on);
+    setSub(on&&RES.includes(page));};
   document.getElementById('burger').addEventListener('click',()=>setMenu(true));
   document.getElementById('navClose').addEventListener('click',()=>setMenu(false));
   /* in-page links (#anchors) would otherwise leave the menu covering the target */
