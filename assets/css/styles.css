@@ -984,6 +984,8 @@ footer{border-top:1px solid var(--line);padding:clamp(60px,7vw,96px) 0 36px;marg
 
 /* hover drives the dropdown on desktop — no toggle needed there */
 .nav-drop-toggle { display: none; }
+/* the panel-only brand marks: the bar has its own pair */
+.nav-m-brand, .nav-m-marudhar { display: none; }
 
 @media (max-width: 940px) {
 
@@ -1110,6 +1112,39 @@ footer{border-top:1px solid var(--line);padding:clamp(60px,7vw,96px) 0 36px;marg
   }
   .nav-links .nav-drop-menu a:hover,
   .nav-links .nav-drop-menu a:active { color: var(--text); background: none; }
+
+  /* ---- brand marks inside the open panel ----
+     Artizia is pinned top-left, mirroring the close button at top-right, so the
+     two read as one header row. Marudhar closes the panel bottom-right:
+     margin-top:auto pushes it past the links (auto margins beat
+     justify-content), align-self overrides the panel's align-items:center.
+     If the links ever outgrow the panel the auto margin simply collapses and
+     the mark follows them instead of overlapping. */
+  .nav-links .nav-m-brand {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 20px;
+    left: 22px;
+    z-index: 1;
+  }
+  .nav-links .nav-m-brand img {
+    height: 34px;
+    width: auto;
+    display: block;
+  }
+  .nav-links .nav-m-marudhar {
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+    align-self: flex-end;
+    padding-top: 30px;
+  }
+  .nav-links .nav-m-marudhar img {
+    height: 34px;
+    width: auto;
+    display: block;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

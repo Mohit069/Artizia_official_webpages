@@ -14,6 +14,7 @@
     <a class="brand" href="index.html"><img class="logo lockup nav-lockup" src="assets/img/brand/logo-full.png" alt="Artizia — Quartz Masterpieces" width="162" height="40"></a>
     <div class="nav-links" id="navLinks">
       <button class="close-x icn" id="navClose" aria-label="Close menu" style="border:0">✕</button>
+      <span class="nav-m-brand" aria-hidden="true"><img class="logo lockup" src="assets/img/brand/logo-full.png" alt=""></span>
       ${navLink('index.html','Home','home')}
       ${navLink('about.html','About','about')}
       ${navLink('collections.html','Collections','collections')}
@@ -31,6 +32,7 @@
       ${navLink('contact.html','Contact','contact')}
       ${navLink('blog.html','Blog','blog')}
       <span id="navExtra"></span>
+      <span class="nav-m-marudhar" aria-hidden="true"><img src="assets/img/brand/marudhar-logo.png" alt="" onerror="this.parentNode.style.display='none'"></span>
     </div>
     <div class="nav-right">
       <button class="icn" id="searchBtn" title="Search surfaces" aria-label="Search surfaces">

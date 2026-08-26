@@ -95,6 +95,9 @@ export default function Nav() {
         <button className="close-x icn" id="navClose" aria-label="Close menu" style={{ border: 0 }} onClick={() => setMenuOpen(false)}>
           ✕
         </button>
+        <span className="nav-m-brand" aria-hidden="true">
+          <img className="logo lockup" src="/assets/img/brand/logo-full.png" alt="" />
+        </span>
         <Link to="/index.html" className={cls('home')}>Home</Link>
         <Link to="/about.html" className={cls('about')}>About</Link>
         <Link to="/collections.html" className={cls('collections')}>Collections</Link>
@@ -125,6 +128,13 @@ export default function Nav() {
         {customPages.map((p) => (
           <Link key={p.slug} to={`/p/${p.slug}`} className={here === p.slug ? 'active' : ''} dangerouslySetInnerHTML={{ __html: esc(p.navLabel || p.title) }} />
         ))}
+        <span className="nav-m-marudhar" aria-hidden="true">
+          <img
+            src="/assets/img/brand/marudhar-logo.png"
+            alt=""
+            onError={(e) => { (e.currentTarget.parentNode as HTMLElement).style.display = 'none' }}
+          />
+        </span>
       </div>
       <div className="nav-right">
         <button className="icn" id="searchBtn" title="Search surfaces" aria-label="Search surfaces" onClick={openSearch}>
