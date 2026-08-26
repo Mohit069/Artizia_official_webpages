@@ -3,7 +3,6 @@ import Seo from '../components/Seo'
 import { useBodyPage } from '../hooks/site'
 import { loadScript } from '../lib/loadScript'
 import home from '../generated/home.json'
-import './home-slider.css'
 
 /* The homepage is a 300vh cinematic experience (projective slab mapping, scroll-
    scrubbed process, looping sliders, world-map drill-down). Its markup, CSS and
