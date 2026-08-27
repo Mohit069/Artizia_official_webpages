@@ -9,6 +9,7 @@
 const express = require('express');
 const { requireAdmin } = require('../auth');
 const Enquiry = require('../models/Enquiry');
+const mailer = require('../mailer');
 
 const router = express.Router();
 
@@ -45,7 +46,19 @@ router.post('/', (req, res) => {
 
   const saved = Enquiry.create(b);
   console.log(`[enquiry] ${saved.type} from ${saved.name} <${saved.email}>`);
+
+  /* Answer the customer first, then notify the team. The row is already
+     committed and the admin panel stays the source of truth, so a slow or
+     failing SMTP hop must never surface as a failed submission — it is
+     logged and nothing more. */
   res.status(201).json({ ok: true, id: saved.id });
+
+  if (mailer.configured) {
+    mailer.sendEnquiryNotification(saved).then(r => {
+      if (r.sent) console.log(`[enquiry] #${saved.id} emailed to ${mailer.settings.to.join(', ')}`);
+      else console.error(`[enquiry] #${saved.id} EMAIL FAILED: ${r.reason}`);
+    });
+  }
 });
 
 router.get('/', requireAdmin, (req, res) => {
