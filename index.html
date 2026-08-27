@@ -345,18 +345,35 @@
     .hero h1 {
       font-size: clamp(52px, 10vw, 150px);
       line-height: .9;
-      letter-spacing: -.03em
+      letter-spacing: -.03em;
+      /* A flex column so the two lines' negative margins do NOT collapse.
+         Adjoining negative margins collapse to the most-negative value instead
+         of summing, which left the lines .26em further apart than before the
+         clip fix. Flex items never collapse margins, so the padding and the
+         negative margin cancel exactly and the line rhythm is unchanged. */
+      display: flex;
+      flex-direction: column
     }
 
     .hero h1 .ln {
       display: block;
+      /* line-height:.9 makes the line box ~67px shorter than the glyphs need at
+         this size, and the overflow:hidden that masks the reveal was cropping
+         the difference — the Q's tail below, and the tops of tall capitals on
+         machines whose fallback serif has taller ascenders. Pad the mask out
+         and pull it back with an equal negative margin: the clip box grows,
+         the layout does not move. */
+      padding: .26em 0;
+      margin: -.26em 0;
       overflow: hidden
     }
 
     .hero h1 .ln i {
       display: block;
       font-style: normal;
-      transform: translateY(110%);
+      /* must clear the padded mask, not just the content box, or the glyph
+         tops peek above the line before the reveal runs */
+      transform: translateY(155%);
       transition: transform 1s var(--e2)
     }
 
