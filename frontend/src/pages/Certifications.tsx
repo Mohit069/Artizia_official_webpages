@@ -16,7 +16,6 @@ const PAGE = {
   certs: [
     { name: 'GreenGuard', image: 'assets/img/certs/greenguard.png', alt: 'UL GREENGUARD Gold certificate — certified for low chemical emissions, UL 2818', text: 'Certified for low chemical emissions, GreenGuard means Artizia surfaces contribute to healthier indoor air — safe for kitchens, bathrooms and the rooms you live in every day.' },
     { name: 'NSF Certified', image: 'assets/img/certs/nsf.png', alt: 'NSF certification mark for food-contact safe surfaces', text: 'NSF certification confirms our surfaces meet strict public-health standards for food-contact use — safe wherever you prep, cook and eat.' },
-    { name: 'Kosher', image: 'assets/img/certs/kosher.png', alt: 'OU Kosher Certification Service mark', text: 'Independently certified kosher, our quartz is approved for use in observant homes and commercial food environments.' },
   ],
   side: {
     eyebrow: 'Warranty',
@@ -36,7 +35,7 @@ export default function Certifications() {
     <>
       <Seo
         title="Certifications — Artizia Quartz"
-        description="Artizia quartz is GreenGuard, NSF and Kosher certified — proof of low emissions, food-safe surfaces and independent quality assurance."
+        description="Artizia quartz is GreenGuard and NSF certified — proof of low emissions, food-safe surfaces and independent quality assurance."
         canonical="https://artizia.co.in/certifications.html"
       />
       <section className="page-hero">

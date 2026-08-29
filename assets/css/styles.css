@@ -469,7 +469,8 @@ table.sp td.rs{font-family:var(--mono);font-size:13px;text-align:right;color:var
 .value-cell .vi{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--accent)}
 .value-cell h4{font-family:var(--serif);font-size:24px}
 .value-cell p{font-size:14px;color:var(--text-dim)}
-.cert-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,28px)}
+/* two certifications since the Kosher card was removed */
+.cert-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(16px,2vw,28px)}
 @media(max-width:820px){.cert-grid{grid-template-columns:1fr}}
 .cert{border:1px solid var(--line);padding:clamp(26px,3vw,40px);display:flex;flex-direction:column;gap:16px;transition:.3s}
 .cert:hover{border-color:var(--line-2);background:var(--surface)}
