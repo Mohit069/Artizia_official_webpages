@@ -178,7 +178,8 @@
 @media(max-width:900px){.ab-global{grid-template-columns:1fr}}
 
 /* ---- 9 · CERTS ---- */
-.ab-certs{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.8vw,24px);margin-top:clamp(40px,5vw,60px)}
+/* two certifications since the Kosher card was removed */
+.ab-certs{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(14px,1.8vw,24px);margin-top:clamp(40px,5vw,60px)}
 @media(max-width:820px){.ab-certs{grid-template-columns:1fr}}
 .ab-cert{position:relative;padding:clamp(26px,3vw,38px);border:1px solid var(--line);border-radius:12px;
   background:var(--surface);overflow:hidden;transition:.5s var(--ease)}

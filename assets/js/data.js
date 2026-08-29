@@ -114,8 +114,7 @@ window.SPECS = [
 
 window.CERTS = [
   ["GreenGuard","Certified for low chemical emissions, GreenGuard means Artizia surfaces contribute to healthier indoor air — safe for kitchens, bathrooms and the rooms you live in every day."],
-  ["NSF Certified","NSF certification confirms our surfaces meet strict public-health standards for food-contact use — safe wherever you prep, cook and eat."],
-  ["Kosher","Independently certified kosher, our quartz is approved for use in observant homes and commercial food environments."]
+  ["NSF Certified","NSF certification confirms our surfaces meet strict public-health standards for food-contact use — safe wherever you prep, cook and eat."]
 ];
 
 window.FAQS = [

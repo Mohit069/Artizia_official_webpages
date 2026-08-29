@@ -122,7 +122,6 @@ const P: any = {
     list: [
       { name: 'GreenGuard', image: 'assets/img/certs/greenguard.png', text: 'Certified for low chemical emissions — quartz surfaces that leave the air in your home clean.' },
       { name: 'NSF Certified', image: 'assets/img/certs/nsf.png', text: 'Meets strict public-health standards for food-contact use, wherever you prep, cook and serve.' },
-      { name: 'Kosher', image: 'assets/img/certs/kosher.png', text: 'Independently certified kosher, for observant homes and commercial food environments alike.' },
     ],
     warranty: {
       title: 'Backed for 15 years.',
