@@ -120,7 +120,7 @@ export default function Warranty() {
               ))}
             </div>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <Link className="btn btn-fill mag" to="/contact.html"><span>Register a Claim →</span></Link>
+              <Link className="btn btn-fill mag" to="/contact.html"><span>Claim Form →</span></Link>
               <Link className="btn btn-line mag" to="/care-and-maintenance.html"><span>Care Guide</span></Link>
             </div>
           </div>
