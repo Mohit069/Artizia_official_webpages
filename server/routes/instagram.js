@@ -9,11 +9,17 @@
    persist the new token to server/cache/ig-token.json, which is preferred over
    the .env value — so the feed keeps working without anyone touching the box.
 
-   Setup (one time):
+   Setup (one time) — "Instagram API with Instagram Login". Basic Display was
+   shut down on 4 December 2024; this is its replacement, and unlike the old
+   flow it does NOT need a Facebook Page:
      1. @artizia_by_marudhar must be a Business or Creator account
-     2. link it to a Facebook Page
-     3. create a Meta app, add "Instagram Basic Display"
-     4. generate a long-lived token -> IG_ACCESS_TOKEN in .env
+     2. create a Meta app and add the Instagram product to it
+     3. Instagram > "API setup with Instagram business login" > Generate token
+        (already long-lived, 60 days — no code-for-token exchange needed)
+     4. paste it into IG_ACCESS_TOKEN in .env and restart
+
+   The scope is instagram_business_basic. Personal accounts cannot be read by
+   any official API any more, which is why step 1 is not optional.
    ============================================================ */
 const express = require('express');
 const fs = require('fs');

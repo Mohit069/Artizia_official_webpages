@@ -159,15 +159,34 @@
 
       /* ---- S14 · INSTAGRAM FEED ------------------------------------------
          Posts are pulled live from the Instagram Graph API by our own server
-         (/api/instagram) and cached for an hour — there is nothing to edit here
-         but the wording. Until IG_ACCESS_TOKEN is set in .env the API returns no
-         posts and this whole section removes itself rather than sit empty.     */
+         (/api/instagram) and cached for an hour. Until IG_ACCESS_TOKEN is set
+         in .env the API returns nothing and the grid falls back to the curated
+         shots below, so the section shows real work instead of vanishing.
+
+         posts / followers / following render only when filled in. Instagram
+         Basic Display does not report a follower count, and made-up numbers on
+         a live site are not an option — leave them "" to hide the row.        */
       instagram: {
         eyebrow: "@artizia_by_marudhar",
         title: "Surfaces <em>in the wild.</em>",
         lead: "Real installations, real kitchens — our quartz slabs in the spaces they were made for.",
         cta: "Follow on Instagram",
-        count: 8                        /* how many posts to show */
+        handle: "artizia_by_marudhar",
+        bio: "Engineered quartz surfaces · Jaipur, India",
+        posts: "", followers: "", following: "",
+        count: 8,                       /* how many posts to show */
+        /* stand-ins while the live feed is unconfigured. Each tile links to the
+           profile, never to a post we cannot name. */
+        fallback: [
+          { image: "assets/img/applications/kitchen-countertops.jpg", caption: "Kitchen countertops that carry the whole room." },
+          { image: "assets/img/process/05-surface-finishing.jpg", caption: "Every colour in the range, on one rack." },
+          { image: "assets/img/applications/bathroom-vanity.jpg", caption: "Vanity tops in a soft, honed finish." },
+          { image: "assets/img/applications/hotels-hospitality.jpg", caption: "Hospitality surfaces built for daily punishment." },
+          { image: "assets/img/process/04-quality-inspection.jpg", caption: "Heat-resistance testing, every batch." },
+          { image: "assets/img/applications/living-rooms.jpg", caption: "Living rooms where the stone sets the tone." },
+          { image: "assets/img/applications/dining-tables.jpg", caption: "Dining tables cut from a single slab." },
+          { image: "assets/img/applications/commercial-spaces.jpg", caption: "Commercial installations across India." }
+        ]
       },
 
       /* ---- S15 · FINAL CTA --------------------------------------------- */
@@ -1572,6 +1591,150 @@
       margin-top: 36px
     }
 
+    /* account header above the grid — avatar, handle, counts, follow */
+    .ig-profile {
+      display: flex;
+      align-items: center;
+      gap: clamp(14px, 2vw, 22px);
+      padding: clamp(14px, 1.8vw, 20px) clamp(16px, 2vw, 24px);
+      margin: 0 0 clamp(16px, 2vw, 22px);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      text-decoration: none;
+      color: inherit;
+      transition: border-color .4s var(--e), transform .4s var(--e)
+    }
+
+    .ig-profile:hover {
+      border-color: var(--line-2);
+      transform: translateY(-2px)
+    }
+
+    .ig-av {
+      flex: none;
+      width: clamp(54px, 6vw, 70px);
+      height: clamp(54px, 6vw, 70px);
+      border-radius: 50%;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      padding: 7px;
+      background: var(--bg);
+      border: 1px solid var(--line)
+    }
+
+    .ig-av img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block
+    }
+
+    .ig-meta {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px
+    }
+
+    .ig-handle {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--mono);
+      font-size: clamp(13px, 1.4vw, 15px);
+      color: var(--text)
+    }
+
+    .ig-tick {
+      width: 15px;
+      height: 15px;
+      flex: none;
+      color: #3897F0
+    }
+
+    .ig-bio {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-dim);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap
+    }
+
+    /* counts render only for the numbers actually supplied in PAGE.instagram */
+    .ig-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      font-size: 12px;
+      letter-spacing: .04em;
+      color: var(--text-faint)
+    }
+
+    .ig-stats b {
+      color: var(--text);
+      font-weight: 600
+    }
+
+    .ig-follow {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      height: 38px;
+      padding: 0 22px;
+      border-radius: 9px;
+      background: #3897F0;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase
+    }
+
+    @media(max-width:640px) {
+      .ig-profile {
+        flex-wrap: wrap
+      }
+
+      .ig-bio {
+        white-space: normal
+      }
+
+      .ig-follow {
+        width: 100%;
+        justify-content: center
+      }
+    }
+
+    /* the overlay stacks the action glyphs above the caption, so it can no
+       longer be a single centred grid cell */
+    .ig-tile .ig-ov {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px
+    }
+
+    .ig-acts {
+      display: flex;
+      gap: 18px;
+      color: #fff
+    }
+
+    .ig-acts svg {
+      width: 21px;
+      height: 21px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round
+    }
+
     /* S13 Testimonials */
     .tst-track {
       display: flex;
@@ -2270,6 +2433,43 @@
     </div>
   </section>
 
+  <!-- ===== S14 · INSTAGRAM FEED (directly below the testimonials) =====
+       Posts come live from the Graph API via /api/instagram. Until
+       IG_ACCESS_TOKEN is set the grid falls back to the curated shots in
+       PAGE.instagram.fallback, so the section still reads as intended instead
+       of deleting itself. -->
+  <section class="pad ig-sec" id="igSection" hidden>
+    <div class="wrap">
+      <div class="sec-head center rv" style="margin:0 auto 40px">
+        <span class="eyebrow" id="igEye"></span>
+        <h2 id="igTitle"></h2>
+        <p id="igLead"></p>
+      </div>
+
+      <a class="ig-profile rv" id="igProfile" target="_blank" rel="noopener noreferrer">
+        <span class="ig-av"><img src="assets/img/brand/apple-touch-icon.png" alt="" loading="lazy"></span>
+        <span class="ig-meta">
+          <span class="ig-handle"><span id="igHandle"></span>
+            <svg class="ig-tick" viewBox="0 0 24 24" role="img" aria-label="Verified">
+              <path fill="currentColor" stroke="none"
+                d="M12 1.5l2.4 2.2 3.2-.4 1 3.1 3 1.2-.9 3.1 2 2.6-2.5 2 .1 3.2-3.2.5-1.7 2.7-3-1.2-3 1.2-1.7-2.7-3.2-.5.1-3.2-2.5-2 2-2.6-.9-3.1 3-1.2 1-3.1 3.2.4z" />
+              <path d="M8.5 12.2l2.4 2.4 4.6-4.8" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="ig-bio" id="igBio"></span>
+          <span class="ig-stats" id="igStats"></span>
+        </span>
+        <span class="ig-follow" aria-hidden="true">Follow</span>
+      </a>
+
+      <div class="ig-grid rv" id="igGrid"></div>
+      <div class="ig-foot rv">
+        <a class="btn btn-line mag" id="igCta" target="_blank" rel="noopener noreferrer"><span></span></a>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== S15 · FINAL CTA ===== -->
   <section class="finalcta">
     <div class="bg" id="ctaBg"></div>
@@ -2286,22 +2486,6 @@
           <a class="btn btn-line mag" href="contact.html"><span>Contact Our Team</span></a>
         </div>
         <div class="contacts" id="ctaContacts"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== S14 · INSTAGRAM FEED (sits just above the footer) =====
-       Removed from the DOM entirely if the feed returns no posts. -->
-  <section class="pad ig-sec" id="igSection" hidden>
-    <div class="wrap">
-      <div class="sec-head center rv" style="margin:0 auto 44px">
-        <span class="eyebrow" id="igEye"></span>
-        <h2 id="igTitle"></h2>
-        <p id="igLead"></p>
-      </div>
-      <div class="ig-grid rv" id="igGrid"></div>
-      <div class="ig-foot rv">
-        <a class="btn btn-line mag" id="igCta" target="_blank" rel="noopener noreferrer"><span></span></a>
       </div>
     </div>
   </section>
@@ -2614,37 +2798,58 @@
 
       /* ---- S14 Instagram feed ---------------------------------------------
          Posts come from our own server, which holds the Graph API token and
-         caches the response. If there is no token yet, or Instagram is down and
-         we have no cache, the section deletes itself — an empty grid under a
-         heading that says "Surfaces in the wild" is worse than no section. */
+         caches the response. With no token yet — or Instagram down and no cache
+         — we fall back to the curated shots in the content block above; those
+         tiles link to the profile rather than to a post we cannot identify.
+         Only if both are empty does the section delete itself. */
       (async function renderInstagram() {
         const sec = $('igSection'), cfg = C.instagram;
         if (!sec) return;
         const drop = () => sec.remove();
         if (!cfg) return drop();
 
-        let posts = [];
+        const profile = (S.social && S.social.instagram) || 'https://www.instagram.com/';
+
+        let posts = [], live = true;
         try {
           const r = await fetch(`/api/instagram?limit=${encodeURIComponent(cfg.count || 8)}`);
           if (r.ok) posts = (await r.json()).posts || [];
-        } catch (e) { /* offline / server down — fall through to drop() */ }
+        } catch (e) { /* offline / server down — the curated set covers it */ }
+        if (!posts.length) {
+          live = false;
+          posts = (cfg.fallback || []).map(p => ({ image: p.image, caption: p.caption, href: profile }));
+        }
         if (!posts.length) return drop();
 
-        const handle = (S.social && S.social.instagram) || 'https://www.instagram.com/';
         $('igEye').textContent = cfg.eyebrow || '';
         $('igTitle').innerHTML = cfg.title || '';
         $('igLead').textContent = cfg.lead || '';
+
+        /* account header */
+        $('igProfile').href = profile;
+        $('igHandle').textContent = '@' + (cfg.handle || 'artizia_by_marudhar');
+        $('igBio').textContent = cfg.bio || '';
+        $('igStats').innerHTML = [['posts', cfg.posts], ['followers', cfg.followers], ['following', cfg.following]]
+          .filter(pair => String(pair[1] == null ? '' : pair[1]).trim())
+          .map(pair => `<span><b>${esc(pair[1])}</b> ${pair[0]}</span>`).join('');
+
         const cta = $('igCta');
-        cta.href = handle;
+        cta.href = profile;
         cta.querySelector('span').textContent = cfg.cta || 'Follow on Instagram';
+
+        /* decorative only — we never show a like or comment count we cannot read */
+        const ACTS = `<span class="ig-acts" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 20.2s-7.2-4.7-7.2-9.6a3.9 3.9 0 0 1 7.2-2.1 3.9 3.9 0 0 1 7.2 2.1c0 4.9-7.2 9.6-7.2 9.6z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M20.5 14.6a2 2 0 0 1-2 2H8.3L4 20V6.4a2 2 0 0 1 2-2h12.5a2 2 0 0 1 2 2z"/></svg>
+          </span>`;
 
         $('igGrid').innerHTML = posts.slice(0, cfg.count || 8).map(p => {
           const kind = p.video ? '▶' : (p.album ? '❏' : '');
           return `<a class="ig-tile" href="${esc(p.href)}" target="_blank" rel="noopener noreferrer"
-            aria-label="View this post on Instagram">
+            aria-label="${live ? 'View this post on Instagram' : 'Artizia on Instagram'}">
             <img src="${esc(p.image)}" alt="${esc(p.caption || 'Artizia on Instagram')}" loading="lazy">
             ${kind ? `<span class="ig-kind" aria-hidden="true">${kind}</span>` : ''}
-            <span class="ig-ov"><span class="ig-cap">${esc(p.caption || '')}</span></span>
+            <span class="ig-ov">${ACTS}<span class="ig-cap">${esc(p.caption || '')}</span></span>
           </a>`;
         }).join('');
 
