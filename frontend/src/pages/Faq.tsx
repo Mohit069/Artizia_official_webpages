@@ -32,7 +32,7 @@ const PAGE = {
     { q: 'How do I make sure my slab is installed correctly?', a: 'Use a professional fabricator. Templating, seam placement, cut-outs and support all affect how the finished surface looks and lasts — a jumbo slab is heavy, and it rewards being handled by someone who does it every day.' },
     { q: 'What does the warranty cover?', a: 'A 15-Year Warranty against manufacturing defects, covering scratches, stains, heat, household chemicals, mould and mildew. See the warranty page for the full terms.' },
   ],
-  cta: { eyebrow: 'Still Curious?', title: "We're happy <em>to help.</em>", text: 'Reach our team in Jaipur for anything not covered here.' },
+  cta: { eyebrow: 'Still Curious?', title: "We're happy <em>to help.</em>", text: 'Reach our team for anything not covered here.' },
 }
 
 export default function Faq() {
