@@ -279,23 +279,6 @@
       border-top: 0
     }
 
-    .slab-cap {
-      position: absolute;
-      z-index: 2;
-      left: 0;
-      right: 0;
-      top: 50%;
-      text-align: center;
-      opacity: 0;
-      pointer-events: none;
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: .28em;
-      text-transform: uppercase;
-      color: var(--pearl);
-      text-shadow: 0 2px 18px rgba(0, 0, 0, .6);
-    }
-
     .hero-grad {
       position: absolute;
       inset: 0;
@@ -485,31 +468,6 @@
       color: var(--text);
       border-bottom: 1px solid var(--accent);
       padding-bottom: 6px
-    }
-
-    .hero-progress {
-      position: absolute;
-      z-index: 4;
-      right: clamp(20px, 5vw, 72px);
-      bottom: clamp(40px, 6vw, 72px);
-      display: flex;
-      align-items: center;
-      pointer-events: none
-    }
-
-    .hero-progress .bar {
-      width: 64px;
-      height: 1px;
-      background: var(--line-2);
-      position: relative;
-      overflow: hidden
-    }
-
-    .hero-progress .bar i {
-      position: absolute;
-      inset: 0;
-      width: 0;
-      background: var(--opal)
     }
 
     .scroll-i {
@@ -2067,7 +2025,6 @@
         </div>
         <div class="slab-frame" id="slabFrame"><span class="fc tl"></span><span class="fc tr"></span><span
             class="fc bl"></span><span class="fc br"></span></div>
-        <div class="slab-cap" id="slabCap">Artizia Quartz · Full Slab · 3200 × 1600 mm</div>
       </div>
       <div class="hero-grad"></div>
       <div class="hero-inner" id="heroCopy">
@@ -2089,7 +2046,6 @@
         <h4>Premium Engineered Quartz Surfaces Crafted for Timeless Spaces</h4>
         <a class="mag" href="collections.html">Explore Collections <span class="arw">→</span></a>
       </div>
-      <div class="hero-progress"><span class="bar"><i id="heroBar"></i></span></div>
       <div class="scroll-i"><span>Scroll to pull back</span><span class="ln"></span></div>
     </div>
   </section>
@@ -2745,9 +2701,8 @@
       const hero = document.getElementById('hero'), heroScene = document.getElementById('heroScene'),
         kScene = document.getElementById('kScene'), slabLand = document.getElementById('slabLand'),
         slabBox = document.getElementById('slabBox'), slabImg = document.getElementById('slabImg'),
-        slabFrame = document.getElementById('slabFrame'), slabCap = document.getElementById('slabCap'),
+        slabFrame = document.getElementById('slabFrame'),
         heroCopy = document.getElementById('heroCopy'), heroEndcap = document.getElementById('heroEndcap'),
-        heroBar = document.getElementById('heroBar'),
         scrollI = document.querySelector('.scroll-i');
       const frameCorners = [...slabFrame.children];
       const cl = v => Math.max(0, Math.min(1, v)), sm = (a, b, x) => { const t = cl((x - a) / (b - a)); return t * t * (3 - 2 * t); }, mx2 = (a, b, t) => a + (b - a) * t;
@@ -2826,16 +2781,11 @@
             el.style.left = q[i][0].toFixed(1) + 'px';
             el.style.top = q[i][1].toFixed(1) + 'px';
           });
-          /* sit the caption just under the slab, never on top of it */
-          const low = Math.max(q[2][1], q[3][1]);
-          slabCap.style.top = Math.min(sceneH - 30, low + 26).toFixed(1) + 'px';
         }
-        slabCap.style.opacity = frameOn * 0.85;
 
         /* copy → endcap crossfade, HUD, scroll hint (unchanged behaviour) */
         const co = sm(0.34, 0.56, p); heroCopy.style.opacity = 1 - co; heroCopy.style.transform = 'translateY(' + (-co * 40) + 'px)'; heroCopy.style.pointerEvents = co > 0.5 ? 'none' : '';
         const ei = sm(0.72, 0.92, p); heroEndcap.style.opacity = ei; heroEndcap.style.transform = 'translateY(' + ((1 - ei) * 16) + 'px)'; heroEndcap.classList.toggle('on', ei > 0.5);
-        heroBar.style.width = (p * 100) + '%';
         if (scrollI) scrollI.style.opacity = 1 - sm(0, 0.14, p);
       };
       window.__heroScroll();
