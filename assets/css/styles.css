@@ -476,6 +476,9 @@ table.sp td.rs{font-family:var(--mono);font-size:13px;text-align:right;color:var
 .cert:hover{border-color:var(--line-2);background:var(--surface)}
 /* ===== STICKY CATALOGUE TAB (right edge, upper-middle) =====
    Injected by app.js only when a catalogue has actually been uploaded. */
+/* the tab is a <button> now (it opens the gate rather than linking straight
+   to the file), so the button defaults have to be neutralised */
+button.cat-tab{border:0;font:inherit;cursor:pointer}
 .cat-tab{position:fixed;right:0;top:38%;z-index:75;display:flex;align-items:center;gap:9px;
   padding:14px 12px 15px;border:1px solid var(--line-2);border-right:0;border-radius:12px 0 0 12px;
   background:rgba(8,8,10,.72);backdrop-filter:blur(10px);color:var(--text);

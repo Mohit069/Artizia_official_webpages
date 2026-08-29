@@ -58,6 +58,7 @@ const TYPE_LABEL = {
   contact: 'Contact message',
   sample: 'Sample request',
   quote: 'Quote request',
+  catalogue: 'Catalogue download',
 };
 
 const esc = s =>

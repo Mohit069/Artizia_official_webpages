@@ -7,7 +7,7 @@ const { db } = require('../db/connection');
 const COLS = ['type', 'name', 'email', 'phone', 'subject', 'role', 'message',
   'address', 'project_type', 'area', 'products'];
 
-const TYPES = ['contact', 'sample', 'quote'];
+const TYPES = ['contact', 'sample', 'quote', 'catalogue'];
 const STATUSES = ['new', 'read', 'archived'];
 
 function toApi(r) {

@@ -351,8 +351,75 @@
     });
     bindMag();bindHover();
   }
+  /* ---------- catalogue gate ----------
+     The catalogue is the strongest lead magnet on the site, so it asks for a
+     name, email and phone first. The answer is stored as a normal enquiry of
+     type "catalogue", so it lands in the admin panel and the notification
+     email alongside every other request. */
+  function openCatalogueGate(c){
+    document.getElementById('modal-body').innerHTML=`
+      <span class="eyebrow">Artizia Catalogue</span>
+      <h3>Where should we send it?</h3>
+      <p>Tell us who you are and the catalogue opens straight away.</p>
+      <form class="form" id="cgform">
+        <div class="g2">
+          <div class="field"><label>Full Name</label><input name="name" required autocomplete="name" placeholder="Your name"></div>
+          <div class="field"><label>Personal / Business Email</label><input name="email" type="email" required autocomplete="email" placeholder="you@company.com"></div>
+        </div>
+        <div class="g2">
+          <div class="field"><label>I am an</label>
+            <select name="role" required>
+              <option value="" disabled selected>Select one</option>
+              <option>Importer</option><option>Wholesaler</option><option>Distributor</option><option>Architect</option><option>Other</option>
+            </select>
+          </div>
+          <div class="field"><label>Phone No</label>
+            <div class="phone-row">
+              <select name="dial" class="dial" aria-label="Country dialling code">
+                <option value="+91" selected>IN +91</option><option value="+1">US +1</option><option value="+44">UK +44</option>
+                <option value="+61">AU +61</option><option value="+971">AE +971</option><option value="+65">SG +65</option>
+                <option value="+49">DE +49</option><option value="+33">FR +33</option>
+              </select>
+              <input name="phone" required inputmode="tel" autocomplete="tel" placeholder="98765 43210">
+            </div>
+          </div>
+        </div>
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <p class="mono" id="cgErr" style="font-size:11px;color:#E0716A;display:none"></p>
+        <div class="mfoot"><button type="button" class="btn btn-line mag" id="cgCancel"><span>Cancel</span></button>
+          <button type="submit" class="btn btn-fill mag" id="cgSend"><span>View Catalogue →</span></button></div>
+      </form>`;
+    modal.classList.add('open');
+    document.getElementById('cgCancel').addEventListener('click',closeModal);
+    document.getElementById('cgform').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const f=e.target, btn=document.getElementById('cgSend'), err=document.getElementById('cgErr');
+      btn.disabled=true; err.style.display='none';
+      try{
+        const r=await fetch('/api/enquiries',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({type:'catalogue',name:f.name.value,email:f.email.value,role:f.role.value,
+            phone:f.dial.value+' '+f.phone.value.trim(),
+            subject:'Catalogue download',website:f.website.value})});
+        const j=await r.json();
+        if(!r.ok) throw new Error(j.error||'Could not open the catalogue.');
+        markCatUnlocked();
+        /* The final open has to come from a click of its own. Opening it here,
+           after the await, would be swallowed by the popup blocker. */
+        document.getElementById('modal-body').innerHTML=`<div class="msucc"><div class="tick">✓</div><h3>Thank you</h3>
+          <p style="color:var(--text-dim);margin:12px 0 26px">Your catalogue is ready${f.name.value?', '+f.name.value.split(' ')[0]:''}.</p>
+          <button class="btn btn-fill mag" id="cgOpen"><span>Open Catalogue →</span></button></div>`;
+        document.getElementById('cgOpen').addEventListener('click',()=>{ openCatalogue(c); closeModal(); });
+        bindMag(); bindHover();
+      }catch(ex){
+        err.textContent='✕ '+ex.message; err.style.display='block'; btn.disabled=false;
+      }
+    });
+    bindMag(); bindHover();
+  }
+
   const closeModal=()=>modal.classList.remove('open');
   window.openModal=openModal;
+  window.openCatalogueGate=openCatalogueGate;
   document.getElementById('modalX').addEventListener('click',closeModal);
   modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeTray();navLinks.classList.remove('open');}});
@@ -465,25 +532,34 @@
      Clings to the right edge on every page. Renders only once the server
      confirms a catalogue exists — no dead link if nothing is uploaded yet.
      Hidden on the admin page, which is not a shop window. */
+  const CAT_KEY='artizia_catalogue_unlocked';
+  const catUnlocked=()=>{ try{ return localStorage.getItem(CAT_KEY)==='1'; }catch(e){ return false; } };
+  const markCatUnlocked=()=>{ try{ localStorage.setItem(CAT_KEY,'1'); }catch(e){} };
+
+  /* Hand the file over. Called only from a click, never after an await —
+     a window.open that follows a fetch is treated as a popup and blocked. */
+  function openCatalogue(c){
+    const a=document.createElement('a');
+    a.href=c.url; a.rel='noopener';
+    if(c.type==='pdf') a.target='_blank'; else a.download=c.name||'artizia-catalogue';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
   function catalogueTab(){
     if(document.body.dataset.page==='admin') return;
     fetch('/api/catalogue',{credentials:'same-origin'})
       .then(r=>r.ok?r.json():null)
       .then(c=>{
         if(!c||!c.configured) return;
-        const a=document.createElement('a');
-        a.className='cat-tab mag';
-        a.href=c.url;
-        a.target='_blank';
-        a.rel='noopener';
-        /* a PDF opens in the browser's viewer; an image poster downloads */
-        if(c.type!=='pdf') a.download=c.name||'artizia-catalogue';
-        a.setAttribute('aria-label','Open the Artizia catalogue'+(c.type==='pdf'?' (PDF)':''));
-        a.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'
-          +'<path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H15l5 5v12.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 20.5z"/>'
-          +'<path d="M14 3v6h6"/><path d="M8 13h8M8 17h5"/></svg>'
-          +'<span>Catalogue</span>';
-        document.body.appendChild(a);
+        const btn=document.createElement('button');
+        btn.type='button';
+        btn.className='cat-tab mag';
+        btn.setAttribute('aria-label','Open the Artizia catalogue'+(c.type==='pdf'?' (PDF)':''));
+        btn.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H15l5 5v12.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 20.5z"/><path d="M14 3v6h6"/><path d="M8 13h8M8 17h5"/></svg><span>Catalogue</span>';
+        /* Anyone who has already given their details goes straight through;
+           the gate is for capturing a lead once, not for nagging. */
+        btn.addEventListener('click',()=>{ catUnlocked() ? openCatalogue(c) : openCatalogueGate(c); });
+        document.body.appendChild(btn);
         bindHover(); bindMag();
       })
       .catch(()=>{});   /* API down → no tab, rather than a broken one */
