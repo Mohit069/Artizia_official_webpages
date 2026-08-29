@@ -16,7 +16,7 @@ const PAGE = {
     lead: "Every Artizia surface is tested to international EN and ASTM standards. Here's exactly how our quartz performs.",
   },
   specs: [] as { property: string; standard: string; result: string }[],
-  note: 'Values are typical ranges for Artizia engineered quartz and may vary by design and finish. Available in <b style="color:var(--text)">20 mm and 30 mm</b> thicknesses, standard slab format <b style="color:var(--text)">3200 × 1600 mm</b>. Finishes: Polished, Honed (selected designs).',
+  note: 'Values are typical ranges for Artizia engineered quartz and may vary by design and finish. Available in <b style="color:var(--text)">20 mm and 30 mm</b> thicknesses, standard slab format <b style="color:var(--text)">3300 × 1650 mm</b>. Finishes: Polished, Honed (selected designs).',
   cta: {
     eyebrow: 'Specifying a Project?',
     title: "We'll help you <em>get it right.</em>",

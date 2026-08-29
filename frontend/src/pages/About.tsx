@@ -64,7 +64,7 @@ const P: any = {
     title: 'Why architects choose us as their <em>quartz slab supplier.</em>',
     cards: [
       { icon: 'breton', title: 'Breton Technology', text: "Every slab is vibro-compressed on Breton machinery — the benchmark the world's leading luxury quartz surfaces are made on." },
-      { icon: 'slab', title: 'Jumbo Slabs', text: 'Jumbo quartz slabs at 3500 × 2000 mm, in 20 mm and 30 mm — longer islands, seamless table tops, a cleaner line.' },
+      { icon: 'slab', title: 'Jumbo Slabs', text: 'Jumbo quartz slabs at 3300 × 1650 mm, in 20 mm and 30 mm — longer islands, seamless table tops, a cleaner line.' },
       { icon: 'globe', title: 'Export-Grade, at Home', text: 'The grade we ship to North America, the UK and Australia is the grade we sell in India. There is no second tier.' },
       { icon: 'shield', title: '15 Years of Warranty', text: 'Scratch, stain, heat, chemical and mould resistant — and warranted against manufacturing defects for 15 years.' },
       { icon: 'leaf', title: 'Zero-Discharge Plant', text: 'Water recycled in a closed loop, VOC-free materials, and GreenGuard-certified surfaces that keep indoor air clean.' },

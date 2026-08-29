@@ -15,12 +15,12 @@ const PAGE = {
     lead: 'Everything you need to know about our quartz slabs — sizes, finishes, samples, delivery, installation and the 15-year warranty.',
   },
   faqs: [
-    { q: 'What does Artizia manufacture?', a: 'Artizia is a quartz slab manufacturer, exporter and supplier based at Mahindra World City, Jaipur. We engineer premium quartz slabs — including jumbo quartz slabs at 3200 × 1600 mm — across 100+ designs, all pressed on Breton technology to global standards of durability and finish.' },
+    { q: 'What does Artizia manufacture?', a: 'Artizia is a quartz slab manufacturer, exporter and supplier based at Mahindra World City, Jaipur. We engineer premium quartz slabs — including jumbo quartz slabs at 3300 × 1650 mm — across 100+ designs, all pressed on Breton technology to global standards of durability and finish.' },
     { q: 'What makes Artizia quartz different?', a: "Three things: the technology, the grade and the scale. Every slab is vibro-compressed on Breton machinery, the benchmark the world's finest luxury quartz surfaces are made on. The grade we ship to North America, the UK and Australia is the grade we sell in India — there is no second tier. And our jumbo format means fewer seams across long islands and table tops." },
     { q: 'Are Artizia surfaces suitable for both homes and commercial projects?', a: 'Yes. Our quartz slabs are specified for kitchen countertops, bathroom vanity tops, dining and table tops, and quartz slabs for commercial projects — hotels, restaurants, offices and retail. The same non-porous, low-maintenance surface that suits a family kitchen also survives a 200-key hotel.' },
     { q: 'Which quartz colours and designs do you offer?', a: 'Our range spans luminous white quartz slabs, warm ivory quartz slabs and soft beige quartz slabs, through to quartz slabs with golden veins for statement islands, and deep charcoals and blacks. From minimal solids to marble-inspired modern quartz designs — browse all 53 across the collections page.' },
     { q: 'What is engineered quartz?', a: 'Engineered quartz combines roughly 90–93% natural quartz aggregate with resins and pigments, compacted under vacuum and vibration on Breton technology. The result is a non-porous surface that is harder, more consistent and more durable than natural stone.' },
-    { q: 'What slab sizes and thicknesses are available?', a: 'Our standard format is 3200 × 1600 mm — a jumbo quartz slab — in 20 mm and 30 mm thicknesses, polished or honed. The larger format means longer runs with fewer joints. Availability varies by design, so check the product page for the exact specification.' },
+    { q: 'What slab sizes and thicknesses are available?', a: 'Our standard format is 3300 × 1650 mm — a jumbo quartz slab — in 20 mm and 30 mm thicknesses, polished or honed. The larger format means longer runs with fewer joints. Availability varies by design, so check the product page for the exact specification.' },
     { q: 'Are Artizia surfaces moisture and fire resistant?', a: 'Yes. Quartz is non-porous, so moisture cannot soak in — which is why it suits bathroom vanities and wet areas without sealing. Our surfaces are also rated Class A for surface burning, and are resistant to mould and mildew.' },
     { q: 'Is Artizia quartz heat resistant?', a: 'It withstands normal kitchen heat, but the resin binder can scorch under prolonged or direct heat. Always use a trivet under hot cookware — no engineered quartz, from any manufacturer, is designed to take a pan straight off the flame.' },
     { q: 'Do I need to seal my Artizia surface?', a: 'No. Artizia quartz is non-porous, so it never needs sealing — unlike granite or marble, which require resealing every year or two.' },
@@ -53,7 +53,7 @@ export default function Faq() {
     <>
       <Seo
         title="FAQ — Quartz Slabs, Sizes, Samples & Installation | Artizia"
-        description="Answers on Artizia quartz slabs — jumbo 3200 × 1600 mm sizes, white, ivory and beige quartz, samples, delivery, installation and the 15-year warranty. From a leading quartz slab manufacturer and exporter in Jaipur, India."
+        description="Answers on Artizia quartz slabs — jumbo 3300 × 1650 mm sizes, white, ivory and beige quartz, samples, delivery, installation and the 15-year warranty. From a leading quartz slab manufacturer and exporter in Jaipur, India."
         canonical="https://artizia.co.in/faq.html"
         jsonLd={jsonLd}
       />
