@@ -119,7 +119,7 @@ window.CERTS = [
 
 window.FAQS = [
   ["What kinds of products does Artizia offer?","Artizia produces premium engineered quartz surfaces — 26 designs across four collections (Signature, Luxury, Premium and Essentials) — built to international quality benchmarks for countertops, vanities, cladding and more."],
-  ["What makes Artizia products unique?","Our surfaces merge timeless design with Breton technology and decades of manufacturing craft, delivering durability, style and easy maintenance in equal measure."],
+  ["What makes Artizia products unique?","Our surfaces merge timeless design with Breton Stone technology and decades of manufacturing craft, delivering durability, style and easy maintenance in equal measure."],
   ["Are Artizia products suitable for homes and commercial spaces?","Yes. Every surface is engineered to enhance both homes and commercial interiors with elegance, durability and low-maintenance performance."],
   ["Are the surfaces fire and moisture resistant?","Artizia quartz is non-porous and engineered for strength and resistance to moisture and heat — rated Class A for surface burning (ASTM E-84)."],
   ["How do I clean and maintain Artizia surfaces?","Clean with a soft cloth and mild detergent; avoid harsh chemicals and abrasives. See our Care & Maintenance guide for full details."],

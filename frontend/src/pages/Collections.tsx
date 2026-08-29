@@ -14,7 +14,7 @@ const PAGE = {
     zoom: 1.3,
     eyebrow: 'The Collections · 53 Surfaces',
     title: 'Our <em>Collections</em>',
-    lead: 'From marble-veined luxury to quiet everyday essentials — every Artizia surface is engineered on Breton technology and backed for 15 years.',
+    lead: 'From marble-veined luxury to quiet everyday essentials — every Artizia surface is engineered on Breton Stone technology and backed for 15 years.',
   },
   cta: {
     eyebrow: 'Not sure which?',
