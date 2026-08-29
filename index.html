@@ -492,13 +492,8 @@
       z-index: 4;
       right: clamp(20px, 5vw, 72px);
       bottom: clamp(40px, 6vw, 72px);
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: .24em;
-      color: var(--text-faint);
       display: flex;
       align-items: center;
-      gap: 12px;
       pointer-events: none
     }
 
@@ -2094,7 +2089,7 @@
         <h4>Premium Engineered Quartz Surfaces Crafted for Timeless Spaces</h4>
         <a class="mag" href="collections.html">Explore Collections <span class="arw">→</span></a>
       </div>
-      <div class="hero-progress"><span id="heroPhase">MACRO</span><span class="bar"><i id="heroBar"></i></span></div>
+      <div class="hero-progress"><span class="bar"><i id="heroBar"></i></span></div>
       <div class="scroll-i"><span>Scroll to pull back</span><span class="ln"></span></div>
     </div>
   </section>
@@ -2752,7 +2747,7 @@
         slabBox = document.getElementById('slabBox'), slabImg = document.getElementById('slabImg'),
         slabFrame = document.getElementById('slabFrame'), slabCap = document.getElementById('slabCap'),
         heroCopy = document.getElementById('heroCopy'), heroEndcap = document.getElementById('heroEndcap'),
-        heroPhase = document.getElementById('heroPhase'), heroBar = document.getElementById('heroBar'),
+        heroBar = document.getElementById('heroBar'),
         scrollI = document.querySelector('.scroll-i');
       const frameCorners = [...slabFrame.children];
       const cl = v => Math.max(0, Math.min(1, v)), sm = (a, b, x) => { const t = cl((x - a) / (b - a)); return t * t * (3 - 2 * t); }, mx2 = (a, b, t) => a + (b - a) * t;
@@ -2840,7 +2835,7 @@
         /* copy → endcap crossfade, HUD, scroll hint (unchanged behaviour) */
         const co = sm(0.34, 0.56, p); heroCopy.style.opacity = 1 - co; heroCopy.style.transform = 'translateY(' + (-co * 40) + 'px)'; heroCopy.style.pointerEvents = co > 0.5 ? 'none' : '';
         const ei = sm(0.72, 0.92, p); heroEndcap.style.opacity = ei; heroEndcap.style.transform = 'translateY(' + ((1 - ei) * 16) + 'px)'; heroEndcap.classList.toggle('on', ei > 0.5);
-        heroBar.style.width = (p * 100) + '%'; heroPhase.textContent = p < 0.5 ? 'MACRO' : (p < 0.72 ? 'FULL SLAB' : 'INSTALLED');
+        heroBar.style.width = (p * 100) + '%';
         if (scrollI) scrollI.style.opacity = 1 - sm(0, 0.14, p);
       };
       window.__heroScroll();
