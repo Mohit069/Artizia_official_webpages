@@ -201,7 +201,6 @@ export function CatalogueTab() {
                   <input className="hp" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
                   {err && <p className="mono" style={{ fontSize: 11, color: '#E0716A' }}>{err}</p>}
                   <div className="mfoot">
-                    <button type="button" className="btn btn-line mag" onClick={() => setGate(false)}><span>Cancel</span></button>
                     <button type="submit" className="btn btn-fill mag" disabled={busy}><span>View Catalogue →</span></button>
                   </div>
                 </form>

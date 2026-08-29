@@ -386,11 +386,10 @@
         </div>
         <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
         <p class="mono" id="cgErr" style="font-size:11px;color:#E0716A;display:none"></p>
-        <div class="mfoot"><button type="button" class="btn btn-line mag" id="cgCancel"><span>Cancel</span></button>
+        <div class="mfoot">
           <button type="submit" class="btn btn-fill mag" id="cgSend"><span>View Catalogue →</span></button></div>
       </form>`;
     modal.classList.add('open');
-    document.getElementById('cgCancel').addEventListener('click',closeModal);
     document.getElementById('cgform').addEventListener('submit',async e=>{
       e.preventDefault();
       const f=e.target, btn=document.getElementById('cgSend'), err=document.getElementById('cgErr');
