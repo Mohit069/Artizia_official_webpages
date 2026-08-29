@@ -385,8 +385,26 @@ export default function About() {
       {/* 3 · PHILOSOPHY */}
       <section className="mani pad">
         <div className="wrap">
-          <p className="eyebrow rv" style={{ marginBottom: 34 }}>Our Philosophy</p>
-          <p className="mani-big" id="mani" ref={maniRef} dangerouslySetInnerHTML={{ __html: P.manifesto }} />
+          <div className="mani-row">
+            <div>
+              <p className="eyebrow rv" style={{ marginBottom: 34 }}>Our Philosophy</p>
+              <p className="mani-big" id="mani" ref={maniRef} dangerouslySetInnerHTML={{ __html: P.manifesto }} />
+            </div>
+            <div className="mani-reel rv d1">
+              <div className="reel-frame">
+                <iframe
+                  src="https://www.instagram.com/reel/DapZVaUkces/embed"
+                  title="Artizia reel on Instagram"
+                  loading="lazy"
+                  scrolling="no"
+                  allowFullScreen
+                />
+              </div>
+              <a className="reel-link" href="https://www.instagram.com/artizia_by_marudhar/" target="_blank" rel="noopener noreferrer">
+                @artizia_by_marudhar <span className="arw">&rarr;</span>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 

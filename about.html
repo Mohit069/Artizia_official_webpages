@@ -262,6 +262,24 @@ window.PAGE = {
 .tl-head .lead-col{display:flex;flex-direction:column;gap:16px}
 .tl-head>p,.tl-head .lead-col p{color:var(--text-dim);font-size:clamp(15px,1.5vw,17px);line-height:1.65;max-width:52ch}
 @media(max-width:900px){.tl-head{grid-template-columns:1fr;gap:20px}}
+/* ---- Philosophy: copy left, Instagram reel right ----
+   The embed's natural height is linear in its width: 1.25 x width + 208px
+   (a 4:5 media area plus Instagram's own header, actions and caption).
+   Measured at 320/360/400/440/480px. Driving both from one custom property
+   keeps the iframe exactly the height of its content at every size, so the
+   frame never shows a gap or an inner scrollbar.
+   Instagram always serves the embed light, so the frame gives it a deliberate
+   edge rather than letting a white rectangle float on the dark theme. */
+.mani-row{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(32px,5vw,72px);align-items:center}
+.mani-reel{--rw:min(400px,calc(100vw - 48px));width:var(--rw);margin:0 auto}
+.reel-frame{width:100%;height:calc(var(--rw) * 1.25 + 208px);border:1px solid var(--line);
+  border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 22px 50px rgba(0,0,0,.18)}
+.reel-frame iframe{width:100%;height:100%;border:0;display:block}
+.reel-link{display:inline-flex;align-items:center;gap:9px;margin-top:16px;font-family:var(--mono);
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);transition:color .3s var(--e)}
+.reel-link:hover{color:var(--accent)}
+@media(max-width:900px){.mani-row{grid-template-columns:1fr;gap:44px}}
+
 /* ---- 5 · WHY ---- */
 .ab-why{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
   border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:clamp(40px,5vw,66px)}
@@ -399,8 +417,16 @@ window.PAGE = {
 
 <!-- ═══ 3 · PHILOSOPHY ═══ -->
 <section class="mani pad"><div class="wrap">
-  <p class="eyebrow rv" style="margin-bottom:34px">Our Philosophy</p>
-  <p class="mani-big" id="mani"></p>
+  <div class="mani-row">
+    <div>
+      <p class="eyebrow rv" style="margin-bottom:34px">Our Philosophy</p>
+      <p class="mani-big" id="mani"></p>
+    </div>
+    <div class="mani-reel rv d1">
+      <div class="reel-frame"><iframe src="https://www.instagram.com/reel/DapZVaUkces/embed" title="Artizia reel on Instagram" loading="lazy" scrolling="no" allowfullscreen></iframe></div>
+      <a class="reel-link" href="https://www.instagram.com/artizia_by_marudhar/" target="_blank" rel="noopener noreferrer">@artizia_by_marudhar <span class="arw">&rarr;</span></a>
+    </div>
+  </div>
 </div></section>
 
 <!-- ═══ 5 · WHY ARTIZIA ═══ -->
