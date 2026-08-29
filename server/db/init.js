@@ -13,6 +13,19 @@ const { loadDefaults } = require('./defaults');
 
 function ensureSchema(){
   db.exec(fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8'));
+  migrate();
+}
+
+/* schema.sql uses CREATE TABLE IF NOT EXISTS, so it never alters a table that
+   already exists. Columns added after the first release need an explicit,
+   idempotent ALTER here. Additive only — nothing is dropped or rewritten, so
+   this is safe to run on every boot against live data. */
+function migrate(){
+  const cols = db.prepare('PRAGMA table_info(enquiries)').all().map(c => c.name);
+  if (!cols.includes('role')) {
+    db.exec('ALTER TABLE enquiries ADD COLUMN role TEXT');
+    console.log('[db] enquiries.role added');
+  }
 }
 
 function seedDefaults(){

@@ -1750,6 +1750,7 @@
     }
     host.innerHTML=list.map(e=>{
       const lines=[];
+      if(e.role)        lines.push('I am an: '+esc(e.role));
       if(e.subject)     lines.push('Subject: '+esc(e.subject));
       if(e.message)     lines.push(esc(e.message));
       if(e.address)     lines.push('Ship to: '+esc(e.address));

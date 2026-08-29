@@ -4,7 +4,7 @@
    ============================================================ */
 const { db } = require('../db/connection');
 
-const COLS = ['type', 'name', 'email', 'phone', 'subject', 'message',
+const COLS = ['type', 'name', 'email', 'phone', 'subject', 'role', 'message',
   'address', 'project_type', 'area', 'products'];
 
 const TYPES = ['contact', 'sample', 'quote'];
@@ -16,7 +16,7 @@ function toApi(r) {
   try { products = JSON.parse(r.products || '[]'); } catch { products = []; }
   return {
     id: r.id, type: r.type, name: r.name, email: r.email, phone: r.phone,
-    subject: r.subject, message: r.message, address: r.address,
+    subject: r.subject, role: r.role, message: r.message, address: r.address,
     projectType: r.project_type, area: r.area, products,
     status: r.status, createdAt: r.created_at
   };
@@ -37,6 +37,7 @@ function create(body = {}) {
     email: clip(body.email, 160),
     phone: clip(body.phone, 40),
     subject: clip(body.subject, 160),
+    role: clip(body.role, 60),
     message: clip(body.message, 4000),
     address: clip(body.address, 400),
     project_type: clip(body.projectType, 60),

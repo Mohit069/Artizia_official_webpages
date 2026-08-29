@@ -88,9 +88,10 @@ export default function Contact() {
         body: JSON.stringify({
           type: 'contact',
           name: g('name'),
-          phone: g('phone'),
+          /* the dial code is its own control, so it is joined back on here */
+          phone: g('dial') + ' ' + g('phone').trim(),
           email: g('email'),
-          subject: g('subject'),
+          role: g('role'),
           message: g('message'),
           website: g('website'),
         }),
@@ -134,12 +135,39 @@ export default function Contact() {
             <div className="rv d1">
               <form className="form" id="cform" onSubmit={onSubmit}>
                 <div className="g2">
-                  <div className="field"><label>Full Name</label><input name="name" required placeholder="Your name" /></div>
-                  <div className="field"><label>Phone</label><input name="phone" required placeholder="+91" /></div>
+                  <div className="field"><label htmlFor="c_name">Full Name</label><input id="c_name" name="name" required autoComplete="name" placeholder="Your name" /></div>
+                  <div className="field"><label htmlFor="c_email">Personal / Business Email</label><input id="c_email" name="email" type="email" required autoComplete="email" placeholder="you@company.com" /></div>
                 </div>
-                <div className="field"><label>Email</label><input name="email" type="email" required placeholder="you@email.com" /></div>
-                <div className="field"><label>Subject</label><input name="subject" placeholder="How can we help?" /></div>
-                <div className="field"><label>Message</label><textarea name="message" rows={5} required placeholder="Tell us about your project…" /></div>
+                <div className="g2">
+                  <div className="field">
+                    <label htmlFor="c_role">I am an</label>
+                    <select id="c_role" name="role" required defaultValue="">
+                      <option value="" disabled>Select one</option>
+                      <option key="Importer">Importer</option>
+                      <option key="Wholesaler">Wholesaler</option>
+                      <option key="Distributor">Distributor</option>
+                      <option key="Architect">Architect</option>
+                      <option key="Other">Other</option>
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label htmlFor="c_phone">Phone No</label>
+                    <div className="phone-row">
+                      <select id="c_dial" name="dial" className="dial" aria-label="Country dialling code" defaultValue="+91">
+                        <option key="+91" value="+91">IN +91</option>
+                        <option key="+1" value="+1">US +1</option>
+                        <option key="+44" value="+44">UK +44</option>
+                        <option key="+61" value="+61">AU +61</option>
+                        <option key="+971" value="+971">AE +971</option>
+                        <option key="+65" value="+65">SG +65</option>
+                        <option key="+49" value="+49">DE +49</option>
+                        <option key="+33" value="+33">FR +33</option>
+                      </select>
+                      <input id="c_phone" name="phone" required inputMode="tel" autoComplete="tel" placeholder="98765 43210" />
+                    </div>
+                  </div>
+                </div>
+                <div className="field"><label htmlFor="c_message">Message</label><textarea id="c_message" name="message" rows={5} required placeholder="Tell us about your project…" /></div>
                 <input className="hp" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
                 <button className="btn btn-fill mag" type="submit" id="cSend"><span>Send Message <span className="arw">→</span></span></button>
                 <p className="mono" style={{ fontSize: 11, color: result.color || 'var(--text-faint)' }} id="cResult">{result.text}</p>

@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS enquiries (
   email        TEXT,
   phone        TEXT,
   subject      TEXT,
+  role         TEXT,                               -- "I am an": Importer, Wholesaler, ...
   message      TEXT,
   address      TEXT,
   project_type TEXT,

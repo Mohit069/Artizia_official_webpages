@@ -75,6 +75,7 @@ function rows(e) {
     ['Name', e.name],
     ['Email', e.email],
     ['Phone', e.phone],
+    ['I am an', e.role],
     ['Subject', e.subject],
     ['Project type', e.projectType],
     ['Area', e.area],

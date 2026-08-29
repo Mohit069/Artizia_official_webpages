@@ -73,11 +73,29 @@ window.PAGE = {
   </div>
   <div class="rv d1">
     <form class="form" id="cform">
-      <div class="g2"><div class="field"><label>Full Name</label><input id="c_name" name="name" required placeholder="Your name"></div>
-        <div class="field"><label>Phone</label><input id="c_phone" name="phone" required placeholder="+91"></div></div>
-      <div class="field"><label>Email</label><input id="c_email" name="email" type="email" required placeholder="you@email.com"></div>
-      <div class="field"><label>Subject</label><input id="c_subject" name="subject" placeholder="How can we help?"></div>
-      <div class="field"><label>Message</label><textarea id="c_message" name="message" rows="5" required placeholder="Tell us about your project…"></textarea></div>
+      <div class="g2">
+        <div class="field"><label for="c_name">Full Name</label><input id="c_name" name="name" required autocomplete="name" placeholder="Your name"></div>
+        <div class="field"><label for="c_email">Personal / Business Email</label><input id="c_email" name="email" type="email" required autocomplete="email" placeholder="you@company.com"></div>
+      </div>
+      <div class="g2">
+        <div class="field"><label for="c_role">I am an</label>
+          <select id="c_role" name="role" required>
+            <option value="" disabled selected>Select one</option>
+            <option>Importer</option>
+            <option>Wholesaler</option>
+            <option>Distributor</option>
+            <option>Architect</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field"><label for="c_phone">Phone No</label>
+          <div class="phone-row">
+            <select id="c_dial" class="dial" aria-label="Country dialling code"><option value="+91" selected>IN +91</option><option value="+1">US +1</option><option value="+44">UK +44</option><option value="+61">AU +61</option><option value="+971">AE +971</option><option value="+65">SG +65</option><option value="+49">DE +49</option><option value="+33">FR +33</option></select>
+            <input id="c_phone" name="phone" required inputmode="tel" autocomplete="tel" placeholder="98765 43210">
+          </div>
+        </div>
+      </div>
+      <div class="field"><label for="c_message">Message</label><textarea id="c_message" name="message" rows="5" required placeholder="Tell us about your project…"></textarea></div>
       <!-- honeypot: hidden from people, irresistible to bots -->
       <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
       <button class="btn btn-fill mag" type="submit" id="cSend"><span>Send Message <span class="arw">→</span></span></button>
@@ -154,8 +172,10 @@ window.PAGE = {
     btn.disabled=true; out.style.color='var(--text-faint)'; out.textContent='Sending…';
     try{
       const r=await fetch('/api/enquiries',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({type:'contact',name:$('c_name').value,phone:$('c_phone').value,
-          email:$('c_email').value,subject:$('c_subject').value,message:$('c_message').value,
+        body:JSON.stringify({type:'contact',name:$('c_name').value,
+          /* the dial code is its own control, so it is joined back on here */
+          phone:$('c_dial').value+' '+$('c_phone').value.trim(),
+          email:$('c_email').value,role:$('c_role').value,message:$('c_message').value,
           website:e.target.website.value})});
       const j=await r.json();
       if(!r.ok) throw new Error(j.error||'Could not send your message.');

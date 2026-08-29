@@ -554,6 +554,15 @@ table.cmp .col-artizia{background:color-mix(in srgb,var(--accent) 8%,transparent
 .field input,.field select,.field textarea{background:var(--surface);border:1px solid var(--line-2);color:var(--text);padding:13px 15px;font-family:var(--sans);font-size:14px;width:100%;cursor:auto}
 .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:460px){.g2{grid-template-columns:1fr}}
+/* dial code + number share one outline so the pair reads as a single control */
+.phone-row{display:flex;align-items:stretch}
+.phone-row .dial{flex:0 0 auto;width:auto;min-width:88px;border-right:0;font-family:var(--mono);font-size:13px}
+.phone-row input{flex:1 1 auto;min-width:0}
+.phone-row .dial:focus{position:relative;z-index:1}
+/* the native arrow is nearly invisible on the dark surface, so draw it in */
+.field select{appearance:none;-webkit-appearance:none;padding-right:38px;background-repeat:no-repeat;
+  background-position:right 13px center;background-size:14px;background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239a968e' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")}
+.phone-row .dial{padding-right:26px;background-position:right 7px center}
 
 /* ===== FOOTER ===== */
 footer{border-top:1px solid var(--line);padding:clamp(60px,7vw,96px) 0 36px;margin-top:0}
