@@ -78,7 +78,7 @@ const SHEET = [
   ['Signature',  '4471', 'Calacatta Bella',   'Calacatta & Exotic Series/CALACATTA BELLA',      'Bold Vein',
    'Bold grey veining over a bright white ground — the classic Calacatta silhouette.'],
   ['Signature',  '4490', 'Calacatta Eternia', 'Calacatta & Exotic Series/CALACATTA ETERNIA',    'Long Vein, Natural',
-   'White with sweeping grey veins that run the full length of the slab — made for super jumbo islands.'],
+   'White with sweeping grey veins that run the full length of the slab — made for jumbo islands.'],
   ['Signature',  '4482', 'Eros Gold',         'Calacatta & Exotic Series/EROS GOLD',            'Fine Vein, Natural',
    'Fine golden veining drifting across a warm white ground.'],
   ['Signature',  '4750', 'Nagoya',            'Calacatta & Exotic Series/NAGOYA',               'Long Vein, Natural',
