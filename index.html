@@ -159,12 +159,16 @@
 
       /* ---- S14 · INSTAGRAM FEED ------------------------------------------
          Posts are pulled live from the Instagram Graph API by our own server
-         (/api/instagram) and cached for an hour. Until IG_ACCESS_TOKEN is set
-         in .env the API returns nothing and the grid falls back to the curated
-         shots below, so the section shows real work instead of vanishing.
+         (/api/instagram) and cached for an hour.
+
+         There is deliberately NO stand-in imagery. This section carries the
+         @artizia_by_marudhar handle and a Follow button, so every tile in it
+         reads as a post from that account — filling it with catalogue
+         photography would tell visitors something untrue. Until a token is
+         issued the API returns nothing and the section removes itself.
 
          posts / followers / following render only when filled in. Instagram
-         Basic Display does not report a follower count, and made-up numbers on
+         does not report a follower count on this API, and made-up numbers on
          a live site are not an option — leave them "" to hide the row.        */
       instagram: {
         eyebrow: "@artizia_by_marudhar",
@@ -174,19 +178,7 @@
         handle: "artizia_by_marudhar",
         bio: "Engineered quartz surfaces · Jaipur, India",
         posts: "", followers: "", following: "",
-        count: 8,                       /* how many posts to show */
-        /* stand-ins while the live feed is unconfigured. Each tile links to the
-           profile, never to a post we cannot name. */
-        fallback: [
-          { image: "assets/img/applications/kitchen-countertops.jpg", caption: "Kitchen countertops that carry the whole room." },
-          { image: "assets/img/process/05-surface-finishing.jpg", caption: "Every colour in the range, on one rack." },
-          { image: "assets/img/applications/bathroom-vanity.jpg", caption: "Vanity tops in a soft, honed finish." },
-          { image: "assets/img/applications/hotels-hospitality.jpg", caption: "Hospitality surfaces built for daily punishment." },
-          { image: "assets/img/process/04-quality-inspection.jpg", caption: "Heat-resistance testing, every batch." },
-          { image: "assets/img/applications/living-rooms.jpg", caption: "Living rooms where the stone sets the tone." },
-          { image: "assets/img/applications/dining-tables.jpg", caption: "Dining tables cut from a single slab." },
-          { image: "assets/img/applications/commercial-spaces.jpg", caption: "Commercial installations across India." }
-        ]
+        count: 8                        /* how many posts to show */
       },
 
       /* ---- S15 · FINAL CTA --------------------------------------------- */
@@ -2435,9 +2427,9 @@
 
   <!-- ===== S14 · INSTAGRAM FEED (directly below the testimonials) =====
        Posts come live from the Graph API via /api/instagram. Until
-       IG_ACCESS_TOKEN is set the grid falls back to the curated shots in
-       PAGE.instagram.fallback, so the section still reads as intended instead
-       of deleting itself. -->
+       IG_ACCESS_TOKEN is set the API returns nothing and this whole section
+       removes itself — it must only ever show real posts from the account
+       whose handle it carries. -->
   <section class="pad ig-sec" id="igSection" hidden>
     <div class="wrap">
       <div class="sec-head center rv" style="margin:0 auto 40px">
@@ -2798,10 +2790,10 @@
 
       /* ---- S14 Instagram feed ---------------------------------------------
          Posts come from our own server, which holds the Graph API token and
-         caches the response. With no token yet — or Instagram down and no cache
-         — we fall back to the curated shots in the content block above; those
-         tiles link to the profile rather than to a post we cannot identify.
-         Only if both are empty does the section delete itself. */
+         caches the response. Every tile here sits under the account's handle
+         and Follow button, so it has to BE a post from that account — there is
+         no stand-in imagery. No token, no cache, or Instagram down and the
+         section deletes itself rather than show something that isn't theirs. */
       (async function renderInstagram() {
         const sec = $('igSection'), cfg = C.instagram;
         if (!sec) return;
@@ -2810,15 +2802,11 @@
 
         const profile = (S.social && S.social.instagram) || 'https://www.instagram.com/';
 
-        let posts = [], live = true;
+        let posts = [];
         try {
           const r = await fetch(`/api/instagram?limit=${encodeURIComponent(cfg.count || 8)}`);
           if (r.ok) posts = (await r.json()).posts || [];
-        } catch (e) { /* offline / server down — the curated set covers it */ }
-        if (!posts.length) {
-          live = false;
-          posts = (cfg.fallback || []).map(p => ({ image: p.image, caption: p.caption, href: profile }));
-        }
+        } catch (e) { /* offline / server down — the section drops out */ }
         if (!posts.length) return drop();
 
         $('igEye').textContent = cfg.eyebrow || '';
@@ -2846,7 +2834,7 @@
         $('igGrid').innerHTML = posts.slice(0, cfg.count || 8).map(p => {
           const kind = p.video ? '▶' : (p.album ? '❏' : '');
           return `<a class="ig-tile" href="${esc(p.href)}" target="_blank" rel="noopener noreferrer"
-            aria-label="${live ? 'View this post on Instagram' : 'Artizia on Instagram'}">
+            aria-label="View this post on Instagram">
             <img src="${esc(p.image)}" alt="${esc(p.caption || 'Artizia on Instagram')}" loading="lazy">
             ${kind ? `<span class="ig-kind" aria-hidden="true">${kind}</span>` : ''}
             <span class="ig-ov">${ACTS}<span class="ig-cap">${esc(p.caption || '')}</span></span>
