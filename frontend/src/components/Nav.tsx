@@ -129,7 +129,7 @@ export default function Nav() {
         {customPages.map((p) => (
           <Link key={p.slug} to={`/p/${p.slug}`} className={here === p.slug ? 'active' : ''} dangerouslySetInnerHTML={{ __html: esc(p.navLabel || p.title) }} />
         ))}
-        <Link to="/become-a-dealer.html" className={cls('dealer')}>Become a Dealer</Link>
+        <Link to="/become-a-dealer.html" className={'nav-m-dealer ' + cls('dealer')}>Become a Dealer</Link>
         <span className="nav-m-marudhar" aria-hidden="true">
           <img
             src="/assets/img/brand/marudhar-logo.png"
@@ -139,6 +139,7 @@ export default function Nav() {
         </span>
       </div>
       <div className="nav-right">
+        <Link to="/become-a-dealer.html" className={'nav-dealer' + (page === 'dealer' ? ' active' : '')}>Become a Dealer</Link>
         <button className="icn" id="searchBtn" title="Search surfaces" aria-label="Search surfaces" onClick={openSearch}>
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
             <circle cx="11" cy="11" r="6.5" />

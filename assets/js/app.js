@@ -32,10 +32,11 @@
       ${navLink('contact.html','Contact','contact')}
       ${navLink('blog.html','Blog','blog')}
       <span id="navExtra"></span>
-      ${navLink('become-a-dealer.html','Become a Dealer','dealer')}
+      <a href="become-a-dealer.html" class="nav-m-dealer ${page==='dealer'?'active':''}">Become a Dealer</a>
       <span class="nav-m-marudhar" aria-hidden="true"><img src="assets/img/brand/marudhar-logo.png" alt="" onerror="this.parentNode.style.display='none'"></span>
     </div>
     <div class="nav-right">
+      <a href="become-a-dealer.html" class="nav-dealer${page==='dealer'?' active':''}">Become a Dealer</a>
       <button class="icn" id="searchBtn" title="Search surfaces" aria-label="Search surfaces">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6"
           stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><line x1="15.8" y1="15.8" x2="20" y2="20"/></svg>

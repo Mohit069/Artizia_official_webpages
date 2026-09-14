@@ -1212,6 +1212,21 @@ footer{border-top:1px solid var(--line);padding:clamp(60px,7vw,96px) 0 36px;marg
 @media(min-width:1200px) and (max-width:1320px){
   .nav{gap:10px}
   .nav-links a{letter-spacing:.1em;padding:10px 10px}
+  .nav-dealer{letter-spacing:.1em;padding:10px 8px}
   .nav-right{gap:8px}
   .nav-marudhar{margin-left:4px;padding-left:12px}
+}
+
+/* Become a Dealer — bold, in the right-hand cluster beside the search icon on
+   desktop. The panel keeps its own copy (.nav-m-dealer) so the mobile menu
+   still lists it; each copy is visible in exactly one mode. Keep at the END
+   of the file: the base .nav-links a rules sit far earlier. */
+.nav-dealer{white-space:nowrap;font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;
+  font-weight:700;color:var(--text);padding:10px 14px;position:relative;transition:color .3s}
+.nav-dealer:hover{color:var(--accent)}
+.nav-dealer.active::after{content:"";position:absolute;left:14px;right:14px;bottom:4px;height:1px;background:var(--opal)}
+.nav-links .nav-m-dealer{display:none}
+@media(max-width:1199px){
+  .nav-dealer{display:none}
+  .nav-links .nav-m-dealer{display:block;font-weight:700}
 }
