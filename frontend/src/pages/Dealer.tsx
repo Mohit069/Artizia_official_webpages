@@ -19,7 +19,25 @@ const PAGE = {
     'Join the Artizia family as an authorised dealer and unlock a world of opportunity. Benefit from our extensive range of premium engineered quartz surfaces, backed by a legacy of excellence spanning over <b>40 years</b>.',
     'Elevate your business with Artizia — where quality meets success.',
   ],
+  why: {
+    eyebrow: 'Why Artizia',
+    title: 'Why partner <em>with us?</em>',
+    cards: [
+      { icon: 'support', title: 'Support and Partnership Benefits', text: 'Partnering with Artizia brings strong brand recognition, marketing support, product training and a collaborative relationship built around mutual growth.' },
+      { icon: 'growth', title: 'Business Development and Growth', text: 'Bring a premium quartz range to your market with the backing of an established manufacturer — and grow with a brand that is expanding across India.' },
+      { icon: 'heritage', title: '40 Years of Manufacturing Heritage', text: 'Every slab is pressed on Breton Stone technology by Marudhar Group — the same export grade shipped to North America, the UK and Europe. There is no second tier.' },
+      { icon: 'range', title: 'A Range Built to Sell', text: 'Five collections, jumbo 3300 × 1650 mm slabs, a 15-year warranty and GreenGuard and NSF certification — a story your customers already want to hear.' },
+    ],
+  },
   thanks: '✓ Application received. Our partnerships team will be in touch within two working days.',
+}
+
+/* Inline monoline icons in the site's 24-box stroke style — nothing external. */
+const WP_ICONS: Record<string, string> = {
+  support: '<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20v-1.5a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5V20"/><path d="M16.5 14.5h.5a4 4 0 0 1 4 4V20"/>',
+  growth: '<path d="M3 20h18"/><path d="M5 16l4-5 4 3 6-8"/><path d="M15 6h4v4"/>',
+  heritage: '<path d="M3 20V9l5 3V9l5 3V9l5 3v8"/><path d="M3 20h18"/><path d="M7 20v-4h3v4M14 20v-4h3v4"/>',
+  range: '<rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 12h18M12 5v14"/>',
 }
 
 const DIALS: [string, string][] = [
@@ -108,6 +126,20 @@ export default function Dealer() {
         .dealer-intro p b{color:var(--text);font-weight:600}
         .dealer-form{max-width:840px;margin:clamp(30px,4vw,48px) auto 0}
         .dealer-form textarea{min-height:120px}
+        .why-partner{max-width:1080px;margin:clamp(44px,6vw,76px) auto 0}
+        .why-partner .sec-head.center{align-items:center;text-align:center;margin-left:auto;margin-right:auto}
+        .why-partner .sec-head.center .eyebrow{justify-content:center}
+        .wp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(14px,2vw,24px);margin-top:clamp(24px,3vw,40px)}
+        @media(max-width:820px){.wp-grid{grid-template-columns:1fr}}
+        .wp-card{display:grid;grid-template-columns:54px 1fr;gap:20px;align-items:start;padding:clamp(20px,2.4vw,30px);
+          border:1px solid var(--line);border-radius:14px;background:var(--surface);
+          transition:border-color .4s var(--e),transform .4s var(--e)}
+        .wp-card:hover{border-color:var(--line-2);transform:translateY(-3px)}
+        .wp-ic{width:54px;height:54px;border-radius:12px;display:grid;place-items:center;background:var(--bg);border:1px solid var(--line);color:var(--accent)}
+        .wp-ic svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+        .wp-card h3{font-family:var(--serif);font-weight:400;font-size:clamp(19px,2vw,23px);line-height:1.25;letter-spacing:-.01em;margin:3px 0 8px}
+        .wp-card p{font-size:14.5px;line-height:1.7;color:var(--text-dim);margin:0}
+        .why-partner + .dealer-form{margin-top:clamp(48px,7vw,88px)}
       `}</style>
       <PageHero banner={PAGE.banner} />
 
@@ -115,6 +147,23 @@ export default function Dealer() {
         <div className="wrap">
           <div className="dealer-intro rv">
             {PAGE.intro.map((t, i) => <p key={i} dangerouslySetInnerHTML={{ __html: t }} />)}
+          </div>
+
+          <div className="why-partner" id="whyPartner">
+            <div className="sec-head center rv" style={{ margin: '0 auto' }}>
+              <span className="eyebrow">{PAGE.why.eyebrow}</span>
+              <h2 dangerouslySetInnerHTML={{ __html: PAGE.why.title }} />
+            </div>
+            <div className="wp-grid">
+              {PAGE.why.cards.map((c, i) => (
+                <article className={`wp-card rv d${(i % 2) + 1}`} key={c.title}>
+                  <span className="wp-ic" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" dangerouslySetInnerHTML={{ __html: WP_ICONS[c.icon] || WP_ICONS.range }} />
+                  </span>
+                  <div><h3>{c.title}</h3><p>{c.text}</p></div>
+                </article>
+              ))}
+            </div>
           </div>
 
           <form className="form dealer-form rv d1" id="dform" onSubmit={onSubmit}>
