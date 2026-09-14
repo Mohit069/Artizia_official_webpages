@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Become a Dealer — Artizia Quartz</title>
+<meta name="description" content="Join the Artizia family as an authorised dealer. Bring premium engineered quartz surfaces to your market, backed by a legacy of excellence spanning over 40 years.">
+<link rel="canonical" href="https://artizia.co.in/become-a-dealer.html">
+<link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/styles.css">
+<style>
+  /* the form sits alone in a centred column, so it gets a little more room than
+     the contact page's half-width column */
+  .dealer-intro{max-width:760px;margin:0 auto;text-align:center}
+  .dealer-intro p{font-size:clamp(15px,1.5vw,17px);line-height:1.75;color:var(--text-dim);margin:0 0 14px}
+  .dealer-intro p b{color:var(--text);font-weight:600}
+  .dealer-form{max-width:840px;margin:clamp(30px,4vw,48px) auto 0}
+  .dealer-form textarea{min-height:120px}
+</style>
+</head>
+<body data-page="dealer">
+
+<!--
+═══════════════════════════════════════════════════════════════════════
+  BECOME A DEALER — EDIT EVERYTHING HERE
+═══════════════════════════════════════════════════════════════════════
+  IMAGES  put files in  assets/img/  then write  "assets/img/name.jpg"
+  Leave  image: ""  and a live marble texture is used instead.
+═══════════════════════════════════════════════════════════════════════
+-->
+<script>
+window.PAGE = {
+
+  /* ---- banner behind the page heading ---- */
+  banner: {
+    image:    "",                        /* e.g. "assets/img/dealer-banner.jpg" */
+    alt:      "Artizia quartz surface",
+    fallback: "calacatta-gold",
+    zoom:     1.3,
+    eyebrow:  "Partner With Us",
+    title:    "Become an <em>Artizia dealer.</em>",
+    lead:     "Bring premium engineered quartz to your market — with the backing of a manufacturer that has been doing this for more than 40 years."
+  },
+
+  /* ---- the two lines above the form ---- */
+  intro: [
+    "Join the Artizia family as an authorised dealer and unlock a world of opportunity. Benefit from our extensive range of premium engineered quartz surfaces, backed by a legacy of excellence spanning over <b>40 years</b>.",
+    "Elevate your business with Artizia — where quality meets success."
+  ],
+
+  /* ---- confirmation shown after a successful submission ---- */
+  thanks: "✓ Application received. Our partnerships team will be in touch within two working days."
+};
+</script>
+
+<section class="page-hero">
+  <div class="ph-vis"></div>
+  <div class="wrap">
+    <span class="eyebrow"></span>
+    <h1></h1>
+    <p class="lead"></p>
+  </div>
+</section>
+
+<section class="pad" style="padding-top:clamp(20px,4vw,50px)"><div class="wrap">
+  <div class="dealer-intro rv" id="dealerIntro"></div>
+
+  <form class="form dealer-form rv d1" id="dform">
+    <div class="field"><label for="d_name">Full Name</label><input id="d_name" name="name" required autocomplete="name" placeholder="Your name"></div>
+
+    <div class="g2">
+      <div class="field"><label for="d_email">Email</label><input id="d_email" name="email" type="email" required autocomplete="email" placeholder="you@company.com"></div>
+      <div class="field"><label for="d_phone">Phone Number</label>
+        <div class="phone-row">
+          <select id="d_dial" name="dial" class="dial" aria-label="Country dialling code">
+            <option value="+91" selected>IN +91</option><option value="+971">AE +971</option><option value="+966">SA +966</option>
+            <option value="+974">QA +974</option><option value="+968">OM +968</option><option value="+965">KW +965</option>
+            <option value="+880">BD +880</option><option value="+977">NP +977</option><option value="+94">LK +94</option>
+            <option value="+65">SG +65</option><option value="+44">UK +44</option><option value="+1">US +1</option>
+            <option value="+61">AU +61</option><option value="+49">DE +49</option><option value="+33">FR +33</option>
+            <option value="+39">IT +39</option><option value="+27">ZA +27</option>
+          </select>
+          <input id="d_phone" name="phone" required inputmode="tel" autocomplete="tel" placeholder="98765 43210">
+        </div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="field"><label for="d_country">Country</label>
+        <select id="d_country" name="country" required>
+          <option selected>India</option>
+          <option>Australia</option><option>Bangladesh</option><option>Canada</option><option>France</option>
+          <option>Germany</option><option>Italy</option><option>Kuwait</option><option>Nepal</option>
+          <option>Oman</option><option>Qatar</option><option>Saudi Arabia</option><option>Singapore</option>
+          <option>South Africa</option><option>Sri Lanka</option><option>United Arab Emirates</option>
+          <option>United Kingdom</option><option>United States</option><option>Other</option>
+        </select>
+      </div>
+      <div class="field"><label for="d_state">State</label>
+        <!-- a datalist rather than a select: Indian states autocomplete, and any
+             other country's regions can still be typed freely -->
+        <input id="d_state" name="state" list="in-states" required autocomplete="address-level1" placeholder="State / province">
+        <datalist id="in-states">
+          <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option>
+          <option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option><option>Haryana</option>
+          <option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option>
+          <option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option>
+          <option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option>
+          <option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option>
+          <option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option>
+          <option>Andaman and Nicobar Islands</option><option>Chandigarh</option>
+          <option>Dadra and Nagar Haveli and Daman and Diu</option><option>Delhi</option>
+          <option>Jammu and Kashmir</option><option>Ladakh</option><option>Lakshadweep</option><option>Puducherry</option>
+        </datalist>
+      </div>
+    </div>
+
+    <div class="field"><label for="d_city">City</label><input id="d_city" name="city" required autocomplete="address-level2" placeholder="Enter city"></div>
+
+    <div class="field"><label for="d_dealerships">Do you have existing dealerships?</label>
+      <select id="d_dealerships" name="dealerships" required>
+        <option value="" disabled selected>Select one</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+    </div>
+
+    <div class="field"><label for="d_message">Tell us about your business <span style="color:var(--text-faint);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+      <textarea id="d_message" name="message" rows="5" placeholder="Showroom, territory, brands you carry, years in business…"></textarea></div>
+
+    <!-- honeypot: hidden from people, irresistible to bots -->
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button class="btn btn-fill mag" type="submit" id="dSend"><span>Apply Now <span class="arw">→</span></span></button>
+    <p class="mono" style="font-size:11px;color:var(--text-faint)" id="dResult"></p>
+  </form>
+</div></section>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/marble.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const P=window.PAGE,S=window.SITE,$=id=>document.getElementById(id);
+  $('dealerIntro').innerHTML=(P.intro||[]).map(t=>`<p>${t}</p>`).join('');
+
+  /* People type their country code even though the dropdown supplies it, which
+     stored numbers like "+91 +919100184117". Strip a repeated code or a leading
+     zero so the two halves join cleanly. */
+  function joinPhone(dial, typed){
+    let n=String(typed||'').trim().replace(/[\s()-]+/g,' ').trim();
+    const code=dial.replace('+','');
+    if(n.startsWith('+'+code)) n=n.slice(code.length+1).trim();
+    else if(n.startsWith('00'+code)) n=n.slice(code.length+2).trim();
+    else if(n.startsWith('+')) return n;                 // a different country's full number — keep it
+    else if(n.startsWith('0')) n=n.replace(/^0+/,'');
+    return dial+' '+n;
+  }
+
+  /* Applications are stored in the database, shown in the admin panel and
+     emailed to the team like every other enquiry. */
+  $('dform').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const f=e.target, btn=$('dSend'), out=$('dResult');
+    btn.disabled=true; out.style.color='var(--text-faint)'; out.textContent='Sending…';
+    try{
+      const r=await fetch('/api/enquiries',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          type:'dealer',
+          name:$('d_name').value, email:$('d_email').value,
+          phone:joinPhone($('d_dial').value,$('d_phone').value),
+          country:$('d_country').value, state:$('d_state').value, city:$('d_city').value,
+          dealerships:$('d_dealerships').value,
+          subject:'Dealer application',
+          message:$('d_message').value,
+          website:f.website.value})});
+      const j=await r.json();
+      if(!r.ok) throw new Error(j.error||'Could not send your application.');
+      f.reset();
+      out.style.color='var(--accent)';
+      out.textContent=P.thanks||'✓ Application received.';
+    }catch(err){
+      out.style.color='#E0716A';
+      out.textContent='✕ '+err.message+' You can also email '+(S.email||'us')+'.';
+    }finally{ btn.disabled=false; }
+  });
+
+  window.Artizia.refresh();
+})();
+</script>
+<script src="assets/js/pageedit.js"></script>
+</body>
+</html>

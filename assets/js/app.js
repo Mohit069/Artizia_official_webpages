@@ -32,6 +32,7 @@
       ${navLink('contact.html','Contact','contact')}
       ${navLink('blog.html','Blog','blog')}
       <span id="navExtra"></span>
+      ${navLink('become-a-dealer.html','Become a Dealer','dealer')}
       <span class="nav-m-marudhar" aria-hidden="true"><img src="assets/img/brand/marudhar-logo.png" alt="" onerror="this.parentNode.style.display='none'"></span>
     </div>
     <div class="nav-right">
@@ -217,7 +218,7 @@
   /* ---------- mobile menu ---------- */
   const navLinks=document.getElementById('navLinks');
   /* The Resources group collapses on mobile. Desktop keeps its hover dropdown —
-     the toggle is display:none above 940px, so none of this can fire there. */
+     the toggle is display:none from 1200px up, so none of this can fire there. */
   const RES=['certifications','technical','warranty','care','faq'];
   const navDrop=navLinks.querySelector('.nav-drop');
   const dropToggle=navDrop&&navDrop.querySelector('.nav-drop-toggle');

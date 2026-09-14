@@ -21,11 +21,16 @@ function ensureSchema(){
    idempotent ALTER here. Additive only — nothing is dropped or rewritten, so
    this is safe to run on every boot against live data. */
 function migrate(){
+  /* CREATE TABLE IF NOT EXISTS never alters an existing table, so every
+     column added after first deploy needs its own guarded ALTER here. */
   const cols = db.prepare('PRAGMA table_info(enquiries)').all().map(c => c.name);
-  if (!cols.includes('role')) {
-    db.exec('ALTER TABLE enquiries ADD COLUMN role TEXT');
-    console.log('[db] enquiries.role added');
-  }
+  const add = (name) => {
+    if (cols.includes(name)) return;
+    db.exec(`ALTER TABLE enquiries ADD COLUMN ${name} TEXT`);
+    console.log(`[db] enquiries.${name} added`);
+  };
+  add('role');
+  add('country'); add('state'); add('city'); add('dealerships');   // dealer applications
 }
 
 function seedDefaults(){

@@ -110,7 +110,7 @@ body.has-banner .nav{top:var(--banner-h)}
    Resources is wrapped in .nav-drop, so on the default `stretch` the two sat at
    different heights and the row read as crooked */
 .nav-links{display:flex;align-items:center;gap:2px}
-.nav-links a{font-family:var(--mono);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);
+.nav-links a{white-space:nowrap;font-family:var(--mono);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);
   padding:10px 16px;position:relative;transition:color .3s}
 .nav-links a:hover,.nav-links a.active{color:var(--text)}
 .nav-links a.active::after{content:"";position:absolute;left:16px;right:16px;bottom:4px;height:1px;background:var(--opal)}
@@ -181,7 +181,7 @@ body.has-banner .nav{top:var(--banner-h)}
 button{cursor:none;font-family:inherit}
 @media(hover:none),(pointer:coarse){button{cursor:pointer}}
 .nav-links .close-x{display:none}
-@media(max-width:940px){
+@media(max-width:1199px){
   .nav-links{position:fixed;inset:0;background:var(--bg);flex-direction:column;justify-content:flex-start;align-items:center;gap:2px;
     padding:84px 20px calc(36px + env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain;
     transform:translateX(100%);transition:transform .5s var(--e2);z-index:85}
@@ -988,10 +988,15 @@ footer{border-top:1px solid var(--line);padding:clamp(60px,7vw,96px) 0 36px;marg
 /* ============================================================
    MOBILE NAV — collapsible submenus
    ------------------------------------------------------------
-   Desktop (>940px) is deliberately untouched: the toggle button
+   Desktop (>=1200px) is deliberately untouched: the toggle button
    is hidden and the Resources dropdown keeps its hover behaviour
    exactly as before. Everything below sits inside the same
-   max-width:940px breakpoint the stylesheet already uses.
+   max-width:1199px breakpoint the stylesheet already uses.
+
+   Why 1199 and not the old 940: seven links, four controls and two
+   logos need ~1140px. Below that the desktop bar was pushing the
+   Samples button and the Marudhar mark off the right edge, so those
+   widths now get the panel, which holds everything.
 
    The bug this fixes: .nav-drop stayed `display:flex` on mobile,
    so the "Resources" label and its submenu were laid out side by
@@ -1003,7 +1008,7 @@ footer{border-top:1px solid var(--line);padding:clamp(60px,7vw,96px) 0 36px;marg
 /* the panel-only brand marks: the bar has its own pair */
 .nav-m-brand, .nav-m-marudhar { display: none; }
 
-@media (max-width: 940px) {
+@media (max-width: 1199px) {
 
   /* ---- the panel ---- */
   .nav-links {
@@ -1198,4 +1203,15 @@ footer{border-top:1px solid var(--line);padding:clamp(60px,7vw,96px) 0 36px;marg
   .tbtn{height:32px;padding:0 7px;font-size:9px;letter-spacing:.06em;gap:5px}
   .tct{min-width:16px;height:16px;padding:0 4px;font-size:9px}
   .logo.nav-lockup{height:24px}
+}
+
+/* Desktop bar in its narrowest band. Just above the panel breakpoint the seven
+   links plus the controls run the full width, so the tracking and padding come
+   in a notch. Scoped with a min-width so it can never reach the panel's own
+   link sizing, which sits earlier in the sheet. Keep at the END of the file. */
+@media(min-width:1200px) and (max-width:1320px){
+  .nav{gap:10px}
+  .nav-links a{letter-spacing:.1em;padding:10px 10px}
+  .nav-right{gap:8px}
+  .nav-marudhar{margin-left:4px;padding-left:12px}
 }

@@ -59,6 +59,7 @@ const TYPE_LABEL = {
   sample: 'Sample request',
   quote: 'Quote request',
   catalogue: 'Catalogue download',
+  dealer: 'Dealer application',
 };
 
 const esc = s =>
@@ -78,6 +79,9 @@ function rows(e) {
     ['Phone', e.phone],
     ['I am an', e.role],
     ['Subject', e.subject],
+    /* dealer applications */
+    ['Location', [e.city, e.state, e.country].filter(Boolean).join(', ')],
+    ['Existing dealerships', e.dealerships ? (e.dealerships === 'yes' ? 'Yes' : 'No') : ''],
     ['Project type', e.projectType],
     ['Area', e.area],
     ['Address', e.address],

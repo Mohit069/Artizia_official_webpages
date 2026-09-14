@@ -10,6 +10,7 @@ function pageKey(path: string): string {
   if (p.startsWith('/about')) return 'about'
   if (p.startsWith('/collections')) return 'collections'
   if (p.startsWith('/contact')) return 'contact'
+  if (p.startsWith('/become-a-dealer')) return 'dealer'
   if (p.startsWith('/blog') || p.startsWith('/post')) return 'blog'
   if (p.startsWith('/certifications')) return 'certifications'
   if (p.startsWith('/technical')) return 'technical'
@@ -128,6 +129,7 @@ export default function Nav() {
         {customPages.map((p) => (
           <Link key={p.slug} to={`/p/${p.slug}`} className={here === p.slug ? 'active' : ''} dangerouslySetInnerHTML={{ __html: esc(p.navLabel || p.title) }} />
         ))}
+        <Link to="/become-a-dealer.html" className={cls('dealer')}>Become a Dealer</Link>
         <span className="nav-m-marudhar" aria-hidden="true">
           <img
             src="/assets/img/brand/marudhar-logo.png"

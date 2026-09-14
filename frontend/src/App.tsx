@@ -9,6 +9,7 @@ import Technical from './pages/Technical'
 import Certifications from './pages/Certifications'
 import Faq from './pages/Faq'
 import Contact from './pages/Contact'
+import Dealer from './pages/Dealer'
 import Collections from './pages/Collections'
 import Product from './pages/Product'
 import Blog from './pages/Blog'
@@ -53,6 +54,9 @@ export default function App() {
 
         <Route path="/contact.html" element={<Contact />} />
         <Route path="/contact" element={<Contact />} />
+
+        <Route path="/become-a-dealer.html" element={<Dealer />} />
+        <Route path="/become-a-dealer" element={<Dealer />} />
 
         <Route path="/blog.html" element={<Blog />} />
         <Route path="/blog" element={<Blog />} />

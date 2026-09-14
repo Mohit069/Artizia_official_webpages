@@ -1,13 +1,14 @@
 /* ============================================================
-   Enquiries — contact-form messages, sample requests and quote requests
-   submitted from the public site.
+   Enquiries — contact-form messages, sample requests, quote requests,
+   catalogue downloads and dealer applications submitted from the public site.
    ============================================================ */
 const { db } = require('../db/connection');
 
 const COLS = ['type', 'name', 'email', 'phone', 'subject', 'role', 'message',
-  'address', 'project_type', 'area', 'products'];
+  'address', 'project_type', 'area', 'products',
+  'country', 'state', 'city', 'dealerships'];
 
-const TYPES = ['contact', 'sample', 'quote', 'catalogue'];
+const TYPES = ['contact', 'sample', 'quote', 'catalogue', 'dealer'];
 const STATUSES = ['new', 'read', 'archived'];
 
 function toApi(r) {
@@ -18,6 +19,7 @@ function toApi(r) {
     id: r.id, type: r.type, name: r.name, email: r.email, phone: r.phone,
     subject: r.subject, role: r.role, message: r.message, address: r.address,
     projectType: r.project_type, area: r.area, products,
+    country: r.country, state: r.state, city: r.city, dealerships: r.dealerships,
     status: r.status, createdAt: r.created_at
   };
 }
@@ -42,7 +44,13 @@ function create(body = {}) {
     address: clip(body.address, 400),
     project_type: clip(body.projectType, 60),
     area: clip(body.area, 40),
-    products
+    products,
+    country: clip(body.country, 80),
+    state: clip(body.state, 80),
+    city: clip(body.city, 80),
+    /* only the two answers the form offers; anything else is dropped */
+    dealerships: ['yes', 'no'].includes(String(body.dealerships || '').toLowerCase())
+      ? String(body.dealerships).toLowerCase() : null
   };
   const info = db.prepare(
     `INSERT INTO enquiries (${COLS.join(',')}) VALUES (${COLS.map(() => '?').join(',')})`

@@ -251,6 +251,7 @@
   .badge.quote{border-color:#F0BFA6;color:#F0BFA6}
   .badge.contact{border-color:#C6B4E8;color:#C6B4E8}
   .badge.catalogue{border-color:#E8D9A6;color:#E8D9A6}
+  .badge.dealer{border-color:#A6D8E8;color:#A6D8E8}
   .enq-body{margin-top:12px;font-size:14px;color:var(--text-dim);line-height:1.6;white-space:pre-wrap}
   .enq-prods{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
   .enq-prods span{font-family:var(--mono);font-size:10px;letter-spacing:.08em;padding:4px 9px;border-radius:6px;
@@ -1753,6 +1754,9 @@
       const lines=[];
       if(e.role)        lines.push('I am an: '+esc(e.role));
       if(e.subject)     lines.push('Subject: '+esc(e.subject));
+      const loc=[e.city,e.state,e.country].filter(Boolean).join(', ');
+      if(loc)           lines.push('Location: '+esc(loc));
+      if(e.dealerships) lines.push('Existing dealerships: '+(e.dealerships==='yes'?'Yes':'No'));
       if(e.message)     lines.push(esc(e.message));
       if(e.address)     lines.push('Ship to: '+esc(e.address));
       if(e.projectType) lines.push('Project: '+esc(e.projectType)+(e.area?' · '+esc(e.area)+' sq ft':''));

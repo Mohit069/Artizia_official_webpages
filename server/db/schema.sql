@@ -73,6 +73,10 @@ CREATE TABLE IF NOT EXISTS enquiries (
   project_type TEXT,
   area         TEXT,
   products     TEXT,                               -- JSON array
+  country      TEXT,                               -- dealer applications
+  state        TEXT,
+  city         TEXT,
+  dealerships  TEXT,                               -- 'yes' | 'no' — already a dealer for other brands?
   status       TEXT NOT NULL DEFAULT 'new',        -- 'new' | 'read' | 'archived'
   created_at   TEXT DEFAULT (datetime('now'))
 );

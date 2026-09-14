@@ -32,6 +32,7 @@ const ROUTES = [
   { file: 'care-and-maintenance.html', title: 'Care & Maintenance — Artizia Quartz', description: 'How to care for your Artizia engineered quartz surface — everyday cleaning, preventing damage and long-term maintenance. No sealing required.', canonical: 'https://artizia.co.in/care-and-maintenance.html' },
   { file: 'faq.html', title: 'FAQ — Quartz Slabs, Sizes, Samples & Installation | Artizia', description: 'Answers on Artizia quartz slabs — jumbo 3300 × 1650 mm sizes, white, ivory and beige quartz, samples, delivery, installation and the 15-year warranty. From a leading quartz slab manufacturer and exporter in Jaipur, India.', canonical: 'https://artizia.co.in/faq.html' },
   { file: 'contact.html', title: 'Contact — Artizia Quartz', description: 'Get in touch with Artizia — request samples, quotes or design guidance. Based at Mahindra World City, Jaipur.', canonical: 'https://artizia.co.in/contact.html' },
+  { file: 'become-a-dealer.html', title: 'Become a Dealer — Artizia Quartz', description: 'Join the Artizia family as an authorised dealer. Bring premium engineered quartz surfaces to your market, backed by a legacy of excellence spanning over 40 years.', canonical: 'https://artizia.co.in/become-a-dealer.html' },
   { file: 'blog.html', title: 'Journal — Artizia Quartz', description: 'Design notes, project stories and technical guidance on engineered quartz surfaces — from the Artizia team in Jaipur.', canonical: 'https://artizia.co.in/blog.html' },
 ]
 
