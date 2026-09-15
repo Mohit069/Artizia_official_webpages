@@ -22,6 +22,7 @@ export interface Material {
   desc?: string
   hidden?: boolean
   images?: string[]
+  viewInHome?: string   /* the TilesView visualiser link, set per product in the admin panel */
   [k: string]: any
 }
 

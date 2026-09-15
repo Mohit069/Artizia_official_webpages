@@ -26,6 +26,15 @@ function deleteUpload(url){
 function slugify(v){
   return String(v || '').trim().toLowerCase().replace(/[^a-z0-9-]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
 }
+/* the "View in my Home" link is written into an href on the product page, so
+   only a full web address is accepted — never javascript: or a bare word */
+function badLink(body){
+  const v = String(body.viewInHome || '').trim();
+  if (!v) return null;
+  if (v.length > 500) return 'The "View in my Home" link is too long.';
+  if (!/^https?:\/\/[^\s"'<>]+$/i.test(v)) return 'The "View in my Home" link must be a full address starting with https://';
+  return null;
+}
 
 /* ---- public reads ---- */
 router.get('/', (req, res) => {
@@ -44,6 +53,8 @@ router.post('/', requireAdmin, (req, res) => {
   if (!slug) return res.status(400).json({ error: 'A slug or name is required.' });
   if (!body.name) return res.status(400).json({ error: 'Name is required.' });
   if (Product.exists(slug)) return res.status(409).json({ error: 'That slug already exists.' });
+  const linkErr = badLink(body);
+  if (linkErr) return res.status(400).json({ error: linkErr });
   const created = Product.create(Object.assign({}, body, { slug }));
   res.status(201).json(created);
 });
@@ -53,6 +64,8 @@ router.put('/:slug', requireAdmin, (req, res) => {
   const existing = Product.bySlug(slug);
   if (!existing) return res.status(404).json({ error: 'Product not found.' });
   const body = req.body || {};
+  const linkErr = badLink(body);
+  if (linkErr) return res.status(400).json({ error: linkErr });
   // delete image files that were removed/replaced
   const oldImgs = existing.images || [];
   const newImgs = body.images || [];

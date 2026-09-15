@@ -25,6 +25,7 @@ function toApi(row){
     thickness: row.thickness || '20 · 30 mm',
     apps: safeJSON(row.applications),
     images: [ row.image_full_slab || '', row.image_closeup || '', row.image_application || '', row.image_detail || '' ],
+    viewInHome: row.visualizer_url || '',
     // auto-marble fallback palette
     base: row.pal_base || undefined,
     vein: row.pal_vein || undefined,
@@ -56,6 +57,7 @@ function fromApi(o){
     image_closeup: img[1] || null,
     image_application: img[2] || null,
     image_detail: img[3] || null,
+    visualizer_url: String(o.viewInHome || '').trim().slice(0, 500) || null,
     pal_base: o.base || null,
     pal_vein: o.vein || null,
     pal_glow: o.glow || null,
@@ -67,7 +69,7 @@ function fromApi(o){
 }
 
 const COLS = ['slug','code','name','collection','description','vein','grain','finish','thickness','applications',
-  'image_full_slab','image_closeup','image_application','image_detail',
+  'image_full_slab','image_closeup','image_application','image_detail','visualizer_url',
   'pal_base','pal_vein','pal_glow','pal_seed','pal_flow','pal_sharp','pal_dark'];
 
 function all(collection){

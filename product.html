@@ -31,7 +31,8 @@ window.PRODUCT_PAGE = {
   sampleNote: "Free samples · Ships in 5–7 days · Up to 4 per order",
 
   /* "View in my Home" — opens the TilesView visualiser so a client can see the
-     surface in a real room. Paste the tilesview.ai link into url. */
+     surface in a real room. Each product's own link is set in the admin panel;
+     url here is the fallback for products that have none. */
   viewInHome: { label: "View in my Home", url: "" },
 
   /* one line per application card, matched to the product's application list */
@@ -98,7 +99,7 @@ window.PRODUCT_PAGE = {
   document.getElementById('phtitle').textContent=m.name;
 
   /* info */
-  const VIH=PP.viewInHome||{}, vihUrl=String(VIH.url||'').trim();
+  const VIH=PP.viewInHome||{}, vihUrl=String(m.viewInHome||VIH.url||'').trim();
   document.getElementById('pinfo').innerHTML=`
     <div class="code">NO. ${m.code} · QUARTZ SURFACE</div>
     <p class="pdesc">${m.desc}</p>

@@ -9,7 +9,8 @@ const PP = {
   slotLabels: ['Full Slab', 'Close-up', 'Application', 'Detail'],
   sampleNote: 'Free samples · Ships in 5–7 days · Up to 4 per order',
   /* "View in my Home" — opens the TilesView visualiser so a client can see the
-     surface in a real room. Paste the tilesview.ai link into url. */
+     surface in a real room. Each product's own link is set in the admin panel;
+     url here is the fallback for products that have none. */
   viewInHome: { label: 'View in my Home', url: '' },
   applicationBlurbs: [
     'Heat- and stain-resistant for the hardest-working surface at home.',
@@ -41,7 +42,7 @@ export default function Product() {
   let key = slug
   if (!mat[key] || mat[key].hidden) key = Object.keys(mat).find((k) => !mat[k].hidden) || 'calacatta-gold'
   const m = mat[key]
-  const vihUrl = (PP.viewInHome.url || '').trim()
+  const vihUrl = (m.viewInHome || PP.viewInHome.url || '').trim()
 
   useEffect(() => setCur(0), [key])
 

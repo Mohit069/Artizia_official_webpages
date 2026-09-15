@@ -23,14 +23,15 @@ function ensureSchema(){
 function migrate(){
   /* CREATE TABLE IF NOT EXISTS never alters an existing table, so every
      column added after first deploy needs its own guarded ALTER here. */
-  const cols = db.prepare('PRAGMA table_info(enquiries)').all().map(c => c.name);
-  const add = (name) => {
+  const add = (table, name) => {
+    const cols = db.prepare(`PRAGMA table_info(${table})`).all().map(c => c.name);
     if (cols.includes(name)) return;
-    db.exec(`ALTER TABLE enquiries ADD COLUMN ${name} TEXT`);
-    console.log(`[db] enquiries.${name} added`);
+    db.exec(`ALTER TABLE ${table} ADD COLUMN ${name} TEXT`);
+    console.log(`[db] ${table}.${name} added`);
   };
-  add('role');
-  add('country'); add('state'); add('city'); add('dealerships');   // dealer applications
+  add('enquiries', 'role');
+  add('enquiries', 'country'); add('enquiries', 'state'); add('enquiries', 'city'); add('enquiries', 'dealerships');   // dealer applications
+  add('products', 'visualizer_url');   // "View in my Home" link
 }
 
 function seedDefaults(){
