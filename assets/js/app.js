@@ -82,7 +82,8 @@
       <div class="fcol"><h5>Explore</h5>
         <a href="about.html">About</a><a href="blog.html">Blog</a>
         <a href="technical-details.html">Technical Details</a><a href="certifications.html">Certifications</a>
-        <a href="warranty.html">Warranty</a><a href="care-and-maintenance.html">Care &amp; Maintenance</a><a href="faq.html">FAQ</a></div>
+        <a href="warranty.html">Warranty</a><a href="care-and-maintenance.html">Care &amp; Maintenance</a>
+        <a href="catalogue">Catalogue</a><a href="faq.html">FAQ</a></div>
       <div class="fcol"><h5>Contact</h5>
         <a href="tel:${S.phoneRaw}">${S.phone}</a><a href="mailto:${S.email}">${S.email}</a>
         <a href="${S.mapUrl}" target="_blank" rel="noopener">Mahindra World City,<br>Jaipur — 302037</a>

@@ -56,6 +56,7 @@ export default function Footer() {
             <Link to="/certifications.html">Certifications</Link>
             <Link to="/warranty.html">Warranty</Link>
             <Link to="/care-and-maintenance.html">Care &amp; Maintenance</Link>
+            <Link to="/catalogue">Catalogue</Link>
             <Link to="/faq.html">FAQ</Link>
           </div>
           <div className="fcol">
