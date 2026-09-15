@@ -30,6 +30,10 @@ window.PRODUCT_PAGE = {
   /* the note under the sample buttons */
   sampleNote: "Free samples · Ships in 5–7 days · Up to 4 per order",
 
+  /* "View in my Home" — opens the TilesView visualiser so a client can see the
+     surface in a real room. Paste the tilesview.ai link into url. */
+  viewInHome: { label: "View in my Home", url: "" },
+
   /* one line per application card, matched to the product's application list */
   applicationBlurbs: [
     "Heat- and stain-resistant for the hardest-working surface at home.",
@@ -94,6 +98,7 @@ window.PRODUCT_PAGE = {
   document.getElementById('phtitle').textContent=m.name;
 
   /* info */
+  const VIH=PP.viewInHome||{}, vihUrl=String(VIH.url||'').trim();
   document.getElementById('pinfo').innerHTML=`
     <div class="code">NO. ${m.code} · QUARTZ SURFACE</div>
     <p class="pdesc">${m.desc}</p>
@@ -107,7 +112,8 @@ window.PRODUCT_PAGE = {
       <a class="btn btn-fill mag" href="#" id="addBtn"><span>Add Free Sample <span class="arw">→</span></span></a>
       <a class="btn btn-line mag" href="#" id="quoteBtn"><span>Get a Quote</span></a>
     </div>
-    <div class="pnote">${PP.sampleNote||''}</div>`;
+    <div class="pnote">${PP.sampleNote||''}</div>
+    ${VIH.label?`<div class="pvih"><a class="btn btn-line mag" id="vihBtn" href="${vihUrl.replace(/"/g,'&quot;')||'#'}"${vihUrl?' target="_blank" rel="noopener"':''}><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-6h4v6"/></svg>${VIH.label}</span></a></div>`:''}`;
 
   /* gallery — uploaded photos when present, else generated marble */
   const SLOT_LABELS=PP.slotLabels||['Full Slab','Close-up','Application','Detail'];
@@ -182,6 +188,7 @@ window.PRODUCT_PAGE = {
   window.Artizia.refresh();
   document.getElementById('addBtn').addEventListener('click',e=>{e.preventDefault();window.addSample(key,e.currentTarget);});
   document.getElementById('quoteBtn').addEventListener('click',e=>{e.preventDefault();window.openModal('quote');});
+  if(!vihUrl){const b=document.getElementById('vihBtn');if(b)b.addEventListener('click',e=>e.preventDefault());}
 
   /* banner header — uploaded photo if present, else live marble canvas */
   const bannerPhoto=hasPhotos?photos[0].src:null;

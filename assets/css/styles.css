@@ -423,6 +423,8 @@ body.menu-open{overflow:hidden}
 .pact{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
 .pnote{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--text-faint);display:flex;gap:9px;align-items:center}
 .pnote::before{content:"◆";color:var(--accent)}
+.pvih{margin-top:18px}
+.pvih svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .psec{border-top:1px solid var(--line)}
 .acc{border-bottom:1px solid var(--line)}
 .acc>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:28px 0;font-family:var(--serif);font-size:clamp(21px,2.4vw,28px)}

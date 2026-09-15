@@ -8,6 +8,9 @@ import { SPECS } from '../data/materials'
 const PP = {
   slotLabels: ['Full Slab', 'Close-up', 'Application', 'Detail'],
   sampleNote: 'Free samples · Ships in 5–7 days · Up to 4 per order',
+  /* "View in my Home" — opens the TilesView visualiser so a client can see the
+     surface in a real room. Paste the tilesview.ai link into url. */
+  viewInHome: { label: 'View in my Home', url: '' },
   applicationBlurbs: [
     'Heat- and stain-resistant for the hardest-working surface at home.',
     'Non-porous — resists moisture, soap and daily wear.',
@@ -38,6 +41,7 @@ export default function Product() {
   let key = slug
   if (!mat[key] || mat[key].hidden) key = Object.keys(mat).find((k) => !mat[k].hidden) || 'calacatta-gold'
   const m = mat[key]
+  const vihUrl = (PP.viewInHome.url || '').trim()
 
   useEffect(() => setCur(0), [key])
 
@@ -211,6 +215,23 @@ export default function Product() {
               </a>
             </div>
             <div className="pnote">{PP.sampleNote}</div>
+            {PP.viewInHome.label && (
+              <div className="pvih">
+                <a
+                  className="btn btn-line mag"
+                  id="vihBtn"
+                  href={vihUrl || '#'}
+                  target={vihUrl ? '_blank' : undefined}
+                  rel={vihUrl ? 'noopener' : undefined}
+                  onClick={(e) => { if (!vihUrl) e.preventDefault() /* no link yet — don't jump to the top */ }}
+                >
+                  <span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5" /><path d="M5.5 10v10h13V10" /><path d="M10 20v-6h4v6" /></svg>
+                    {PP.viewInHome.label}
+                  </span>
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </div>
