@@ -28,6 +28,11 @@ app.use(express.json({ limit: '4mb' }));
    Two directories on a serverless host: images that shipped with the deployment
    are normally served straight off the CDN, but anything uploaded at runtime
    only exists in /tmp and has to come through here. */
+/* Every upload gets a unique timestamped name, so 30 days is safe — except the
+   catalogue cover, which is overwritten IN PLACE on each re-upload and is the
+   picture behind the share link's preview. Five minutes for that one. `send`
+   only sets Cache-Control when none is present, so this wins. */
+app.get('/uploads/catalogue-cover.jpg', (req, res, next) => { res.setHeader('Cache-Control', 'public, max-age=300'); next(); });
 app.use('/uploads', express.static(UPLOADS, { maxAge: '30d' }));
 if (SERVERLESS) app.use('/uploads', express.static(BUNDLED_UPLOADS, { maxAge: '30d' }));
 
@@ -51,6 +56,23 @@ app.use('/api/enquiries', require('./routes/enquiries'));
 app.use('/api/instagram', require('./routes/instagram'));
 app.use('/api/catalogue', require('./routes/catalogue'));
 app.use('/api',           require('./routes/content'));   /* /api/pages, /api/posts */
+
+/* ---- the shareable catalogue link ----
+   /catalogue      the branded page (catalogue.html, or the SPA route) — the
+                   URL to put in front of clients. Counted, then handed on to
+                   whichever static handler serves the page.
+   /catalogue.pdf  the file itself. Uploads get a new timestamped name every
+                   time, so this stable address always redirects to the
+                   current one — a link sent last month keeps working after a
+                   re-upload. */
+const catalogue = require('./routes/catalogue');
+app.get(['/catalogue', '/catalogue.html'], (req, res, next) => { catalogue.recordView(req, 'page'); next(); });
+app.get('/catalogue.pdf', (req, res) => {
+  const m = catalogue.readMeta();
+  if (!m || !m.url || !catalogue.locate(m.url)) return res.status(404).type('text').send('No catalogue has been uploaded yet.');
+  catalogue.recordView(req, 'file');
+  res.redirect(302, m.url);
+});
 
 /* ---- OPTIONAL: serve the React (Vite) build ----
    Set SERVE_SPA=1 to serve frontend/dist instead of the legacy static HTML.

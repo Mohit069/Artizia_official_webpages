@@ -230,6 +230,18 @@
   .cat-drop .hint{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--text-faint)}
   .cat-drop.busy{opacity:.55;pointer-events:none}
   .cat-msg{margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.04em;min-height:16px}
+  /* share link + opens */
+  .cat-share{margin:16px 0 18px;padding:18px 20px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+  .cat-share h4{margin:0 0 4px;font-size:14px}
+  .cat-share .why{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--text-faint);margin:0 0 14px}
+  .cat-link{display:flex;align-items:center;gap:10px;margin-top:8px}
+  .cat-link code{flex:1;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);
+    font-family:var(--mono);font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cat-link .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint);width:64px;flex:none}
+  .cat-stats{display:flex;gap:22px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+  .cat-stats div{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint)}
+  .cat-stats b{display:block;font-family:var(--serif);font-size:22px;letter-spacing:0;text-transform:none;color:var(--text);margin-bottom:2px}
+  .cat-cover{width:46px;height:62px;flex:0 0 auto;border-radius:6px;object-fit:cover;border:1px solid var(--line);background:var(--bg)}
 
   /* ---- enquiries ---- */
   .filters2{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
@@ -1662,15 +1674,35 @@
         return;
       }
       const when=new Date(c.updatedAt).toLocaleString();
+      const pageLink=location.origin+'/catalogue', fileLink=location.origin+'/catalogue.pdf';
       host.innerHTML=`<div class="cat-card">
-        <span class="kind">${c.type==='pdf'?'PDF':'JPG'}</span>
+        ${c.cover?`<img class="cat-cover" src="${esc(c.cover)}?v=${Date.parse(c.updatedAt)||0}" alt="">`:`<span class="kind">${c.type==='pdf'?'PDF':'JPG'}</span>`}
         <div class="meta">
           <div class="nm">${esc(c.name||'catalogue')}</div>
           <div class="sub">${kb(c.size)} · updated ${esc(when)} · live on the site</div>
         </div>
         <a class="ab" href="${esc(c.url)}" target="_blank" rel="noopener">View</a>
         <button class="ab danger" id="catDel">Remove</button>
+      </div>
+      <div class="cat-share">
+        <h4>Share link</h4>
+        <p class="why">Send this to clients. It opens the catalogue on artizia.co.in, with a cover preview in WhatsApp and mail — and every open is counted below.</p>
+        <div class="cat-link"><span class="lbl">Page</span><code id="catLinkPage">${esc(pageLink)}</code><button class="ab" data-copy="${esc(pageLink)}">Copy</button></div>
+        <div class="cat-link"><span class="lbl">File</span><code id="catLinkFile">${esc(fileLink)}</code><button class="ab" data-copy="${esc(fileLink)}">Copy</button></div>
+        <div class="cat-stats" id="catStats"><div><b>…</b>opens</div></div>
       </div>`;
+      host.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',async()=>{
+        try{ await navigator.clipboard.writeText(b.dataset.copy); b.textContent='Copied'; setTimeout(()=>b.textContent='Copy',1600); }
+        catch{ prompt('Copy this link:', b.dataset.copy); }
+      }));
+      /* how the link is doing — bots and link previewers are already excluded */
+      fetch('/api/catalogue/stats',{credentials:'same-origin'}).then(r=>r.ok?r.json():null).then(s=>{
+        if(!s) return;
+        const today=new Date().toISOString().slice(0,10);
+        const week=Object.entries(s.days||{}).filter(([d])=>(Date.now()-Date.parse(d))<7*864e5).reduce((n,[,v])=>n+v,0);
+        $('catStats').innerHTML=`<div><b>${s.total||0}</b>opens total</div><div><b>${week}</b>last 7 days</div><div><b>${(s.days||{})[today]||0}</b>today</div>`
+          +(s.lastAt?`<div><b style="font-size:13px;margin-top:6px">${esc(new Date(s.lastAt).toLocaleString())}</b>last opened</div>`:'');
+      }).catch(()=>{});
       $('catDel').addEventListener('click',async()=>{
         if(!confirm('Remove the catalogue? The sticky tab will disappear from the site.')) return;
         const r=await fetch('/api/catalogue',{method:'DELETE',credentials:'same-origin'});

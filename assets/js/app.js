@@ -547,7 +547,8 @@
   }
 
   function catalogueTab(){
-    if(document.body.dataset.page==='admin') return;
+    /* no tab in the admin, and none on the catalogue page itself */
+    if(['admin','catalogue'].includes(document.body.dataset.page)) return;
     fetch('/api/catalogue',{credentials:'same-origin'})
       .then(r=>r.ok?r.json():null)
       .then(c=>{

@@ -10,6 +10,7 @@ import Certifications from './pages/Certifications'
 import Faq from './pages/Faq'
 import Contact from './pages/Contact'
 import Dealer from './pages/Dealer'
+import Catalogue from './pages/Catalogue'
 import Collections from './pages/Collections'
 import Product from './pages/Product'
 import Blog from './pages/Blog'
@@ -57,6 +58,9 @@ export default function App() {
 
         <Route path="/become-a-dealer.html" element={<Dealer />} />
         <Route path="/become-a-dealer" element={<Dealer />} />
+
+        <Route path="/catalogue.html" element={<Catalogue />} />
+        <Route path="/catalogue" element={<Catalogue />} />
 
         <Route path="/blog.html" element={<Blog />} />
         <Route path="/blog" element={<Blog />} />

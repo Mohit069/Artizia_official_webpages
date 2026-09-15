@@ -41,3 +41,4 @@ Thumbs.db
 
 # throwaway Playwright/Node probes at the repo root
 /*.cjs
+server/cache/catalogue-views.json

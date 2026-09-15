@@ -18,6 +18,9 @@ interface Catalogue {
   url?: string
   name?: string
   type?: string
+  size?: number
+  cover?: string | null
+  updatedAt?: string
 }
 
 interface ArtiziaValue {

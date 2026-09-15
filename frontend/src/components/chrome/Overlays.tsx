@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useArtizia } from '../../context/ArtiziaContext'
 
 const HOVER_SEL = 'a,button,summary,input,select,textarea,.gcard,.pcard,.pair,.pth,.why-row'
@@ -99,12 +100,15 @@ function deliverCatalogue(c: { url?: string; type?: string; name?: string }) {
 
 export function CatalogueTab() {
   const { catalogue } = useArtizia()
+  const loc = useLocation()
   const [gate, setGate] = useState(false)
   const [done, setDone] = useState('')
   const [err, setErr] = useState('')
   const [busy, setBusy] = useState(false)
 
-  if (!catalogue || !catalogue.configured || !catalogue.url) return null
+  /* no tab on the page that *is* the catalogue */
+  const onCataloguePage = /^\/catalogue(\.html)?$/.test(loc.pathname)
+  if (!catalogue || !catalogue.configured || !catalogue.url || onCataloguePage) return null
   const isPdf = catalogue.type === 'pdf'
 
   const onTab = () => {
