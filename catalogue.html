@@ -30,8 +30,12 @@
 
   /* the PDF, inline. Height follows the viewport so the reader gets a real
      page in view rather than a letterbox. */
-  .cat-frame{width:100%;height:max(640px,calc(100vh - 170px));border:1px solid var(--line);border-radius:14px;
-    background:var(--surface);display:block}
+  /* A portrait frame proportioned like an A4 sheet plus the viewer's toolbar,
+     sized to the viewport so one whole page sits in view; the viewer is asked
+     to fit the page (view=Fit for Chrome/Edge, zoom=page-fit for Firefox). */
+  .cat-frame{--h:max(640px,calc(100vh - 170px));height:var(--h);
+    width:min(100%,calc((var(--h) - 56px) / 1.414 + 48px));margin:0 auto;
+    border:1px solid var(--line);border-radius:14px;background:var(--surface);display:block}
 
   /* phones and tablets cannot scroll a PDF inside an iframe (iOS renders only
      page 1), so they get the cover and a button that opens it natively */
@@ -162,7 +166,7 @@ window.PAGE = {
 
     if(!touch){
       /* an image catalogue has no pages to page through — show it directly */
-      if(c.type==='pdf'){ $('catFrame').src=url+'#view=FitH'; $('catFrame').hidden=false; }
+      if(c.type==='pdf'){ $('catFrame').src=url+'#view=Fit&zoom=page-fit&navpanes=0'; $('catFrame').hidden=false; }
       else { const img=document.createElement('img'); img.src=url; img.alt='Artizia catalogue';
              img.style.cssText='width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:14px';
              $('catFrame').replaceWith(img); }

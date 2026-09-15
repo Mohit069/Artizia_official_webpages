@@ -74,7 +74,7 @@ export default function Catalogue() {
         .cat-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:clamp(18px,2.4vw,28px)}
         .cat-actions .spacer{flex:1 1 auto}
         .cat-facts{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-faint)}
-        .cat-frame{width:100%;height:max(640px,calc(100vh - 170px));border:1px solid var(--line);border-radius:14px;background:var(--surface);display:block}
+        .cat-frame{--h:max(640px,calc(100vh - 170px));height:var(--h);width:min(100%,calc((var(--h) - 56px) / 1.414 + 48px));margin:0 auto;border:1px solid var(--line);border-radius:14px;background:var(--surface);display:block}
         .cat-mobile{display:none;max-width:520px;margin:0 auto;text-align:center}
         .cat-mobile .cover{width:100%;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface);box-shadow:0 24px 60px rgba(0,0,0,.28)}
         .cat-mobile .cover img{width:100%;height:auto;display:block}
@@ -100,7 +100,7 @@ export default function Catalogue() {
               </div>
 
               {!touch && (c.type === 'pdf'
-                ? <iframe className="cat-frame rv d1" title="Artizia catalogue" src={c.url + '#view=FitH'} />
+                ? <iframe className="cat-frame rv d1" title="Artizia catalogue" src={c.url + '#view=Fit&zoom=page-fit&navpanes=0'} />
                 : <img src={c.url} alt="Artizia catalogue" style={{ width: '100%', height: 'auto', display: 'block', border: '1px solid var(--line)', borderRadius: 14 }} />)}
 
               <div className="cat-mobile rv d1">
