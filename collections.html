@@ -95,8 +95,8 @@ window.PAGE = {
   function vsample(m){
     const u=String(m.viewInHome||'').trim();
     return u
-      ? `<a class="mvs" href="${u.replace(/"/g,'&quot;')}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-6h4v6"/></svg>Virtual Sample</a>`
-      : `<a class="mvs" href="#" data-nolink><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-6h4v6"/></svg>Virtual Sample</a>`;
+      ? `<a class="mvs" href="${u.replace(/"/g,'&quot;')}" target="_blank" rel="noopener">Virtual Sample</a>`
+      : `<a class="mvs" href="#" data-nolink>Virtual Sample</a>`;
   }
   function card(k,i){const m=MAT[k];
     return `<div class="mcard rv">
