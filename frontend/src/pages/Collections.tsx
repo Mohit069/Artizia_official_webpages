@@ -39,9 +39,9 @@ function CardArt({ k, name }: { k: string; name: string }) {
   return <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg,#222,#555)' }} />
 }
 
-/* "Virtual Sample" — the product's own link from the admin panel (separate
-   from the product page's "View in my Home"). Rendered on every card; without
-   a link it is inert rather than missing. */
+/* "Visualize" — the same TilesView link as the product page's "View in my
+   Home" button. Rendered on every card; without a link it is inert rather
+   than missing. */
 function VirtualSample({ url }: { url?: string }) {
   const u = (url || '').trim()
   return (
@@ -52,7 +52,7 @@ function VirtualSample({ url }: { url?: string }) {
       rel={u ? 'noopener' : undefined}
       onClick={(e) => { if (!u) e.preventDefault() }}
     >
-      Virtual Sample
+      Visualize
     </a>
   )
 }
@@ -149,7 +149,7 @@ export default function Collections() {
                           <div className="mtitle">{m.name}</div>
                           <div className="mdesc">{m.desc}</div>
                         </Link>
-                        <VirtualSample url={m.virtualSample} />
+                        <VirtualSample url={m.viewInHome} />
                       </div>
                       <Link className="marw" to={`/product.html?p=${k}`} aria-label={`View ${m.name}`}>
                         <span>→</span>

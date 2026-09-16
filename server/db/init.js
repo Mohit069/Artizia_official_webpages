@@ -31,8 +31,7 @@ function migrate(){
   };
   add('enquiries', 'role');
   add('enquiries', 'country'); add('enquiries', 'state'); add('enquiries', 'city'); add('enquiries', 'dealerships');   // dealer applications
-  add('products', 'visualizer_url');       // "View in my Home" link
-  add('products', 'virtual_sample_url');   // "Virtual Sample" link
+  add('products', 'visualizer_url');   // "View in my Home" / "Visualize" link
 }
 
 function seedDefaults(){

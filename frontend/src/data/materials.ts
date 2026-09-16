@@ -22,8 +22,7 @@ export interface Material {
   desc?: string
   hidden?: boolean
   images?: string[]
-  viewInHome?: string      /* "View in my Home" link on the product page — set per product in the admin panel */
-  virtualSample?: string   /* "Virtual Sample" link on the collections card — likewise */
+  viewInHome?: string   /* the TilesView link — "View in my Home" on the product page, "Visualize" on its card; set in the admin panel */
   [k: string]: any
 }
 

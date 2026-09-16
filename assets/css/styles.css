@@ -328,7 +328,7 @@ body.menu-open{overflow:hidden}
 .minfo{position:relative}
 .mvs{position:absolute;top:17px;right:18px;font-size:12.5px;line-height:1;font-weight:700;color:var(--text);white-space:nowrap;transition:color .3s}
 .mvs:hover{color:var(--accent)}
-.minfo .mcoll{padding-right:104px}
+.minfo .mcoll{padding-right:76px}
 .minfo .mcoll{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;
   color:var(--accent);margin-bottom:7px}
 .minfo .mtitle{font-family:var(--serif);font-size:clamp(19px,1.9vw,22px);line-height:1.1;color:var(--text)}
