@@ -90,16 +90,27 @@ window.PAGE = {
     return `<img class="bed" src="${photo}" alt="" aria-hidden="true" loading="lazy">
       <img class="slab" src="${photo}" alt="${alt}" loading="lazy">`;
   }
+  /* "Virtual Sample" — the product's TilesView link from the admin panel.
+     Rendered on every card; without a link it is inert rather than missing. */
+  function vsample(m){
+    const u=String(m.viewInHome||'').trim();
+    return u
+      ? `<a class="mvs" href="${u.replace(/"/g,'&quot;')}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-6h4v6"/></svg>Virtual Sample</a>`
+      : `<a class="mvs" href="#" data-nolink><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-6h4v6"/></svg>Virtual Sample</a>`;
+  }
   function card(k,i){const m=MAT[k];
     return `<div class="mcard rv">
       <a class="mimg" href="product.html?p=${k}" aria-label="${m.name}">${art(k,m)}</a>
       <button class="madd" data-add="${k}" aria-label="Add ${m.name} to samples">+</button>
       <div class="minfo">
-        <a class="mtxt" href="product.html?p=${k}">
-          <div class="mcoll">${m.coll} · No. ${m.code}</div>
-          <div class="mtitle">${m.name}</div>
-          <div class="mdesc">${m.desc}</div>
-        </a>
+        <div class="mcol">
+          <a class="mtxt" href="product.html?p=${k}">
+            <div class="mcoll">${m.coll} · No. ${m.code}</div>
+            <div class="mtitle">${m.name}</div>
+            <div class="mdesc">${m.desc}</div>
+          </a>
+          ${vsample(m)}
+        </div>
         <a class="marw" href="product.html?p=${k}" aria-label="View ${m.name}"><span>→</span></a>
       </div>
     </div>`;}
@@ -131,6 +142,8 @@ window.PAGE = {
     document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();window.addSample(b.dataset.add,b);}));
     window.Artizia.refresh();
   }
+  /* a Virtual Sample with no link yet must not jump the page to the top */
+  document.getElementById('grid').addEventListener('click',e=>{const a=e.target.closest('.mvs[data-nolink]');if(a)e.preventDefault();});
   document.getElementById('filters').addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(!b)return;
     active=b.dataset.c;document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('active',x.dataset.c===active));
     const q=new URLSearchParams();
