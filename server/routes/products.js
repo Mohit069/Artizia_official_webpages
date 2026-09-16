@@ -26,13 +26,17 @@ function deleteUpload(url){
 function slugify(v){
   return String(v || '').trim().toLowerCase().replace(/[^a-z0-9-]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
 }
-/* the "View in my Home" link is written into an href on the product page, so
-   only a full web address is accepted — never javascript: or a bare word */
+/* the "View in my Home" and "Virtual Sample" links are written into hrefs on
+   the site, so only a full web address is accepted — never javascript: or a
+   bare word */
+const LINKS = [['viewInHome', 'View in my Home'], ['virtualSample', 'Virtual Sample']];
 function badLink(body){
-  const v = String(body.viewInHome || '').trim();
-  if (!v) return null;
-  if (v.length > 500) return 'The "View in my Home" link is too long.';
-  if (!/^https?:\/\/[^\s"'<>]+$/i.test(v)) return 'The "View in my Home" link must be a full address starting with https://';
+  for (const [field, label] of LINKS) {
+    const v = String(body[field] || '').trim();
+    if (!v) continue;
+    if (v.length > 500) return `The "${label}" link is too long.`;
+    if (!/^https?:\/\/[^\s"'<>]+$/i.test(v)) return `The "${label}" link must be a full address starting with https://`;
+  }
   return null;
 }
 

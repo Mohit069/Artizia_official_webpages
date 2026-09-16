@@ -90,10 +90,11 @@ window.PAGE = {
     return `<img class="bed" src="${photo}" alt="" aria-hidden="true" loading="lazy">
       <img class="slab" src="${photo}" alt="${alt}" loading="lazy">`;
   }
-  /* "Virtual Sample" — the product's TilesView link from the admin panel.
-     Rendered on every card; without a link it is inert rather than missing. */
+  /* "Virtual Sample" — the product's own link from the admin panel (separate
+     from the product page's "View in my Home"). Rendered on every card;
+     without a link it is inert rather than missing. */
   function vsample(m){
-    const u=String(m.viewInHome||'').trim();
+    const u=String(m.virtualSample||'').trim();
     return u
       ? `<a class="mvs" href="${u.replace(/"/g,'&quot;')}" target="_blank" rel="noopener">Virtual Sample</a>`
       : `<a class="mvs" href="#" data-nolink>Virtual Sample</a>`;

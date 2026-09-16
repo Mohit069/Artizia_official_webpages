@@ -31,8 +31,10 @@ CREATE TABLE IF NOT EXISTS products (
   pal_sharp  REAL,
   pal_dark   REAL,
 
-  -- "View in my Home" — the TilesView visualiser link for this design
-  visualizer_url TEXT,
+  -- "View in my Home" (product page) and "Virtual Sample" (collections card):
+  -- the TilesView links for this design
+  visualizer_url     TEXT,
+  virtual_sample_url TEXT,
 
   created_at  TEXT DEFAULT (datetime('now')),
   updated_at  TEXT DEFAULT (datetime('now'))

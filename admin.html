@@ -627,8 +627,9 @@
       <div class="fld"><label>Thickness</label><input id="f_thickness" placeholder="20 · 30 mm"></div>
       <div class="fld"><label>Applications (one per line)</label><textarea id="f_apps" rows="4" placeholder="Kitchen Countertop&#10;Bathroom Vanity"></textarea></div>
 
-      <div class="grouplabel">View in my Home</div>
-      <div class="fld"><label>TilesView link</label><input id="f_vih" type="url" placeholder="https://…tilesview.ai/…"><span class="hint">the address the “View in my Home” button on this product's page opens · paste this design's tilesview.ai link</span></div>
+      <div class="grouplabel">Links</div>
+      <div class="fld"><label>View in my Home link</label><input id="f_vih" type="url" placeholder="https://tilesview.ai/…"><span class="hint">the address the “View in my Home” button on this product's page opens</span></div>
+      <div class="fld"><label>Virtual Sample link</label><input id="f_vs" type="url" placeholder="https://tilesview.ai/…"><span class="hint">the address “Virtual Sample” on this product's card on the Collections page opens</span></div>
       <p class="err" id="ferr"></p>
     </div>
     <div class="dfoot">
@@ -1005,7 +1006,7 @@
     $('f_desc').value=m.desc||'';$('f_vein').value=m.veinText||'';$('f_grain').value=m.grain||'';
     $('f_finish').value=m.finish||'Polished';$('f_thickness').value=m.thickness||'20 · 30 mm';
     $('f_apps').value=(m.apps||[]).join('\n');
-    $('f_vih').value=m.viewInHome||'';
+    $('f_vih').value=m.viewInHome||'';$('f_vs').value=m.virtualSample||'';
     curImages=[0,1,2,3].map(i=>(m.images&&m.images[i])||null);paintSlots();
     drawer.classList.add('open');
   }
@@ -1026,7 +1027,7 @@
       veinText:$('f_vein').value.trim(),grain:$('f_grain').value.trim(),
       finish:$('f_finish').value.trim()||'Polished',thickness:$('f_thickness').value.trim()||'20 · 30 mm',
       apps:$('f_apps').value.split('\n').map(s=>s.trim()).filter(Boolean),
-      viewInHome:$('f_vih').value.trim(),
+      viewInHome:$('f_vih').value.trim(),virtualSample:$('f_vs').value.trim(),
       images:curImages.map(x=>x||'')
     },pal);
     $('saveBtn').textContent='Saving…';
