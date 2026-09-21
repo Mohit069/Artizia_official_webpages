@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { graph, webPage, crumbs, SITE_URL } from '../data/schema'
 
 export interface SeoProps {
   title?: string
@@ -9,10 +10,21 @@ export interface SeoProps {
   jsonLd?: object | object[]
 }
 
+/* Structured data for a page that declares none of its own: the company and
+   site nodes, the page itself, and a Home › Page breadcrumb. Pages with a
+   richer story (product, collections, about, FAQ, posts) pass `jsonLd`. */
+function defaultJsonLd(title?: string, description?: string, canonical?: string, robots?: string) {
+  if (!canonical || !title || /noindex/.test(robots || '')) return undefined
+  const path = canonical.replace(SITE_URL, '') || '/'
+  const name = title.replace(/\s+[—|].*$/, '').trim()
+  return graph(webPage('WebPage', path, title, description), ...(path === '/' ? [] : [crumbs([['Home', '/'], [name, path]])]))
+}
+
 /* Runtime head management for the SPA (mirrors each page's current static <head>).
    The SSG/prerender phase will additionally bake these into the emitted HTML so
    crawlers see them without executing JS — preserving today's SEO exactly. */
-export default function Seo({ title, description, canonical, robots, og, jsonLd }: SeoProps) {
+export default function Seo({ title, description, canonical, robots, og, jsonLd: own }: SeoProps) {
+  const jsonLd = own || defaultJsonLd(title, description, canonical, robots)
   useEffect(() => {
     if (title) document.title = title
     // wipe previously-managed tags, then re-add for this page

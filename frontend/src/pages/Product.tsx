@@ -4,6 +4,7 @@ import Seo from '../components/Seo'
 import { useBodyPage } from '../hooks/site'
 import { useArtizia } from '../context/ArtiziaContext'
 import { SPECS } from '../data/materials'
+import { productHead } from '../data/schema'
 
 const PP = {
   slotLabels: ['Full Slab', 'Close-up', 'Application', 'Detail'],
@@ -165,7 +166,7 @@ export default function Product() {
 
   return (
     <>
-      <Seo title={`${m.name} — Artizia Quartz`} description="Explore this Artizia engineered quartz surface — design details, applications, technical specifications and free samples." />
+      <Seo {...productHead(m, key)} />
 
       <section className="page-hero compact" id="phero">
         <div className="ph-vis" ref={bannerRef} />

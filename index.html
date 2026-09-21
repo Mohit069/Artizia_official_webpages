@@ -1978,6 +1978,7 @@
       stroke-width: 1.6
     }
   </style>
+<script type="application/ld+json" data-schema="site">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://artizia.co.in/#organization","name":"Artizia","alternateName":"Artizia by Marudhar","url":"https://artizia.co.in/","logo":{"@type":"ImageObject","url":"https://artizia.co.in/assets/img/brand/logo-full.png"},"image":"https://artizia.co.in/assets/img/brand/logo-full.png","description":"Quartz slab manufacturer, exporter and supplier of jumbo quartz slabs and luxury engineered quartz surfaces for kitchen countertops, bathroom vanities, table tops and commercial projects — pressed on Breton Stone technology in Jaipur, India.","telephone":"+91 89528 15800","email":"sales@artizia.co.in","address":{"@type":"PostalAddress","streetAddress":"Plot No. PA-008-020-023, Mahindra World City Jaipur, Bhambhoriya Sanganer","addressLocality":"Jaipur","addressRegion":"Rajasthan","postalCode":"302037","addressCountry":"IN"},"contactPoint":[{"@type":"ContactPoint","contactType":"sales","telephone":"+91 89528 15800","email":"sales@artizia.co.in","availableLanguage":["en","hi"]},{"@type":"ContactPoint","contactType":"sales","telephone":"+91 92160 57565","url":"https://wa.me/919216057565","name":"WhatsApp","availableLanguage":["en","hi"]}],"parentOrganization":{"@type":"Organization","name":"Marudhar Group"},"sameAs":["https://www.instagram.com/artizia_by_marudhar/","https://www.linkedin.com/company/artizia-by-marudhar/"]},{"@type":"WebSite","@id":"https://artizia.co.in/#website","url":"https://artizia.co.in/","name":"Artizia","publisher":{"@id":"https://artizia.co.in/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://artizia.co.in/#webpage","url":"https://artizia.co.in/","name":"Artizia — Quartz Slab Manufacturer & Exporter | Luxury Quartz Surfaces, India","description":"Artizia is a quartz slab manufacturer and exporter crafting luxury quartz surfaces in Jaipur, India. Jumbo quartz slabs and 53 designs across five collections — pressed on Breton Stone technology, warranted for 15 years.","isPartOf":{"@id":"https://artizia.co.in/#website"},"about":{"@id":"https://artizia.co.in/#organization"},"inLanguage":"en"}]}</script>
 </head>
 
 <body data-page="home">
@@ -2849,7 +2850,7 @@
       })();
 
       /* final-CTA contact links */
-      const wa = (S.phoneRaw || '').replace(/[^0-9]/g, '');
+      const wa = (S.whatsappRaw || S.phoneRaw || '').replace(/[^0-9]/g, '');
       $('ctaContacts').innerHTML = `
     <a href="tel:${S.phoneRaw || ''}"><span class="ci"><svg viewBox="0 0 24 24"><path d="M5 4h3l2 5-2 1a11 11 0 005 5l1-2 5 2v3a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></span>${S.phone || 'Call us'}</a>
     <a href="mailto:${S.email || ''}"><span class="ci"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>${S.email || 'Email us'}</a>

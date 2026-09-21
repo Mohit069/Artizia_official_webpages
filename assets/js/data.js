@@ -4,6 +4,7 @@
    ============================================================ */
 window.SITE={
   phone:"+91 89528 15800", phoneRaw:"+918952815800",
+  whatsapp:"+91 92160 57565", whatsappRaw:"+919216057565",
   email:"sales@artizia.co.in",
   address:"Plot No. PA-008-020-023, Mahindra World City Jaipur, Bhambhoriya Sanganer, Jaipur — 302037, Rajasthan",
   mapUrl:"https://maps.google.com/?q=Mahindra+World+City+Jaipur",

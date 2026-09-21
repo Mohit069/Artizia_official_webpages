@@ -4,6 +4,7 @@ import Seo from '../components/Seo'
 import { useBodyPage } from '../hooks/site'
 import { loadScript } from '../lib/loadScript'
 import './about.css'
+import { graph, webPage, crumbs } from '../data/schema'
 
 const esc = (s: any) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string))
 const pad = (n: number) => String(n).padStart(2, '0')
@@ -270,16 +271,11 @@ export default function About() {
     }
   }, [])
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'Artizia',
-    description: 'Quartz slab manufacturer, exporter and supplier of jumbo quartz slabs and luxury quartz surfaces for kitchen countertops, bathroom vanities, table tops and commercial projects.',
-    url: 'https://artizia.co.in/',
-    logo: 'https://artizia.co.in/assets/img/brand/logo-full.png',
-    address: { '@type': 'PostalAddress', addressLocality: 'Jaipur', addressRegion: 'Rajasthan', addressCountry: 'IN', streetAddress: 'Mahindra World City' },
-    sameAs: ['https://www.instagram.com/artizia_by_marudhar/'],
-  }
+  const jsonLd = graph(
+    webPage('AboutPage', '/about.html', 'About Artizia — Quartz Slab Manufacturer, Exporter & Supplier',
+      'Artizia is a quartz slab manufacturer, exporter and supplier with 40 years of heritage, a retail expansion of Marudhar Group, Jaipur.'),
+    crumbs([['Home', '/'], ['About', '/about.html']]),
+  )
 
   const S = P.story,
     W = P.why,

@@ -5,6 +5,7 @@ import { useBodyPage } from '../hooks/site'
 import { useArtizia } from '../context/ArtiziaContext'
 import { COLLECTIONS } from '../data/materials'
 import { firstPhoto } from '../lib/marble'
+import { graph, crumbs, productUrl, collectionUrl, abs, SITE_URL, SLAB } from '../data/schema'
 
 const PAGE = {
   banner: {
@@ -94,9 +95,30 @@ export default function Collections() {
   return (
     <>
       <Seo
-        title="Collections — Artizia Quartz Surfaces"
-        description="Explore 53 engineered quartz surfaces across five Artizia collections — Signature, Luxury, Premium, Classic and Essentials."
+        title={active === 'All' ? 'Collections — Artizia Quartz Surfaces' : `${active} Collection — Artizia Quartz Surfaces`}
+        description={active === 'All'
+          ? `Explore ${Object.keys(mat).filter((k) => !mat[k].hidden).length} engineered quartz surfaces across five Artizia collections — Signature, Luxury, Premium, Classic and Essentials.`
+          : `${list.length} engineered quartz surfaces in the Artizia ${active} collection. Jumbo ${SLAB} slabs, pressed on Breton Stone technology in Jaipur, India.`}
         canonical="https://artizia.co.in/collections.html"
+        jsonLd={ready ? graph(
+          {
+            '@type': 'CollectionPage',
+            '@id': (active === 'All' ? SITE_URL + '/collections.html' : collectionUrl(active)) + '#page',
+            url: active === 'All' ? SITE_URL + '/collections.html' : collectionUrl(active),
+            name: active === 'All' ? 'Collections — Artizia Quartz Surfaces' : `${active} Collection — Artizia Quartz Surfaces`,
+            isPartOf: { '@id': SITE_URL + '/#website' },
+            about: { '@id': SITE_URL + '/#organization' },
+            mainEntity: {
+              '@type': 'ItemList',
+              numberOfItems: list.length,
+              itemListElement: list.map((k, i) => ({
+                '@type': 'ListItem', position: i + 1, url: productUrl(k), name: mat[k].name,
+                item: { '@type': 'Product', '@id': productUrl(k) + '#product', name: mat[k].name, url: productUrl(k), sku: mat[k].code || undefined, image: abs((mat[k].images || []).find(Boolean)) || undefined, brand: { '@type': 'Brand', name: 'Artizia' } },
+              })),
+            },
+          },
+          crumbs([['Home', '/'], ['Collections', '/collections.html'], ...(active === 'All' ? [] : ([[active, collectionUrl(active)]] as [string, string][]))]),
+        ) : undefined}
       />
       <PageHero banner={PAGE.banner} />
 

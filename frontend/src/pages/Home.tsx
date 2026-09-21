@@ -3,6 +3,7 @@ import Seo from '../components/Seo'
 import { useBodyPage } from '../hooks/site'
 import { loadScript } from '../lib/loadScript'
 import home from '../generated/home.json'
+import { graph, webPage } from '../data/schema'
 
 /* The homepage is a 300vh cinematic experience (projective slab mapping, scroll-
    scrubbed process, looping sliders, world-map drill-down). Its markup, CSS and
@@ -44,6 +45,8 @@ export default function Home() {
           ['og:description', 'Jumbo quartz slabs and luxury quartz surfaces, engineered in Jaipur and exported worldwide. Free samples, shipped across India in 5–7 days.'],
           ['og:type', 'website'],
         ]}
+        jsonLd={graph(webPage('WebPage', '/', 'Artizia — Quartz Slab Manufacturer & Exporter | Luxury Quartz Surfaces, India',
+          'Artizia is a quartz slab manufacturer and exporter crafting luxury quartz surfaces in Jaipur, India. Jumbo quartz slabs and 53 designs across five collections — pressed on Breton Stone technology, warranted for 15 years.'))}
       />
       <style dangerouslySetInnerHTML={{ __html: home.css }} />
       <div dangerouslySetInnerHTML={{ __html: home.html }} />

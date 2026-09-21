@@ -90,7 +90,7 @@ window.PRODUCT_PAGE = {
   let key=slug; if(!MAT[key]||MAT[key].hidden){ key=(window.productList&&window.productList()[0])||'calacatta-gold'; }
   const m=MAT[key];
   if(!m){ document.querySelector('.pdp').innerHTML='<p style="padding:60px 0;color:var(--text-dim);font-family:var(--mono)">Product not found. <a href="collections.html" style="color:var(--accent)">Back to collections →</a></p>'; return; }
-  document.title=m.name+' — Artizia Quartz';
+  document.title=m.name+' — '+(m.coll?m.coll+' Collection ':'')+'Quartz Slab | Artizia';
 
   document.getElementById('crumb').innerHTML=`<a href="index.html">Home</a><span>/</span><a href="collections.html">Collections</a><span>/</span><a href="collections.html?c=${m.coll}">${m.coll}</a><span>/</span><b>${m.name}</b>`;
 

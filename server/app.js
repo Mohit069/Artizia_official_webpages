@@ -74,6 +74,11 @@ app.get('/catalogue.pdf', (req, res) => {
   res.redirect(302, m.url);
 });
 
+/* ---- crawlers: robots.txt and a sitemap built from the database ---- */
+const seo = require('./seo');
+app.get('/robots.txt', seo.robots);
+app.get('/sitemap.xml', seo.sitemap);
+
 /* ---- OPTIONAL: serve the React (Vite) build ----
    Set SERVE_SPA=1 to serve frontend/dist instead of the legacy static HTML.
    Additive and off by default: without the env var, behaviour is exactly what
@@ -109,6 +114,12 @@ if (process.env.SERVE_SPA === '1') {
    (On Vercel these are handled by rewrites in vercel.json instead — the
    function never sees them.) */
 app.get('/p/:slug',    (req, res) => res.sendFile(path.join(ROOT, 'page.html')));
+/* product.html and collections.html are filled in by the browser from the
+   API; a crawler reading the raw file would see the same title and no
+   structured data on every product. These serve the template with the
+   <head> completed on the server for the product / collection requested. */
+app.get(['/product.html', '/product'], seo.productPage);
+app.get(['/collections.html', '/collections'], seo.collectionsPage);
 app.get('/blog',       (req, res) => res.sendFile(path.join(ROOT, 'blog.html')));
 app.get('/blog/:slug', (req, res) => res.sendFile(path.join(ROOT, 'post.html')));
 
