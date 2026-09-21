@@ -34,6 +34,9 @@ CREATE TABLE IF NOT EXISTS products (
   -- the TilesView link for this design: "View in my Home" on the product
   -- page and "Visualize" on its collections card
   visualizer_url TEXT,
+  -- "Get 360 view": the button on the product page and the 360° badge on
+  -- its card only appear when this is set
+  view360_url    TEXT,
 
   created_at  TEXT DEFAULT (datetime('now')),
   updated_at  TEXT DEFAULT (datetime('now'))

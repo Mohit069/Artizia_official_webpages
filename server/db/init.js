@@ -32,6 +32,7 @@ function migrate(){
   add('enquiries', 'role');
   add('enquiries', 'country'); add('enquiries', 'state'); add('enquiries', 'city'); add('enquiries', 'dealerships');   // dealer applications
   add('products', 'visualizer_url');   // "View in my Home" / "Visualize" link
+  add('products', 'view360_url');      // "Get 360 view" link
 }
 
 function seedDefaults(){

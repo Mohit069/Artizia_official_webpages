@@ -43,6 +43,8 @@ export default function Product() {
   if (!mat[key] || mat[key].hidden) key = Object.keys(mat).find((k) => !mat[k].hidden) || 'calacatta-gold'
   const m = mat[key]
   const vihUrl = (m.viewInHome || PP.viewInHome.url || '').trim()
+  /* "Get 360 view" exists only for products given a link in the admin panel */
+  const v360 = (m.view360 || '').trim()
 
   useEffect(() => setCur(0), [key])
 
@@ -216,21 +218,31 @@ export default function Product() {
               </a>
             </div>
             <div className="pnote">{PP.sampleNote}</div>
-            {PP.viewInHome.label && (
+            {(PP.viewInHome.label || v360) && (
               <div className="pvih">
-                <a
-                  className="btn btn-line mag"
-                  id="vihBtn"
-                  href={vihUrl || '#'}
-                  target={vihUrl ? '_blank' : undefined}
-                  rel={vihUrl ? 'noopener' : undefined}
-                  onClick={(e) => { if (!vihUrl) e.preventDefault() /* no link yet — don't jump to the top */ }}
-                >
-                  <span>
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5" /><path d="M5.5 10v10h13V10" /><path d="M10 20v-6h4v6" /></svg>
-                    {PP.viewInHome.label}
-                  </span>
-                </a>
+                {PP.viewInHome.label && (
+                  <a
+                    className="btn btn-line mag"
+                    id="vihBtn"
+                    href={vihUrl || '#'}
+                    target={vihUrl ? '_blank' : undefined}
+                    rel={vihUrl ? 'noopener' : undefined}
+                    onClick={(e) => { if (!vihUrl) e.preventDefault() /* no link yet — don't jump to the top */ }}
+                  >
+                    <span>
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5" /><path d="M5.5 10v10h13V10" /><path d="M10 20v-6h4v6" /></svg>
+                      {PP.viewInHome.label}
+                    </span>
+                  </a>
+                )}
+                {v360 && (
+                  <a className="btn btn-line mag" id="v360Btn" href={v360} target="_blank" rel="noopener">
+                    <span>
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.3" /><path d="M21 12a9 9 0 0 1-15.5 6.3" /><path d="M18.5 2v4h-4" /><path d="M5.5 22v-4h4" /></svg>
+                      Get 360 view
+                    </span>
+                  </a>
+                )}
               </div>
             )}
           </div>

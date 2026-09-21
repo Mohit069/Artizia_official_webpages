@@ -96,12 +96,18 @@ window.PAGE = {
   function vsample(m){
     const u=String(m.viewInHome||'').trim();
     return u
-      ? `<a class="mvs" href="${u.replace(/"/g,'&quot;')}" target="_blank" rel="noopener">Visualize</a>`
-      : `<a class="mvs" href="#" data-nolink>Visualize</a>`;
+      ? `<a class="mvs" href="${u.replace(/"/g,'&quot;')}" target="_blank" rel="noopener">Visualize<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M19 13v6H5V5h6"/></svg></a>`
+      : `<a class="mvs" href="#" data-nolink>Visualize<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M19 13v6H5V5h6"/></svg></a>`;
+  }
+  /* 360° badge on the image — only for products given a "Get 360 view" link */
+  function badge360(m){
+    const u=String(m.view360||'').trim();
+    return u?`<a class="m360" href="${u.replace(/"/g,'&quot;')}" target="_blank" rel="noopener" aria-label="360° view of ${(m.name||'').replace(/"/g,'&quot;')}">360°</a>`:'';
   }
   function card(k,i){const m=MAT[k];
-    return `<div class="mcard rv">
+    return `<div class="mcard rv${m.view360?' has360':''}">
       <a class="mimg" href="product.html?p=${k}" aria-label="${m.name}">${art(k,m)}</a>
+      ${badge360(m)}
       <button class="madd" data-add="${k}" aria-label="Add ${m.name} to samples">+</button>
       <div class="minfo">
         <div class="mcol">

@@ -53,6 +53,7 @@ function VirtualSample({ url }: { url?: string }) {
       onClick={(e) => { if (!u) e.preventDefault() }}
     >
       Visualize
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6" /><path d="M20 4 10 14" /><path d="M19 13v6H5V5h6" /></svg>
     </a>
   )
 }
@@ -125,10 +126,14 @@ export default function Collections() {
               list.map((k) => {
                 const m = mat[k]
                 return (
-                  <div className="mcard rv" key={k}>
+                  <div className={'mcard rv' + (m.view360 ? ' has360' : '')} key={k}>
                     <Link className="mimg" to={`/product.html?p=${k}`} aria-label={m.name}>
                       <CardArt k={k} name={m.name} />
                     </Link>
+                    {/* 360° badge — only for products given a "Get 360 view" link */}
+                    {m.view360 && (
+                      <a className="m360" href={m.view360} target="_blank" rel="noopener" aria-label={`360° view of ${m.name}`}>360°</a>
+                    )}
                     <button
                       className="madd"
                       aria-label={`Add ${m.name} to samples`}

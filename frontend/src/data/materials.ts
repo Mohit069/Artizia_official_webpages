@@ -23,6 +23,7 @@ export interface Material {
   hidden?: boolean
   images?: string[]
   viewInHome?: string   /* the TilesView link — "View in my Home" on the product page, "Visualize" on its card; set in the admin panel */
+  view360?: string      /* "Get 360 view" link — the button and the card badge exist only when set */
   [k: string]: any
 }
 
