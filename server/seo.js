@@ -29,6 +29,8 @@ const SITE_URL = (process.env.SITE_URL || 'https://artizia.co.in').replace(/\/$/
 const ROOT = path.join(__dirname, '..');
 const abs = (u) => (!u ? '' : /^https?:\/\//i.test(u) ? u : SITE_URL + (u.startsWith('/') ? u : '/' + u));
 const LOGO = abs('/assets/img/brand/logo-full.png');
+/* 1200x630, what a page without a picture of its own shows when shared */
+const SHARE_IMAGE = abs('/assets/img/og-home.jpg');
 
 /* ---- the company, referenced by @id from every page ---- */
 const ORG = {
@@ -92,10 +94,85 @@ function inject(html, h) {
     out = /<link rel="canonical"[^>]*>/i.test(out) ? out.replace(/<link rel="canonical"[^>]*>/i, tag) : out.replace(/<\/title>/i, `</title>\n${tag}`);
   }
   const extra = [];
-  for (const [p, c] of h.og || []) if (c) extra.push(`<meta property="${escAttr(p)}" content="${escAttr(c)}">`);
+  /* og:* is a property, everything else (twitter:*) a name */
+  for (const [p, c] of h.og || []) if (c) extra.push(`<meta ${/^og:/i.test(p) ? 'property' : 'name'}="${escAttr(p)}" content="${escAttr(c)}">`);
   if (h.jsonLd) extra.push(`<script type="application/ld+json">${jsonForScript(h.jsonLd)}</script>`);
   if (extra.length) out = out.replace(/<\/head>/i, `${extra.join('\n')}\n</head>`);
   return out;
+}
+
+/* ---- body injection ----
+   The pages are filled in by the browser, so the raw HTML has an empty <h1> and
+   no copy. What a crawler needs is written into the very elements the page's own
+   script overwrites a moment later with the same text: the heading, the
+   description, the specifications. A browser ends up exactly where it always
+   did; a reader that runs no JavaScript now gets a real page.
+
+   Nothing filled here carries the .rv reveal class, so there is no flash — the
+   text is simply on screen sooner than the API could deliver it. */
+const fillEl = (html, id, inner) =>
+  html.replace(new RegExp(`(<([a-z0-9]+)\\b[^>]*\\bid="${id}"[^>]*>)\\s*</\\2>`, 'i'),
+    (m, open, tag) => open + inner + '</' + tag + '>');
+
+/* the heading a marketing page will render, read out of its own
+   window.PAGE.banner so the wording still lives in one place — the page */
+function bannerText(html) {
+  const block = /banner:\s*\{([\s\S]*?)\n\s*\}/.exec(html) || /hero:\s*\{([\s\S]*?)\n\s*\}/.exec(html);
+  if (!block) return {};
+  const get = (k) => {
+    const m = new RegExp(k + ':\\s*"((?:[^"\\\\]|\\\\.)*)"').exec(block[1]);
+    return m ? m[1].replace(/\\"/g, '"') : '';
+  };
+  return { eyebrow: get('eyebrow'), title: get('title'), lead: get('lead') };
+}
+
+/* about.html raises its headline a word at a time. The same wrapping is applied
+   here so the heading the server writes is the markup the browser would write —
+   otherwise the animation would replay from plain text. */
+const wordWrap = (t) => {
+  let i = 0;
+  return String(t).replace(/(<br\s*\/?>)|(<em>.*?<\/em>|[^\s<]+)/g, (m, br) => br || `<span class="w" style="--i:${i++}">${m}</span>`);
+};
+
+/* fills the hero's empty eyebrow / h1 / lead. about.html names them by id;
+   the rest carry classes inside .page-hero, and that lookup is scoped to the
+   one section so the eyebrows further down the page are left alone. The title
+   and lead hold markup (<em>, <br>) and come from our own file, so they go in
+   as written. */
+function bannerFill(html) {
+  const b = bannerText(html);
+  if (!b.title && !b.eyebrow && !b.lead) return html;
+  let out = html;
+  if (b.eyebrow) out = fillEl(out, 'hEye', escText(b.eyebrow));
+  if (b.lead)    out = fillEl(out, 'hLead', escText(b.lead));
+  if (b.title)   out = fillEl(out, 'hTitle', wordWrap(b.title));
+  const start = out.search(/<section[^>]*class="[^"]*\bpage-hero\b[^"]*"/i);
+  if (start < 0) return out;
+  const end = out.indexOf('</section>', start);
+  if (end < 0) return out;
+  let s = out.slice(start, end);
+  if (b.eyebrow) s = s.replace(/(<span class="eyebrow"[^>]*>)\s*(<\/span>)/i, (m, o, c) => o + escText(b.eyebrow) + c);
+  if (b.title)   s = s.replace(/(<h1[^>]*>)\s*(<\/h1>)/i, (m, o, c) => o + b.title + c);
+  if (b.lead)    s = s.replace(/(<p class="lead"[^>]*>)\s*(<\/p>)/i, (m, o, c) => o + b.lead + c);
+  return out.slice(0, start) + s + out.slice(end);
+}
+
+/* Share tags, taken from the page's own title, description and canonical.
+   Added only where the page names no picture of its own, so catalogue.html keeps
+   its cover and the product pages keep their slab. */
+function shareTags(html) {
+  if (/property="og:image"/i.test(html)) return html;
+  const grab = (re) => { const m = re.exec(html); return m ? m[1].replace(/\s+/g, ' ').trim() : ''; };
+  const url = grab(/<link rel="canonical" href="([^"]+)"/i);
+  const og = [
+    ['og:type', 'website'], ['og:site_name', 'Artizia'], ['og:url', url],
+    ['og:title', grab(/<title>([^<]*)<\/title>/i)],
+    ['og:description', grab(/<meta name="description"\s+content="([^"]*)"/i)],
+    ['og:image', SHARE_IMAGE], ['og:image:width', '1200'], ['og:image:height', '630'],
+    ['og:image:alt', 'An Artizia engineered quartz slab'],
+    ['twitter:card', 'summary_large_image']
+  ].filter(([p, c]) => c && !new RegExp(`(property|name)="${p}"`, 'i').test(html));
+  return og.length ? inject(html, { og }) : html;
 }
 
 /* the template, re-read only when the file changes on disk */
@@ -148,13 +225,38 @@ function productHead(m) {
     og: [
       ['og:type', 'website'], ['og:site_name', 'Artizia'], ['og:url', url],
       ['og:title', `${m.name} — Artizia Quartz`], ['og:description', m.desc || description],
-      ['og:image', image ? abs(image) : LOGO]
+      ['og:image', image ? abs(image) : SHARE_IMAGE],
+      ['twitter:card', 'summary_large_image']
     ],
     jsonLd: graph(
       productNode(m),
       crumbs([['Home', '/'], ['Collections', '/collections.html'], ...(m.coll ? [[m.coll, collectionUrl(m.coll)]] : []), [m.name, url]])
     )
   };
+}
+
+/* the product page's heading, breadcrumb and specification panel */
+function productBody(html, m) {
+  const link = (href, text) => `<a href="${escAttr(href)}">${escText(text)}</a>`;
+  const crumb = [
+    link('index.html', 'Home'), '<span>/</span>', link('collections.html', 'Collections'),
+    ...(m.coll ? ['<span>/</span>', link('collections.html?c=' + encodeURIComponent(m.coll), m.coll)] : []),
+    '<span>/</span>', `<b>${escText(m.name)}</b>`
+  ].join('');
+  const specs = [['Vein', m.veinText || m.vein], ['Grain', m.grain], ['Finish', m.finish], ['Thickness', m.thickness]]
+    .filter(([, v]) => v)
+    .map(([k, v]) => `<div class="s"><div class="k">${escText(k)}</div><div class="v">${escText(v)}</div></div>`)
+    .join('');
+  const info = [
+    m.code ? `<div class="code">NO. ${escText(m.code)} · QUARTZ SURFACE</div>` : '',
+    m.desc ? `<p class="pdesc">${escText(m.desc)}</p>` : '',
+    specs ? `<div class="scg">${specs}</div>` : '',
+    (m.apps || []).length ? `<div class="pnote">${escText('Applications: ' + m.apps.join(' · '))}</div>` : ''
+  ].join('');
+  let out = fillEl(html, 'crumb', crumb);
+  out = fillEl(out, 'pheye', m.coll ? escText(m.coll + ' Collection') : '');
+  out = fillEl(out, 'phtitle', escText(m.name));
+  return fillEl(out, 'pinfo', info);
 }
 
 function collectionsHead(coll) {
@@ -169,7 +271,8 @@ function collectionsHead(coll) {
     title, description,
     /* the filtered views are the same page narrowed — one canonical */
     canonical: SITE_URL + '/collections.html',
-    og: [['og:type', 'website'], ['og:site_name', 'Artizia'], ['og:url', url], ['og:title', title], ['og:description', description], ['og:image', LOGO]],
+    og: [['og:type', 'website'], ['og:site_name', 'Artizia'], ['og:url', url], ['og:title', title], ['og:description', description],
+      ['og:image', SHARE_IMAGE], ['og:image:width', '1200'], ['og:image:height', '630'], ['twitter:card', 'summary_large_image']],
     jsonLd: graph(
       {
         '@type': 'CollectionPage',
@@ -200,9 +303,13 @@ function productPage(req, res, next) {
     const slug = String(req.query.p || '').trim();
     const m = slug ? Product.bySlug(slug) : null;
     noCache(res);
-    /* an unknown slug still gets the template — the page's own script picks a
-       fallback product, as it always has — but nothing to index */
-    res.send(m ? inject(html, productHead(m)) : html.replace(/<\/title>/i, '</title>\n<meta name="robots" content="noindex">'));
+    if (m) return res.send(productBody(inject(html, productHead(m)), m));
+    /* A slug that names no product is a dead address and now says so: a 200 here
+       is a soft 404, which Google reports and keeps re-crawling. /product.html
+       with no slug at all is not a wrong address — the page's own script picks a
+       fallback product, as it always has. Neither is worth indexing. */
+    if (slug) res.status(404);
+    res.send(html.replace(/<\/title>/i, '</title>\n<meta name="robots" content="noindex">'));
   } catch (e) { next(e); }
 }
 
@@ -210,8 +317,33 @@ function collectionsPage(req, res, next) {
   try {
     const coll = String(req.query.c || '').trim();
     noCache(res);
-    res.send(inject(template('collections.html'), collectionsHead(coll || null)));
+    res.send(bannerFill(inject(template('collections.html'), collectionsHead(coll || null))));
   } catch (e) { next(e); }
+}
+
+/* The marketing pages this module completes on the way out: the heading their
+   own script would write, and share tags built from their title and canonical.
+   product.html and collections.html have handlers of their own. */
+const SERVED_PAGES = [
+  'index.html', 'about.html', 'blog.html', 'contact.html', 'faq.html', 'certifications.html',
+  'warranty.html', 'technical-details.html', 'care-and-maintenance.html', 'become-a-dealer.html',
+  'catalogue.html'
+];
+const BANNER_ROUTES = ['/', ...SERVED_PAGES.flatMap(f => ['/' + f, '/' + f.replace(/\.html$/, '')])];
+
+function staticPage(req, res, next) {
+  try {
+    const p = req.path.replace(/^\/+/, '');
+    const file = p === '' ? 'index.html' : (/\.html$/i.test(p) ? p : p + '.html');
+    if (!SERVED_PAGES.includes(file)) return next();
+    noCache(res);
+    res.send(shareTags(bannerFill(template(file))));
+  } catch (e) {
+    /* this only ever adds to a page that is already complete — if anything here
+       fails, hand the file to the static server untouched */
+    console.error('[seo] ' + req.path + ': ' + e.message);
+    next();
+  }
 }
 
 function robots(req, res) {
@@ -219,25 +351,28 @@ function robots(req, res) {
   res.send(['User-agent: *', 'Disallow: /admin', 'Disallow: /admin.html', 'Disallow: /api/', 'Allow: /', '', `Sitemap: ${SITE_URL}/sitemap.xml`, ''].join('\n'));
 }
 
+/* address -> the file behind it, whose modification time dates the entry.
+   <changefreq> and <priority> are not written: Google ignores both. */
 const STATIC_PAGES = [
-  ['/', '1.0', 'weekly'], ['/collections.html', '0.9', 'weekly'], ['/about.html', '0.7', 'monthly'],
-  ['/catalogue', '0.7', 'monthly'], ['/become-a-dealer.html', '0.7', 'monthly'], ['/contact.html', '0.6', 'monthly'],
-  ['/faq.html', '0.6', 'monthly'], ['/blog.html', '0.6', 'weekly'], ['/certifications.html', '0.5', 'yearly'],
-  ['/warranty.html', '0.5', 'yearly'], ['/technical-details.html', '0.5', 'yearly'], ['/care-and-maintenance.html', '0.5', 'yearly']
+  ['/', 'index.html'], ['/collections.html', 'collections.html'], ['/about.html', 'about.html'],
+  ['/catalogue', 'catalogue.html'], ['/become-a-dealer.html', 'become-a-dealer.html'], ['/contact.html', 'contact.html'],
+  ['/faq.html', 'faq.html'], ['/blog.html', 'blog.html'], ['/certifications.html', 'certifications.html'],
+  ['/warranty.html', 'warranty.html'], ['/technical-details.html', 'technical-details.html'], ['/care-and-maintenance.html', 'care-and-maintenance.html']
 ];
 const day = (iso) => (iso ? String(iso).slice(0, 10) : '');
+const fileDay = (f) => { try { return new Date(fs.statSync(path.join(ROOT, f)).mtimeMs).toISOString().slice(0, 10); } catch (e) { return ''; } };
 const xmlEsc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 function sitemap(req, res) {
   const rows = [];
-  const add = (loc, lastmod, priority, freq) => rows.push(
-    `<url><loc>${xmlEsc(abs(loc))}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}${freq ? `<changefreq>${freq}</changefreq>` : ''}${priority ? `<priority>${priority}</priority>` : ''}</url>`);
-  for (const [loc, pr, freq] of STATIC_PAGES) add(loc, '', pr, freq);
-  for (const p of Product.all(null)) add(`/product.html?p=${encodeURIComponent(p.slug)}`, day(p.updatedAt), '0.8', 'monthly');
-  for (const p of Post.published()) add(`/blog/${encodeURIComponent(p.slug)}`, day(p.updatedAt || p.publishedAt), '0.6', 'monthly');
-  for (const p of Page.published()) add(`/p/${encodeURIComponent(p.slug)}`, day(p.updatedAt), '0.5', 'monthly');
+  const add = (loc, lastmod) => rows.push(
+    `<url><loc>${xmlEsc(abs(loc))}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}</url>`);
+  for (const [loc, file] of STATIC_PAGES) add(loc, fileDay(file));
+  for (const p of Product.all(null)) add(`/product.html?p=${encodeURIComponent(p.slug)}`, day(p.updatedAt));
+  for (const p of Post.published()) add(`/blog/${encodeURIComponent(p.slug)}`, day(p.updatedAt || p.publishedAt));
+  for (const p of Page.published()) add(`/p/${encodeURIComponent(p.slug)}`, day(p.updatedAt));
   res.type('application/xml').setHeader('Cache-Control', 'public, max-age=3600');
   res.send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${rows.join('\n')}\n</urlset>\n`);
 }
 
-module.exports = { productPage, collectionsPage, robots, sitemap, ORG, WEBSITE, productHead, collectionsHead, inject };
+module.exports = { productPage, collectionsPage, staticPage, BANNER_ROUTES, robots, sitemap, ORG, WEBSITE, productHead, collectionsHead, inject };

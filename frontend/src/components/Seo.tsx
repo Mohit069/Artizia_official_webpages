@@ -49,7 +49,8 @@ export default function Seo({ title, description, canonical, robots, og, jsonLd:
       l.setAttribute('href', canonical)
       add(l)
     }
-    ;(og || []).forEach(([p, c]) => meta('property', p, c))
+    /* og:* is a property, everything else (twitter:*) a name */
+    ;(og || []).forEach(([p, c]) => meta(/^og:/i.test(p) ? 'property' : 'name', p, c))
     if (jsonLd) {
       const s = document.createElement('script')
       s.type = 'application/ld+json'

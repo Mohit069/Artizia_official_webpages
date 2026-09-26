@@ -22,6 +22,30 @@ ensureSchema();
 const seedResult = seedIfEmpty();
 require('./models/User').seedIfEmpty();
 
+/* ---- every response ----
+   Headers first, so they cover static files as well as the API.
+
+   No Content-Security-Policy beyond frame-ancestors: the pages carry their own
+   inline <script> and <style> throughout, and a script-src policy would have to
+   nonce every one of them. frame-ancestors alone stops the site being framed.
+
+   www.artizia.co.in and artizia.co.in are one site served by one vhost. Every
+   canonical names the apex, so www is redirected there rather than answering
+   with a duplicate of every page. */
+app.disable('x-powered-by');
+app.use((req, res, next) => {
+  const host = req.headers.host || '';
+  const https = req.secure || req.headers['x-forwarded-proto'] === 'https';
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Content-Security-Policy', "frame-ancestors 'self'");
+  if (https) res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  if (/^www\./i.test(host) && (req.method === 'GET' || req.method === 'HEAD'))
+    return res.redirect(301, 'https://' + host.replace(/^www\./i, '') + req.originalUrl);
+  next();
+});
+
 app.use(express.json({ limit: '4mb' }));
 
 /* uploaded images, served efficiently with caching.
@@ -120,6 +144,12 @@ app.get('/p/:slug',    (req, res) => res.sendFile(path.join(ROOT, 'page.html')))
    <head> completed on the server for the product / collection requested. */
 app.get(['/product.html', '/product'], seo.productPage);
 app.get(['/collections.html', '/collections'], seo.collectionsPage);
+/* The marketing pages write their own <h1> in the browser, from the
+   window.PAGE block at the top of each file. The heading is filled in on the
+   server from that same block so the raw HTML carries it, and share tags are
+   added from the page's own title and canonical. Declared before
+   express.static, which would otherwise serve these files as they are. */
+app.get(seo.BANNER_ROUTES, seo.staticPage);
 app.get('/blog',       (req, res) => res.sendFile(path.join(ROOT, 'blog.html')));
 app.get('/blog/:slug', (req, res) => res.sendFile(path.join(ROOT, 'post.html')));
 

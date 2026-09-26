@@ -5,6 +5,8 @@ import type { Material } from './materials'
 
 export const SITE_URL = 'https://artizia.co.in'
 const LOGO = SITE_URL + '/assets/img/brand/logo-full.png'
+/* 1200x630, what a page without a picture of its own shows when shared */
+export const SHARE_IMAGE = SITE_URL + '/assets/img/og-home.jpg'
 export const abs = (u?: string) => (!u ? '' : /^https?:\/\//i.test(u) ? u : SITE_URL + (u.startsWith('/') ? u : '/' + u))
 
 export const ORG = {
@@ -98,7 +100,8 @@ export function productHead(m: Material & { code?: string; coll?: string }, slug
     og: [
       ['og:type', 'website'], ['og:site_name', 'Artizia'], ['og:url', url],
       ['og:title', `${m.name} — Artizia Quartz`], ['og:description', m.desc || description],
-      ['og:image', image ? abs(image) : LOGO],
+      ['og:image', image ? abs(image) : SHARE_IMAGE],
+      ['twitter:card', 'summary_large_image'],
     ] as [string, string][],
     jsonLd: graph(
       productNode(m, slug),
