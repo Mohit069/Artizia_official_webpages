@@ -117,6 +117,7 @@ if (process.env.SERVE_SPA === '1') {
     extensions: ['html'],
     etag: true,
     setHeaders(res, filePath) {
+      if (/\.avif$/i.test(filePath)) res.setHeader('Content-Type', 'image/avif');
       if (/\.html$/i.test(filePath)) res.setHeader('Cache-Control', 'no-cache');
       else res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
     }
@@ -165,6 +166,9 @@ app.use(express.static(ROOT, {
   extensions: ['html'],
   etag: true,
   setHeaders(res, filePath) {
+    /* serve-static's type table predates AVIF and calls it a binary download,
+       which with nosniff is a picture a browser may refuse to draw */
+    if (/\.avif$/i.test(filePath)) res.setHeader('Content-Type', 'image/avif');
     if (/\.(html|css|js)$/i.test(filePath)) res.setHeader('Cache-Control', 'no-cache');
     else if (/\.(png|jpe?g|webp|avif|gif|svg|mp4|webm|woff2?)$/i.test(filePath)) res.setHeader('Cache-Control', 'public, max-age=604800');
   }
