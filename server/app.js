@@ -35,12 +35,16 @@ require('./models/User').seedIfEmpty();
 app.disable('x-powered-by');
 app.use((req, res, next) => {
   const host = req.headers.host || '';
-  const https = req.secure || req.headers['x-forwarded-proto'] === 'https';
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('Content-Security-Policy', "frame-ancestors 'self'");
-  if (https) res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  /* nginx terminates TLS and does not pass the scheme on, so this is set
+     whatever the proxy says: a browser ignores it over plain http anyway, and
+     http is redirected to https before it ever reaches here. Deliberately
+     without includeSubDomains — nothing here vouches for what a subdomain
+     serves, and webmail is not ours to lock to https. */
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000');
   if (/^www\./i.test(host) && (req.method === 'GET' || req.method === 'HEAD'))
     return res.redirect(301, 'https://' + host.replace(/^www\./i, '') + req.originalUrl);
   next();

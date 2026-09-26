@@ -18,6 +18,10 @@
   <link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
   <link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <!-- The hero slab is the largest thing on the page and its markup sits two
+       thousand lines down the document. This starts it downloading now. -->
+  <link rel="preload" as="image" type="image/avif" imagesizes="100vw"
+    imagesrcset="assets/img/hero-slab-1200.avif 1200w, assets/img/hero-slab-2000.avif 2000w">
 
   <!--
 ═══════════════════════════════════════════════════════════════════════
@@ -2180,7 +2184,17 @@
           </svg>
         </div>
         <div class="slab-box" id="slabBox">
-          <img id="slabImg" src="assets/img/hero-slab.jpg" alt="Artizia engineered quartz slab" fetchpriority="high">
+          <!-- AVIF first, then WebP, then the original JPEG for anything that
+               reads neither. 3600px of slab was four times what any screen
+               asks for: 802 KB of hero became 135 KB. -->
+          <picture>
+            <source type="image/avif" sizes="100vw"
+              srcset="assets/img/hero-slab-1200.avif 1200w, assets/img/hero-slab-2000.avif 2000w">
+            <source type="image/webp" sizes="100vw"
+              srcset="assets/img/hero-slab-1200.webp 1200w, assets/img/hero-slab-2000.webp 2000w">
+            <img id="slabImg" src="assets/img/hero-slab.jpg" alt="Artizia engineered quartz slab"
+              width="3600" height="1763" fetchpriority="high">
+          </picture>
         </div>
         <div class="slab-frame" id="slabFrame"><span class="fc tl"></span><span class="fc tr"></span><span
             class="fc bl"></span><span class="fc br"></span></div>
