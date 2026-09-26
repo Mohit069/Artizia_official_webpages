@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { collectionPath } from '../data/schema'
 import { SITE } from '../data/site'
 import { useArtizia } from '../context/ArtiziaContext'
 
@@ -42,11 +43,11 @@ export default function Footer() {
           </div>
           <div className="fcol">
             <h5>Collections</h5>
-            <Link to="/collections.html?c=Signature">Signature</Link>
-            <Link to="/collections.html?c=Luxury">Luxury</Link>
-            <Link to="/collections.html?c=Premium">Premium</Link>
-            <Link to="/collections.html?c=Classic">Classic</Link>
-            <Link to="/collections.html?c=Essentials">Essentials</Link>
+            <Link to={collectionPath('Signature')}>Signature</Link>
+            <Link to={collectionPath('Luxury')}>Luxury</Link>
+            <Link to={collectionPath('Premium')}>Premium</Link>
+            <Link to={collectionPath('Classic')}>Classic</Link>
+            <Link to={collectionPath('Essentials')}>Essentials</Link>
           </div>
           <div className="fcol">
             <h5>Explore</h5>

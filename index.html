@@ -52,7 +52,7 @@
         { key: "Signature",  image: "assets/img/calacatta-gold-full.jpg", desc: "Statement slabs threaded with golden veins — our most photographed surface." },
         { key: "Luxury",     image: "assets/img/grigio-cloud-full.jpg",   desc: "Marble-inspired drama, engineered to outlive the marble it echoes." },
         { key: "Premium",    image: "assets/img/carrara-bianco-full.jpg", desc: "Refined white quartz slabs for interiors that reward a second look." },
-        { key: "Classic",    image: "assets/img/albestor-concrete-full.jpg", desc: "Solid, understated tones for calm contemporary spaces.", href: "collections.html" },
+        { key: "Classic",    image: "assets/img/albestor-concrete-full.jpg", desc: "Solid, understated tones for calm contemporary spaces.", href: "/collections" },
         { key: "Essentials", image: "assets/img/sparkle-white-full.jpg",  desc: "Dependable everyday whites, greys and blacks. Quietly perfect." }
       ],
 
@@ -2207,7 +2207,7 @@
             <p class="hero-sub">Artizia is a leading quartz brand from the house of Marudhar delivering
               premium Jumbo Quartz Slabs designed for luxury residential and commercial interiors.</p>
             <div class="hero-cta">
-              <a class="btn btn-fill mag" href="collections.html"><span>Explore Collections <span
+              <a class="btn btn-fill mag" href="/collections"><span>Explore Collections <span
                     class="arw">→</span></span></a>
               <a class="btn btn-line mag" href="#" id="heroSamples"><span>Free Samples</span></a>
             </div>
@@ -2217,7 +2217,7 @@
       <div class="hero-endcap" id="heroEndcap">
         <span class="eyebrow">Installed · Real Kitchens</span>
         <h4>Premium Engineered Quartz Surfaces Crafted for Timeless Spaces</h4>
-        <a class="mag" href="collections.html">Explore Collections <span class="arw">→</span></a>
+        <a class="mag" href="/collections">Explore Collections <span class="arw">→</span></a>
       </div>
       <div class="scroll-i"><span>Scroll to pull back</span><span class="ln"></span></div>
     </div>
@@ -2490,7 +2490,7 @@
         <p>Talk to our team about luxury quartz surfaces for your project — free samples, shipped across India in 5–7
           days.</p>
         <div class="btns">
-          <a class="btn btn-fill mag" href="collections.html"><span>Explore Collections <span
+          <a class="btn btn-fill mag" href="/collections"><span>Explore Collections <span
                 class="arw">→</span></span></a>
           <a class="btn btn-line mag" href="contact.html"><span>Request Catalogue</span></a>
           <a class="btn btn-line mag" href="contact.html"><span>Contact Our Team</span></a>
@@ -2772,7 +2772,7 @@
           : window.COLLECTIONS.map(c => ({ key: c.key, image: '', desc: c.lead }));
         const card = c => {
           const art = c.image ? `<img src="${esc(c.image)}" alt="${esc(c.key)} collection" loading="lazy">` : GL.imgFor(repFor(c.key), 0);
-          const href = c.href || `collections.html?c=${encodeURIComponent(c.key)}`;
+          const href = c.href || window.collPath(c.key);
           return `<a class="fcoll" href="${esc(href)}"><span class="ph">${art}</span>
         <div class="c"><span class="k">Collection</span><h3>${esc(c.key)}</h3><p>${esc(c.desc || '')}</p><span class="go">Explore →</span></div></a>`;
         };

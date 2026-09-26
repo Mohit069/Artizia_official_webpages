@@ -7,43 +7,51 @@
   const fine=window.matchMedia('(hover:hover) and (pointer:fine)').matches;
   const page=document.body.dataset.page||'';
 
+  /* ---------- addresses ----------
+     A surface lives at /quartz/<name> and a collection at /collections/<name>.
+     The same rule as server/seo.js, which writes the canonical and the sitemap —
+     if one changes the other has to. */
+  const productPath=k=>'/quartz/'+encodeURIComponent(k);
+  const collPath=c=>'/collections/'+String(c||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  window.productPath=productPath; window.collPath=collPath;
+
   /* ---------- inject shared chrome ---------- */
   const navLink=(href,label,key)=>`<a href="${href}" class="${key===page?'active':''}">${label}</a>`;
   const nav=document.createElement('nav');nav.className='nav';nav.id='nav';
   nav.innerHTML=`
-    <a class="brand" href="index.html"><img class="logo lockup nav-lockup" src="assets/img/brand/logo-full.png" alt="Artizia — Quartz Masterpieces" width="162" height="40"></a>
+    <a class="brand" href="/"><img class="logo lockup nav-lockup" src="/assets/img/brand/logo-full.png" alt="Artizia — Quartz Masterpieces" width="162" height="40"></a>
     <div class="nav-links" id="navLinks">
       <button class="close-x icn" id="navClose" aria-label="Close menu" style="border:0">✕</button>
-      <span class="nav-m-brand" aria-hidden="true"><img class="logo lockup" src="assets/img/brand/logo-full.png" alt=""></span>
-      ${navLink('index.html','Home','home')}
-      ${navLink('about.html','About','about')}
-      ${navLink('collections.html','Collections','collections')}
+      <span class="nav-m-brand" aria-hidden="true"><img class="logo lockup" src="/assets/img/brand/logo-full.png" alt=""></span>
+      ${navLink('/','Home','home')}
+      ${navLink('/about.html','About','about')}
+      ${navLink('/collections','Collections','collections')}
       <div class="nav-drop">
-        <a href="technical-details.html" class="${['certifications','technical','warranty','care','faq'].includes(page)?'active':''}">Resources</a>
+        <a href="/technical-details.html" class="${['certifications','technical','warranty','care','faq'].includes(page)?'active':''}">Resources</a>
         <button type="button" class="nav-drop-toggle" aria-expanded="false" aria-controls="nav-sub-resources" aria-label="Expand Resources submenu"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polyline points="6 9 12 15 18 9"/></svg></button>
         <div class="nav-drop-menu" id="nav-sub-resources">
-          <a href="certifications.html">Certifications</a>
-          <a href="technical-details.html">Technical Details</a>
-          <a href="warranty.html">Warranty</a>
-          <a href="care-and-maintenance.html">Care &amp; Maintenance</a>
-          <a href="faq.html">FAQs</a>
+          <a href="/certifications.html">Certifications</a>
+          <a href="/technical-details.html">Technical Details</a>
+          <a href="/warranty.html">Warranty</a>
+          <a href="/care-and-maintenance.html">Care &amp; Maintenance</a>
+          <a href="/faq.html">FAQs</a>
         </div>
       </div>
-      ${navLink('contact.html','Contact','contact')}
-      ${navLink('blog.html','Blog','blog')}
+      ${navLink('/contact.html','Contact','contact')}
+      ${navLink('/blog.html','Blog','blog')}
       <span id="navExtra"></span>
-      <a href="become-a-dealer.html" class="nav-m-dealer ${page==='dealer'?'active':''}">Become a Dealer</a>
-      <span class="nav-m-marudhar" aria-hidden="true"><img src="assets/img/brand/marudhar-logo.png" alt="" onerror="this.parentNode.style.display='none'"></span>
+      <a href="/become-a-dealer.html" class="nav-m-dealer ${page==='dealer'?'active':''}">Become a Dealer</a>
+      <span class="nav-m-marudhar" aria-hidden="true"><img src="/assets/img/brand/marudhar-logo.png" alt="" onerror="this.parentNode.style.display='none'"></span>
     </div>
     <div class="nav-right">
-      <a href="become-a-dealer.html" class="nav-dealer${page==='dealer'?' active':''}">Become a Dealer</a>
+      <a href="/become-a-dealer.html" class="nav-dealer${page==='dealer'?' active':''}">Become a Dealer</a>
       <button class="icn" id="searchBtn" title="Search surfaces" aria-label="Search surfaces">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6"
           stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><line x1="15.8" y1="15.8" x2="20" y2="20"/></svg>
       </button>
       <button class="icn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">☀</button>
       <button class="tbtn" id="trayBtn">Samples <span class="tct" id="tct">0</span></button>
-      <span class="nav-marudhar" id="navMarudhar"><img class="logo marudhar-lockup" src="assets/img/brand/marudhar-logo.png" alt="Marudhar Quartz" height="40" onerror="this.parentNode.style.display='none'"></span>
+      <span class="nav-marudhar" id="navMarudhar"><img class="logo marudhar-lockup" src="/assets/img/brand/marudhar-logo.png" alt="Marudhar Quartz" height="40" onerror="this.parentNode.style.display='none'"></span>
       <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>`;
   document.body.prepend(nav);
@@ -71,19 +79,19 @@
   const footer=document.createElement('footer');
   footer.innerHTML=`<div class="wrap">
     <div class="ftop">
-      <div class="fb"><div class="brand"><img class="logo lockup" src="assets/img/brand/logo-full.png" alt="Artizia — Quartz Masterpieces" width="178" height="44"></div>
+      <div class="fb"><div class="brand"><img class="logo lockup" src="/assets/img/brand/logo-full.png" alt="Artizia — Quartz Masterpieces" width="178" height="44"></div>
         <p>Premium engineered quartz — global craftsmanship, Indian design sensibility. Built on 40 years of heritage.</p>
         <div class="fsoc">${socialHTML()}</div>
       </div>
       <div class="fcol"><h5>Collections</h5>
-        <a href="collections.html?c=Signature">Signature</a><a href="collections.html?c=Luxury">Luxury</a>
-        <a href="collections.html?c=Premium">Premium</a><a href="collections.html?c=Classic">Classic</a>
-        <a href="collections.html?c=Essentials">Essentials</a></div>
+        <a href="${collPath('Signature')}">Signature</a><a href="${collPath('Luxury')}">Luxury</a>
+        <a href="${collPath('Premium')}">Premium</a><a href="${collPath('Classic')}">Classic</a>
+        <a href="${collPath('Essentials')}">Essentials</a></div>
       <div class="fcol"><h5>Explore</h5>
-        <a href="about.html">About</a><a href="blog.html">Blog</a>
-        <a href="technical-details.html">Technical Details</a><a href="certifications.html">Certifications</a>
-        <a href="warranty.html">Warranty</a><a href="care-and-maintenance.html">Care &amp; Maintenance</a>
-        <a href="catalogue">Catalogue</a><a href="faq.html">FAQ</a></div>
+        <a href="/about.html">About</a><a href="/blog.html">Blog</a>
+        <a href="/technical-details.html">Technical Details</a><a href="/certifications.html">Certifications</a>
+        <a href="/warranty.html">Warranty</a><a href="/care-and-maintenance.html">Care &amp; Maintenance</a>
+        <a href="/catalogue">Catalogue</a><a href="/faq.html">FAQ</a></div>
       <div class="fcol"><h5>Contact</h5>
         <a href="tel:${S.phoneRaw}">${S.phone}</a><a href="mailto:${S.email}">${S.email}</a>
         <a href="${S.mapUrl}" target="_blank" rel="noopener">Mahindra World City,<br>Jaipur — 302037</a>
@@ -171,16 +179,16 @@
     if(!q.trim()){ sResults.innerHTML=`<p class="search-hint">Search by name, code, collection or finish.</p>`; return; }
     if(!sHits.length){
       sResults.innerHTML=`<p class="search-hint">No surfaces match “${q.replace(/[<>&]/g,'')}”.
-        <a href="collections.html">Browse all collections →</a></p>`;
+        <a href="/collections">Browse all collections →</a></p>`;
       return;
     }
     sResults.innerHTML=sHits.map(({k,m},i)=>`
-      <a class="sres" role="option" href="product.html?p=${k}" data-i="${i}">
+      <a class="sres" role="option" href="${productPath(k)}" data-i="${i}">
         <span class="sres-img">${thumb(k,m)}</span>
         <span class="sres-txt"><b>${m.name}</b><span>${m.coll} · No. ${m.code}</span></span>
         <span class="sres-go">→</span>
       </a>`).join('')+
-      `<a class="sres-all" href="collections.html?q=${encodeURIComponent(q.trim())}">See all results in Collections →</a>`;
+      `<a class="sres-all" href="/collections?q=${encodeURIComponent(q.trim())}">See all results in Collections →</a>`;
   }
   function highlight(){
     sResults.querySelectorAll('.sres').forEach((el,i)=>el.classList.toggle('on',i===sPick));
@@ -204,8 +212,8 @@
     else if(e.key==='Enter'){
       const q=sInput.value.trim(); if(!q) return;
       /* a highlighted result goes straight there; otherwise hand the query to the grid */
-      location.href = sPick>=0 ? 'product.html?p='+sHits[sPick].k
-                               : 'collections.html?q='+encodeURIComponent(q);
+      location.href = sPick>=0 ? productPath(sHits[sPick].k)
+                               : '/collections?q='+encodeURIComponent(q);
     }
   });
   document.addEventListener('keydown',e=>{
@@ -259,7 +267,7 @@
        no clue that it was waiting to be filled, or where you fill it from */
     let h='';for(let i=0;i<4;i++){const k=SAMPLES[i];const m=k&&window.MAT[k];
       h+=k?`<div class="slot on">${GL.imgFor(k,0)}<span class="sn">${m?m.name:k}</span><button class="rm" data-rm="${k}" aria-label="Remove">✕</button></div>`
-          :`<a class="slot add" href="collections.html" aria-label="Add a surface — browse the collections" title="Browse collections to add a surface"><span aria-hidden="true">+</span></a>`;}
+          :`<a class="slot add" href="/collections" aria-label="Add a surface — browse the collections" title="Browse collections to add a surface"><span aria-hidden="true">+</span></a>`;}
     document.getElementById('tslots').innerHTML=h;
     document.getElementById('tct').textContent=SAMPLES.length;document.getElementById('tn').textContent=SAMPLES.length;
     document.querySelectorAll('#tslots .rm').forEach(b=>b.addEventListener('click',()=>removeSample(b.dataset.rm)));

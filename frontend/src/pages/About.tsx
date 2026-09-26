@@ -31,7 +31,7 @@ const P: any = {
     eyebrow: 'About Artizia',
     title: 'Crafting Timeless<br><em>Luxury Quartz Surfaces</em>',
     lead: 'Artizia is a leading Quartz Slab Manufacturer and Quartz Slab Exporter, crafting premium Engineered Quartz Slabs using advanced Breton Stone technology. Designed for architects, designers, fabricators, and homeowners, our Luxury Quartz Surfaces combine durability, precision, and timeless aesthetics for residential and commercial spaces worldwide.',
-    cta: { label: 'Explore the Collections', href: 'collections.html' },
+    cta: { label: 'Explore the Collections', href: '/collections' },
     cta2: { label: 'Talk to Our Team', href: 'contact.html' },
     facts: [
       { value: 40, suffix: 'yrs', label: 'Of Heritage' },
@@ -561,7 +561,7 @@ export default function About() {
           <h2 id="ctaTitle" dangerouslySetInnerHTML={{ __html: X.title }} />
           <p id="ctaText">{X.text}</p>
           <div className="row">
-            <Link className="btn btn-fill mag" to="/collections.html"><span>View Collections <span className="arw">→</span></span></Link>
+            <Link className="btn btn-fill mag" to="/collections"><span>View Collections <span className="arw">→</span></span></Link>
             <Link className="btn btn-line mag" to="/contact.html"><span>Request Samples</span></Link>
           </div>
         </div>

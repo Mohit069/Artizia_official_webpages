@@ -1,11 +1,11 @@
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import Seo from '../components/Seo'
 import PageHero from '../components/PageHero'
 import { useBodyPage } from '../hooks/site'
 import { useArtizia } from '../context/ArtiziaContext'
 import { COLLECTIONS } from '../data/materials'
 import { firstPhoto } from '../lib/marble'
-import { graph, crumbs, productUrl, collectionUrl, abs, SITE_URL, SLAB } from '../data/schema'
+import { graph, crumbs, productUrl, collectionUrl, collectionPath, productPath, collSlug, abs, SITE_URL, SLAB } from '../data/schema'
 
 const PAGE = {
   banner: {
@@ -62,10 +62,13 @@ function VirtualSample({ url }: { url?: string }) {
 export default function Collections() {
   useBodyPage('collections')
   const { mat, ready, addSample, openTray } = useArtizia()
-  const [params, setParams] = useSearchParams()
-  const active = params.get('c') || 'All'
-  const query = (params.get('q') || '').trim()
+  const [params] = useSearchParams()
+  const { coll } = useParams()
+  const nav = useNavigate()
   const cats = ['All', ...COLLECTIONS.map((c) => c.key)]
+  /* the collection is named in the path now: /collections/luxury */
+  const active = cats.find((c) => c !== 'All' && collSlug(c) === (coll || '')) || 'All'
+  const query = (params.get('q') || '').trim()
 
   const list = Object.keys(mat)
     .filter((k) => !mat[k].hidden)
@@ -79,17 +82,9 @@ export default function Collections() {
       )
     })
 
-  const setFilter = (c: string) => {
-    const q = new URLSearchParams()
-    if (c !== 'All') q.set('c', c)
-    if (query) q.set('q', query)
-    setParams(q, { replace: true })
-  }
-  const clearSearch = () => {
-    const q = new URLSearchParams()
-    if (active !== 'All') q.set('c', active)
-    setParams(q, { replace: true })
-  }
+  const setFilter = (c: string) =>
+    nav(collectionPath(c === 'All' ? null : c) + (query ? '?q=' + encodeURIComponent(query) : ''), { replace: true })
+  const clearSearch = () => nav(collectionPath(active === 'All' ? null : active), { replace: true })
 
   const c = PAGE.cta
   return (
@@ -99,12 +94,12 @@ export default function Collections() {
         description={active === 'All'
           ? `Explore ${Object.keys(mat).filter((k) => !mat[k].hidden).length} engineered quartz surfaces across five Artizia collections — Signature, Luxury, Premium, Classic and Essentials.`
           : `${list.length} engineered quartz surfaces in the Artizia ${active} collection. Jumbo ${SLAB} slabs, pressed on Breton Stone technology in Jaipur, India.`}
-        canonical="https://artizia.co.in/collections.html"
+        canonical={collectionUrl(active === 'All' ? null : active)}
         jsonLd={ready ? graph(
           {
             '@type': 'CollectionPage',
-            '@id': (active === 'All' ? SITE_URL + '/collections.html' : collectionUrl(active)) + '#page',
-            url: active === 'All' ? SITE_URL + '/collections.html' : collectionUrl(active),
+            '@id': collectionUrl(active === 'All' ? null : active) + '#page',
+            url: collectionUrl(active === 'All' ? null : active),
             name: active === 'All' ? 'Collections — Artizia Quartz Surfaces' : `${active} Collection — Artizia Quartz Surfaces`,
             isPartOf: { '@id': SITE_URL + '/#website' },
             about: { '@id': SITE_URL + '/#organization' },
@@ -117,7 +112,7 @@ export default function Collections() {
               })),
             },
           },
-          crumbs([['Home', '/'], ['Collections', '/collections.html'], ...(active === 'All' ? [] : ([[active, collectionUrl(active)]] as [string, string][]))]),
+          crumbs([['Home', '/'], ['Collections', '/collections'], ...(active === 'All' ? [] : ([[active, collectionUrl(active)]] as [string, string][]))]),
         ) : undefined}
       />
       <PageHero banner={PAGE.banner} />
@@ -149,7 +144,7 @@ export default function Collections() {
                 const m = mat[k]
                 return (
                   <div className={'mcard rv' + (m.view360 ? ' has360' : '')} key={k}>
-                    <Link className="mimg" to={`/product.html?p=${k}`} aria-label={m.name}>
+                    <Link className="mimg" to={productPath(k)} aria-label={m.name}>
                       <CardArt k={k} name={m.name} />
                     </Link>
                     {/* 360° badge — only for products given a "Get 360 view" link */}
@@ -169,7 +164,7 @@ export default function Collections() {
                     </button>
                     <div className="minfo">
                       <div className="mcol">
-                        <Link className="mtxt" to={`/product.html?p=${k}`}>
+                        <Link className="mtxt" to={productPath(k)}>
                           <div className="mcoll">
                             {m.coll} · No. {m.code}
                           </div>
@@ -178,7 +173,7 @@ export default function Collections() {
                         </Link>
                         <VirtualSample url={m.viewInHome} />
                       </div>
-                      <Link className="marw" to={`/product.html?p=${k}`} aria-label={`View ${m.name}`}>
+                      <Link className="marw" to={productPath(k)} aria-label={`View ${m.name}`}>
                         <span>→</span>
                       </Link>
                     </div>
@@ -187,7 +182,7 @@ export default function Collections() {
               })
             ) : (
               <p className="no-hits">
-                Nothing matches that search. <Link to="/collections.html">Show every surface →</Link>
+                Nothing matches that search. <Link to="/collections">Show every surface →</Link>
               </p>
             )}
           </div>

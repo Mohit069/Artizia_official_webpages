@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate, useSearchParams } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Admin from './pages/Admin'
@@ -16,6 +16,21 @@ import Product from './pages/Product'
 import Blog from './pages/Blog'
 import Post from './pages/Post'
 import CmsPage from './pages/CmsPage'
+import { productPath, collectionPath } from './data/schema'
+
+/* The addresses these pages had before the move to /quartz/<name> and
+   /collections/<name>. A cold visit gets a 301 from Express; this covers a link
+   followed inside the app, and anything still pointing at the old form. */
+function OldProductUrl() {
+  const [params] = useSearchParams()
+  const p = params.get('p') || ''
+  return <Navigate replace to={p ? productPath(p) : '/collections'} />
+}
+function OldCollectionsUrl() {
+  const [params] = useSearchParams()
+  const q = params.get('q') || ''
+  return <Navigate replace to={collectionPath(params.get('c')) + (q ? '?q=' + encodeURIComponent(q) : '')} />
+}
 
 /* Every current URL is preserved. Extensionless aliases (/about) resolve to the
    same page as the canonical .html URL, matching Express's `extensions:['html']`. */
@@ -33,10 +48,13 @@ export default function App() {
         <Route path="/about.html" element={<About />} />
         <Route path="/about" element={<About />} />
 
-        <Route path="/collections.html" element={<Collections />} />
         <Route path="/collections" element={<Collections />} />
+        <Route path="/collections/:coll" element={<Collections />} />
+        <Route path="/collections.html" element={<OldCollectionsUrl />} />
 
-        <Route path="/product.html" element={<Product />} />
+        <Route path="/quartz/:slug" element={<Product />} />
+        <Route path="/product.html" element={<OldProductUrl />} />
+        <Route path="/product" element={<OldProductUrl />} />
 
         <Route path="/certifications.html" element={<Certifications />} />
         <Route path="/certifications" element={<Certifications />} />

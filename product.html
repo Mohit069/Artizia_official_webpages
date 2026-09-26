@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Surface — Artizia Quartz</title>
 <meta name="description" content="Explore this Artizia engineered quartz surface — design details, applications, technical specifications and free samples.">
-<link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
-<link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
-<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" type="image/png" href="/assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="/assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/css/styles.css">
 </head>
 <body data-page="collections">
 
@@ -48,7 +48,7 @@ window.PRODUCT_PAGE = {
   /* the care & warranty accordion */
   care: {
     text:     "Clean with a soft cloth, warm water and mild detergent. Avoid harsh chemicals and abrasive pads; use trivets under hot cookware and boards when cutting.",
-    warranty: "Backed by a <b style=\"color:var(--accent)\">15-Year Warranty</b> against manufacturing defects — resisting scratches, stains, heat, household chemicals, mould and mildew. <a href=\"warranty.html\" style=\"color:var(--accent)\">Full terms →</a>"
+    warranty: "Backed by a <b style=\"color:var(--accent)\">15-Year Warranty</b> against manufacturing defects — resisting scratches, stains, heat, household chemicals, mould and mildew. <a href=\"/warranty.html\" style=\"color:var(--accent)\">Full terms →</a>"
   }
 };
 </script>
@@ -76,23 +76,25 @@ window.PRODUCT_PAGE = {
   <div class="pairs" id="pairs"></div>
 </div></section>
 
-<script src="assets/js/data.js"></script>
-<script src="assets/js/marble.js"></script>
-<script src="assets/js/app.js"></script>
+<script src="/assets/js/data.js"></script>
+<script src="/assets/js/marble.js"></script>
+<script src="/assets/js/app.js"></script>
 <script>
 (function(){
   const GL=window.MarbleGL,MAT=window.MAT,dpr=GL.dpr,reduce=GL.reduce;
   const PP=window.PRODUCT_PAGE||{};
   const params=new URLSearchParams(location.search);
-  const slug=params.get('p');
+  /* /quartz/oceana. ?p=oceana is still read so a link made before the addresses
+     changed still lands on the right surface — the server redirects those. */
+  const slug=decodeURIComponent((location.pathname.match(/^\/quartz\/([^/]+)/)||[])[1]||'')||params.get('p');
   (window.ArtiziaData ? window.ArtiziaData.ready : Promise.resolve()).then(render);
   function render(){
   let key=slug; if(!MAT[key]||MAT[key].hidden){ key=(window.productList&&window.productList()[0])||'calacatta-gold'; }
   const m=MAT[key];
-  if(!m){ document.querySelector('.pdp').innerHTML='<p style="padding:60px 0;color:var(--text-dim);font-family:var(--mono)">Product not found. <a href="collections.html" style="color:var(--accent)">Back to collections →</a></p>'; return; }
+  if(!m){ document.querySelector('.pdp').innerHTML='<p style="padding:60px 0;color:var(--text-dim);font-family:var(--mono)">Product not found. <a href="/collections" style="color:var(--accent)">Back to collections →</a></p>'; return; }
   document.title=m.name+' — '+(m.coll?m.coll+' Collection ':'')+'Quartz Slab | Artizia';
 
-  document.getElementById('crumb').innerHTML=`<a href="index.html">Home</a><span>/</span><a href="collections.html">Collections</a><span>/</span><a href="collections.html?c=${m.coll}">${m.coll}</a><span>/</span><b>${m.name}</b>`;
+  document.getElementById('crumb').innerHTML=`<a href="/">Home</a><span>/</span><a href="/collections">Collections</a><span>/</span><a href="${window.collPath(m.coll)}">${m.coll}</a><span>/</span><b>${m.name}</b>`;
 
   /* banner heading */
   document.getElementById('pheye').textContent=m.coll+' Collection';
@@ -187,7 +189,7 @@ window.PRODUCT_PAGE = {
   const pool=window.productList().filter(k=>k!==key);
   const same=pool.filter(k=>MAT[k].coll===m.coll);
   const pairs=(same.concat(pool).filter((v,i,a)=>a.indexOf(v)===i)).slice(0,3);
-  document.getElementById('pairs').innerHTML=pairs.map(k=>`<a class="pair" href="product.html?p=${k}"><div class="frame">${GL.imgFor(k,0)}</div><div class="pn">${MAT[k].name}</div><div class="pc">${MAT[k].coll} Collection</div></a>`).join('');
+  document.getElementById('pairs').innerHTML=pairs.map(k=>`<a class="pair" href="${window.productPath(k)}"><div class="frame">${GL.imgFor(k,0)}</div><div class="pn">${MAT[k].name}</div><div class="pc">${MAT[k].coll} Collection</div></a>`).join('');
 
   window.Artizia.refresh();
   document.getElementById('addBtn').addEventListener('click',e=>{e.preventDefault();window.addSample(key,e.currentTarget);});

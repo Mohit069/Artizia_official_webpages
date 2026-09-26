@@ -101,7 +101,7 @@ export default function Nav() {
         </span>
         <Link to="/index.html" className={cls('home')}>Home</Link>
         <Link to="/about.html" className={cls('about')}>About</Link>
-        <Link to="/collections.html" className={cls('collections')}>Collections</Link>
+        <Link to="/collections" className={cls('collections')}>Collections</Link>
         <div className={`nav-drop${subOpen ? ' open' : ''}`}>
           <Link to="/technical-details.html" className={resourcesActive}>Resources</Link>
           <button

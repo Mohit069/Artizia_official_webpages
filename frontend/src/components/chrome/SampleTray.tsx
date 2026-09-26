@@ -25,7 +25,7 @@ export default function SampleTray() {
     } else {
       e.preventDefault()
       closeTray()
-      nav('/collections.html')
+      nav('/collections')
     }
   }
 
@@ -65,7 +65,7 @@ export default function SampleTray() {
             return (
               <a
                 className="slot add"
-                href="/collections.html"
+                href="/collections"
                 key={i}
                 aria-label="Add a surface — browse the collections"
                 title="Browse collections to add a surface"

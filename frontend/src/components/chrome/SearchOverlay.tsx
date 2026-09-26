@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { productPath } from '../../data/schema'
 import { useNavigate } from 'react-router-dom'
 import { useArtizia } from '../../context/ArtiziaContext'
 
@@ -65,8 +66,8 @@ export default function SearchOverlay() {
       const query = q.trim()
       if (!query) return
       closeSearch()
-      if (pick >= 0) nav('/product.html?p=' + hits[pick].k)
-      else nav('/collections.html?q=' + encodeURIComponent(query))
+      if (pick >= 0) nav(productPath(hits[pick].k))
+      else nav('/collections?q=' + encodeURIComponent(query))
     }
   }
 
@@ -112,7 +113,7 @@ export default function SearchOverlay() {
           ) : !hits.length ? (
             <p className="search-hint">
               No surfaces match “{q.replace(/[<>&]/g, '')}”.{' '}
-              <a href="/collections.html" onClick={(e) => { e.preventDefault(); closeSearch(); nav('/collections.html') }}>
+              <a href="/collections" onClick={(e) => { e.preventDefault(); closeSearch(); nav('/collections') }}>
                 Browse all collections →
               </a>
             </p>
@@ -122,13 +123,13 @@ export default function SearchOverlay() {
                 <a
                   className={`sres${i === pick ? ' on' : ''}`}
                   role="option"
-                  href={`/product.html?p=${k}`}
+                  href={productPath(k)}
                   data-i={i}
                   key={k}
                   onClick={(e) => {
                     e.preventDefault()
                     closeSearch()
-                    nav('/product.html?p=' + k)
+                    nav(productPath(k))
                   }}
                 >
                   <span className="sres-img" dangerouslySetInnerHTML={{ __html: thumb(k) }} />
@@ -143,11 +144,11 @@ export default function SearchOverlay() {
               ))}
               <a
                 className="sres-all"
-                href={`/collections.html?q=${encodeURIComponent(q.trim())}`}
+                href={`/collections?q=${encodeURIComponent(q.trim())}`}
                 onClick={(e) => {
                   e.preventDefault()
                   closeSearch()
-                  nav('/collections.html?q=' + encodeURIComponent(q.trim()))
+                  nav('/collections?q=' + encodeURIComponent(q.trim()))
                 }}
               >
                 See all results in Collections →

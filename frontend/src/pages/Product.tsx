@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Seo from '../components/Seo'
 import { useBodyPage } from '../hooks/site'
 import { useArtizia } from '../context/ArtiziaContext'
 import { SPECS } from '../data/materials'
-import { productHead } from '../data/schema'
+import { productHead, productPath, collectionPath } from '../data/schema'
 
 const PP = {
   slotLabels: ['Full Slab', 'Close-up', 'Application', 'Detail'],
@@ -33,8 +33,7 @@ type View = { type: 'photo' | 'room' | 'live' | 'img'; src?: string; seed?: numb
 export default function Product() {
   useBodyPage('collections')
   const { mat, addSample, openModal } = useArtizia()
-  const [params] = useSearchParams()
-  const slug = params.get('p') || ''
+  const { slug = '' } = useParams()
   const bannerRef = useRef<HTMLDivElement>(null)
   const mainRef = useRef<HTMLDivElement>(null)
   const [cur, setCur] = useState(0)
@@ -146,7 +145,7 @@ export default function Product() {
       <div className="wrap">
         <div className="pdp">
           <p style={{ padding: '60px 0', color: 'var(--text-dim)', fontFamily: 'var(--mono)' }}>
-            Product not found. <Link to="/collections.html" style={{ color: 'var(--accent)' }}>Back to collections →</Link>
+            Product not found. <Link to="/collections" style={{ color: 'var(--accent)' }}>Back to collections →</Link>
           </p>
         </div>
       </div>
@@ -172,11 +171,11 @@ export default function Product() {
         <div className="ph-vis" ref={bannerRef} />
         <div className="wrap">
           <div className="crumb" id="crumb" style={{ padding: '0 0 18px' }}>
-            <Link to="/index.html">Home</Link>
+            <Link to="/">Home</Link>
             <span>/</span>
-            <Link to="/collections.html">Collections</Link>
+            <Link to="/collections">Collections</Link>
             <span>/</span>
-            <Link to={`/collections.html?c=${m.coll}`}>{m.coll}</Link>
+            <Link to={collectionPath(m.coll)}>{m.coll}</Link>
             <span>/</span>
             <b>{m.name}</b>
           </div>
@@ -311,7 +310,7 @@ export default function Product() {
           </div>
           <div className="pairs" id="pairs">
             {pairs.map((k) => (
-              <Link className="pair" to={`/product.html?p=${k}`} key={k}>
+              <Link className="pair" to={productPath(k)} key={k}>
                 <div className="frame" dangerouslySetInnerHTML={{ __html: GL ? GL.imgFor(k, 0) : '' }} />
                 <div className="pn">{mat[k].name}</div>
                 <div className="pc">{mat[k].coll} Collection</div>

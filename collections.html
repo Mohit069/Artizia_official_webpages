@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Collections — Artizia Quartz Surfaces</title>
 <meta name="description" content="Explore 53 engineered quartz surfaces across five Artizia collections — Signature, Luxury, Premium, Classic and Essentials.">
-<link rel="canonical" href="https://artizia.co.in/collections.html">
-<link rel="icon" type="image/png" href="assets/img/brand/favicon-64.png">
-<link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
-<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="canonical" href="https://artizia.co.in/collections">
+<link rel="icon" type="image/png" href="/assets/img/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="/assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/css/styles.css">
 </head>
 <body data-page="collections">
 
@@ -69,15 +69,18 @@ window.PAGE = {
     <a class="btn btn-line mag" href="contact.html"><span>Talk to Us</span></a></div>
 </div></section>
 
-<script src="assets/js/data.js"></script>
-<script src="assets/js/marble.js"></script>
-<script src="assets/js/app.js"></script>
+<script src="/assets/js/data.js"></script>
+<script src="/assets/js/marble.js"></script>
+<script src="/assets/js/app.js"></script>
 <script>
 (function(){
   const GL=window.MarbleGL,MAT=window.MAT,dpr=GL.dpr,reduce=GL.reduce;
   const params=new URLSearchParams(location.search);
-  let active=params.get('c')||'All';
   const cats=['All',...window.COLLECTIONS.map(c=>c.key)];
+  /* the collection is in the path now (/collections/luxury); ?c=Luxury is still
+     read so a link made before the addresses changed still lands right */
+  const inPath=(location.pathname.match(/^\/collections\/([^/]+)/)||[])[1]||'';
+  let active=cats.find(c=>c!=='All'&&window.collPath(c)==='/collections/'+inPath)||params.get('c')||'All';
   document.getElementById('filters').innerHTML=cats.map(c=>`<button data-c="${c}" class="${c===active?'active':''}">${c}</button>`).join('');
   /* Every card is the same 375x250 frame and the whole slab is fitted inside it,
      whatever its shape (they range from 1.5:1 to 2.9:1). Fitting the widest ones
@@ -106,19 +109,19 @@ window.PAGE = {
   }
   function card(k,i){const m=MAT[k];
     return `<div class="mcard rv${m.view360?' has360':''}">
-      <a class="mimg" href="product.html?p=${k}" aria-label="${m.name}">${art(k,m)}</a>
+      <a class="mimg" href="${window.productPath(k)}" aria-label="${m.name}">${art(k,m)}</a>
       ${badge360(m)}
       <button class="madd" data-add="${k}" aria-label="Add ${m.name} to samples">+</button>
       <div class="minfo">
         <div class="mcol">
-          <a class="mtxt" href="product.html?p=${k}">
+          <a class="mtxt" href="${window.productPath(k)}">
             <div class="mcoll">${m.coll} · No. ${m.code}</div>
             <div class="mtitle">${m.name}</div>
             <div class="mdesc">${m.desc}</div>
           </a>
           ${vsample(m)}
         </div>
-        <a class="marw" href="product.html?p=${k}" aria-label="View ${m.name}"><span>→</span></a>
+        <a class="marw" href="${window.productPath(k)}" aria-label="View ${m.name}"><span>→</span></a>
       </div>
     </div>`;}
   /* ?q= arrives from the nav search — the grid becomes the results page */
@@ -135,7 +138,7 @@ window.PAGE = {
     bar.innerHTML=`<span>${list.length} ${list.length===1?'surface':'surfaces'} matching
       “${query.replace(/[<>&]/g,'')}”</span><button id="qclear">Clear search ✕</button>`;
     document.getElementById('qclear').addEventListener('click',()=>{
-      query=''; history.replaceState(null,'',active==='All'?location.pathname:'?c='+active); render();
+      query=''; history.replaceState(null,'',active==='All'?'/collections':window.collPath(active)); render();
     });
   }
   function render(){
@@ -144,7 +147,7 @@ window.PAGE = {
     const grid=document.getElementById('grid');
     grid.innerHTML=list.length
       ? list.map(card).join('')
-      : `<p class="no-hits">Nothing matches that search. <a href="collections.html">Show every surface →</a></p>`;
+      : `<p class="no-hits">Nothing matches that search. <a href="/collections">Show every surface →</a></p>`;
     paintQuery(list);
     document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();window.addSample(b.dataset.add,b);}));
     window.Artizia.refresh();
@@ -153,10 +156,8 @@ window.PAGE = {
   document.getElementById('grid').addEventListener('click',e=>{const a=e.target.closest('.mvs[data-nolink]');if(a)e.preventDefault();});
   document.getElementById('filters').addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(!b)return;
     active=b.dataset.c;document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('active',x.dataset.c===active));
-    const q=new URLSearchParams();
-    if(active!=='All') q.set('c',active);
-    if(query) q.set('q',query);
-    history.replaceState(null,'',q.toString()?'?'+q:location.pathname);render();});
+    const base=active==='All'?'/collections':window.collPath(active);
+    history.replaceState(null,'',base+(query?'?q='+encodeURIComponent(query):''));render();});
   // wait for live products from the API, then render
   (window.ArtiziaData ? window.ArtiziaData.ready : Promise.resolve()).then(render);
   document.getElementById('ctaSamples').addEventListener('click',e=>{e.preventDefault();window.openTray();});
@@ -165,6 +166,6 @@ window.PAGE = {
   $('ctaEye').textContent=c.eyebrow||''; $('ctaTitle').innerHTML=c.title||''; $('ctaText').textContent=c.text||'';
 })();
 </script>
-<script src="assets/js/pageedit.js"></script>
+<script src="/assets/js/pageedit.js"></script>
 </body>
 </html>

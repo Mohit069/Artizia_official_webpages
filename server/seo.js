@@ -188,8 +188,27 @@ function template(name) {
 }
 
 const SLAB = '3300 × 1650 mm';
-const productUrl = (slug) => `${SITE_URL}/product.html?p=${encodeURIComponent(slug)}`;
-const collectionUrl = (coll) => `${SITE_URL}/collections.html?c=${encodeURIComponent(coll)}`;
+
+/* ---- addresses ----
+   A surface lives at /quartz/<name> and a collection at /collections/<name>.
+   The query-string forms these replace (product.html?p=, collections.html?c=)
+   redirect here permanently; nothing on the site links to them any more.
+
+   A collection's address is derived from its name, so a collection added in the
+   admin panel gets one without anything here being edited. Reading it back means
+   asking the catalogue which name produces that address — there is no list of
+   collections to keep in step. */
+const collSlug = (name) => String(name || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+function collFromSlug(slug) {
+  const want = collSlug(slug);
+  if (!want) return null;
+  for (const p of Product.all(null)) if (collSlug(p.coll) === want) return p.coll;
+  return null;
+}
+const productPath = (slug) => `/quartz/${encodeURIComponent(slug)}`;
+const collectionPath = (coll) => (coll ? `/collections/${collSlug(coll)}` : '/collections');
+const productUrl = (slug) => SITE_URL + productPath(slug);
+const collectionUrl = (coll) => SITE_URL + collectionPath(coll);
 
 function productNode(m) {
   const images = (m.images || []).filter(Boolean).map(abs);
@@ -230,7 +249,7 @@ function productHead(m) {
     ],
     jsonLd: graph(
       productNode(m),
-      crumbs([['Home', '/'], ['Collections', '/collections.html'], ...(m.coll ? [[m.coll, collectionUrl(m.coll)]] : []), [m.name, url]])
+      crumbs([['Home', '/'], ['Collections', '/collections'], ...(m.coll ? [[m.coll, collectionUrl(m.coll)]] : []), [m.name, url]])
     )
   };
 }
@@ -239,8 +258,8 @@ function productHead(m) {
 function productBody(html, m) {
   const link = (href, text) => `<a href="${escAttr(href)}">${escText(text)}</a>`;
   const crumb = [
-    link('index.html', 'Home'), '<span>/</span>', link('collections.html', 'Collections'),
-    ...(m.coll ? ['<span>/</span>', link('collections.html?c=' + encodeURIComponent(m.coll), m.coll)] : []),
+    link('/', 'Home'), '<span>/</span>', link('/collections', 'Collections'),
+    ...(m.coll ? ['<span>/</span>', link(collectionPath(m.coll), m.coll)] : []),
     '<span>/</span>', `<b>${escText(m.name)}</b>`
   ].join('');
   const specs = [['Vein', m.veinText || m.vein], ['Grain', m.grain], ['Finish', m.finish], ['Thickness', m.thickness]]
@@ -262,15 +281,17 @@ function productBody(html, m) {
 function collectionsHead(coll) {
   const all = Product.all(null);
   const list = coll ? all.filter(p => p.coll === coll) : all;
-  const url = coll ? collectionUrl(coll) : SITE_URL + '/collections.html';
+  const url = collectionUrl(coll);
   const title = coll ? `${coll} Collection — Artizia Quartz Surfaces` : 'Collections — Artizia Quartz Surfaces';
   const description = coll
     ? `${list.length} engineered quartz surfaces in the Artizia ${coll} collection. Jumbo ${SLAB} slabs, pressed on Breton Stone technology in Jaipur, India.`
     : `Explore ${all.length} engineered quartz surfaces across five Artizia collections — Signature, Luxury, Premium, Classic and Essentials.`;
   return {
     title, description,
-    /* the filtered views are the same page narrowed — one canonical */
-    canonical: SITE_URL + '/collections.html',
+    /* Each collection answers a different search — "luxury quartz slabs" is not
+       "quartz slabs" — so each gets a canonical of its own rather than pointing
+       at the unfiltered page, which is what kept them out of the index. */
+    canonical: url,
     og: [['og:type', 'website'], ['og:site_name', 'Artizia'], ['og:url', url], ['og:title', title], ['og:description', description],
       ['og:image', SHARE_IMAGE], ['og:image:width', '1200'], ['og:image:height', '630'], ['twitter:card', 'summary_large_image']],
     jsonLd: graph(
@@ -289,36 +310,59 @@ function collectionsHead(coll) {
           }))
         }
       },
-      crumbs([['Home', '/'], ['Collections', '/collections.html'], ...(coll ? [[coll, url]] : [])])
+      crumbs([['Home', '/'], ['Collections', '/collections'], ...(coll ? [[coll, url]] : [])])
     )
   };
 }
+
+/* These pages are written with relative links — assets/css/styles.css, and a
+   warranty link inside a config block — and they are now served from addresses
+   a level or two down. One <base> keeps every one of them resolving against the
+   site root, including the links the page's own script builds at runtime. */
+const withBase = (html) =>
+  /<base\s/i.test(html) ? html : html.replace(/(<meta charset="[^"]*">)/i, (m, tag) => tag + '\n<base href="/">');
 
 /* ---- express handlers ---- */
 function noCache(res) { res.setHeader('Cache-Control', 'no-cache'); res.type('html'); }
 
 function productPage(req, res, next) {
   try {
-    const html = template('product.html');
-    const slug = String(req.query.p || '').trim();
+    const html = withBase(template('product.html'));
+    const slug = String(req.params.slug || req.query.p || '').trim();
     const m = slug ? Product.bySlug(slug) : null;
     noCache(res);
     if (m) return res.send(productBody(inject(html, productHead(m)), m));
-    /* A slug that names no product is a dead address and now says so: a 200 here
-       is a soft 404, which Google reports and keeps re-crawling. /product.html
-       with no slug at all is not a wrong address — the page's own script picks a
-       fallback product, as it always has. Neither is worth indexing. */
+    /* A name that belongs to no surface is a dead address and says so: a 200
+       here is a soft 404, which Google reports and keeps re-crawling. */
     if (slug) res.status(404);
     res.send(html.replace(/<\/title>/i, '</title>\n<meta name="robots" content="noindex">'));
   } catch (e) { next(e); }
 }
 
+/* product.html?p=oceana, the address every existing link uses */
+function productRedirect(req, res, next) {
+  const slug = String(req.query.p || '').trim();
+  const m = slug ? Product.bySlug(slug) : null;
+  if (m) return res.redirect(301, productPath(m.slug));
+  if (slug) return productPage(req, res, next);   /* a name that names nothing: 404 */
+  return res.redirect(301, '/collections');       /* no name at all: the catalogue */
+}
+
 function collectionsPage(req, res, next) {
   try {
-    const coll = String(req.query.c || '').trim();
+    const slug = String(req.params.slug || '').trim();
+    const coll = slug ? collFromSlug(slug) : null;
+    if (slug && !coll) return next();   /* no such collection — let it 404 */
     noCache(res);
-    res.send(bannerFill(inject(template('collections.html'), collectionsHead(coll || null))));
+    res.send(withBase(bannerFill(inject(template('collections.html'), collectionsHead(coll)))));
   } catch (e) { next(e); }
+}
+
+/* collections.html, with or without ?c= and ?q= */
+function collectionsRedirect(req, res) {
+  const coll = collFromSlug(collSlug(String(req.query.c || '').trim()));
+  const q = String(req.query.q || '').trim();
+  res.redirect(301, collectionPath(coll) + (q ? '?q=' + encodeURIComponent(q) : ''));
 }
 
 /* The marketing pages this module completes on the way out: the heading their
@@ -354,7 +398,7 @@ function robots(req, res) {
 /* address -> the file behind it, whose modification time dates the entry.
    <changefreq> and <priority> are not written: Google ignores both. */
 const STATIC_PAGES = [
-  ['/', 'index.html'], ['/collections.html', 'collections.html'], ['/about.html', 'about.html'],
+  ['/', 'index.html'], ['/collections', 'collections.html'], ['/about.html', 'about.html'],
   ['/catalogue', 'catalogue.html'], ['/become-a-dealer.html', 'become-a-dealer.html'], ['/contact.html', 'contact.html'],
   ['/faq.html', 'faq.html'], ['/blog.html', 'blog.html'], ['/certifications.html', 'certifications.html'],
   ['/warranty.html', 'warranty.html'], ['/technical-details.html', 'technical-details.html'], ['/care-and-maintenance.html', 'care-and-maintenance.html']
@@ -368,11 +412,19 @@ function sitemap(req, res) {
   const add = (loc, lastmod) => rows.push(
     `<url><loc>${xmlEsc(abs(loc))}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}</url>`);
   for (const [loc, file] of STATIC_PAGES) add(loc, fileDay(file));
-  for (const p of Product.all(null)) add(`/product.html?p=${encodeURIComponent(p.slug)}`, day(p.updatedAt));
+  const products = Product.all(null);
+  /* one entry per collection, newest product in it dating the page */
+  const colls = new Map();
+  for (const p of products) if (p.coll) {
+    const d = day(p.updatedAt);
+    if (!colls.has(p.coll) || d > colls.get(p.coll)) colls.set(p.coll, d);
+  }
+  for (const [coll, d] of colls) add(collectionPath(coll), d);
+  for (const p of products) add(productPath(p.slug), day(p.updatedAt));
   for (const p of Post.published()) add(`/blog/${encodeURIComponent(p.slug)}`, day(p.updatedAt || p.publishedAt));
   for (const p of Page.published()) add(`/p/${encodeURIComponent(p.slug)}`, day(p.updatedAt));
   res.type('application/xml').setHeader('Cache-Control', 'public, max-age=3600');
   res.send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${rows.join('\n')}\n</urlset>\n`);
 }
 
-module.exports = { productPage, collectionsPage, staticPage, BANNER_ROUTES, robots, sitemap, ORG, WEBSITE, productHead, collectionsHead, inject };
+module.exports = { productPage, productRedirect, collectionsPage, collectionsRedirect, staticPage, BANNER_ROUTES, robots, sitemap, ORG, WEBSITE, productHead, collectionsHead, inject };

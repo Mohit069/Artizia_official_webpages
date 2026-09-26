@@ -61,8 +61,15 @@ export const webPage = (type: string, url: string, name: string, description?: s
 
 /* ---- products ---- */
 export const SLAB = '3300 × 1650 mm'
-export const productUrl = (slug: string) => `${SITE_URL}/product.html?p=${encodeURIComponent(slug)}`
-export const collectionUrl = (coll: string) => `${SITE_URL}/collections.html?c=${encodeURIComponent(coll)}`
+/* A surface lives at /quartz/<name> and a collection at /collections/<name>.
+   The same rule as server/seo.js and assets/js/app.js — if one changes they all
+   have to. */
+export const collSlug = (name?: string | null) =>
+  String(name || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+export const productPath = (slug: string) => `/quartz/${encodeURIComponent(slug)}`
+export const collectionPath = (coll?: string | null) => (coll ? `/collections/${collSlug(coll)}` : '/collections')
+export const productUrl = (slug: string) => SITE_URL + productPath(slug)
+export const collectionUrl = (coll?: string | null) => SITE_URL + collectionPath(coll)
 
 export function productNode(m: Material & { slug?: string; code?: string; coll?: string }, slug: string) {
   const images = (m.images || []).filter(Boolean).map(abs)
@@ -105,7 +112,7 @@ export function productHead(m: Material & { code?: string; coll?: string }, slug
     ] as [string, string][],
     jsonLd: graph(
       productNode(m, slug),
-      crumbs([['Home', '/'], ['Collections', '/collections.html'], ...(m.coll ? ([[m.coll, collectionUrl(m.coll)]] as [string, string][]) : []), [m.name, url]]),
+      crumbs([['Home', '/'], ['Collections', '/collections'], ...(m.coll ? ([[m.coll, collectionUrl(m.coll)]] as [string, string][]) : []), [m.name, url]]),
     ),
   }
 }

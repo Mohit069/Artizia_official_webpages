@@ -143,12 +143,25 @@ if (process.env.SERVE_SPA === '1') {
    (On Vercel these are handled by rewrites in vercel.json instead — the
    function never sees them.) */
 app.get('/p/:slug',    (req, res) => res.sendFile(path.join(ROOT, 'page.html')));
-/* product.html and collections.html are filled in by the browser from the
-   API; a crawler reading the raw file would see the same title and no
-   structured data on every product. These serve the template with the
-   <head> completed on the server for the product / collection requested. */
-app.get(['/product.html', '/product'], seo.productPage);
-app.get(['/collections.html', '/collections'], seo.collectionsPage);
+/* ---- surfaces and collections ----
+   /quartz/<name>        one surface
+   /collections          every surface
+   /collections/<name>   one collection, with a canonical of its own so it can
+                         rank for its own name
+
+   Both templates are filled in by the browser from the API, so a crawler
+   reading the raw file would see the same title and no structured data on
+   every product. These serve them with the <head> completed on the server for
+   the surface or collection actually asked for.
+
+   product.html?p= and collections.html?c= were the addresses until now. They
+   redirect permanently: links already sent out, and the visualiser links on
+   each product, keep working. */
+app.get('/quartz/:slug', seo.productPage);
+app.get(['/product.html', '/product'], seo.productRedirect);
+app.get('/collections', seo.collectionsPage);
+app.get('/collections/:slug', seo.collectionsPage);
+app.get('/collections.html', seo.collectionsRedirect);
 /* The marketing pages write their own <h1> in the browser, from the
    window.PAGE block at the top of each file. The heading is filled in on the
    server from that same block so the raw HTML carries it, and share tags are
