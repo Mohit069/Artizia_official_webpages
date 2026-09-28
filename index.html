@@ -425,8 +425,12 @@
       transform: none
     }
 
+    /* 50ch puts nine words on a line and holds the paragraph to seven lines.
+       Narrower and the longer copy runs to ten; wider and it starts crowding
+       the buttons beside it. On a phone the column is narrower than this
+       anyway, so the measure there is unchanged. */
     .hero-sub {
-      max-width: 40ch;
+      max-width: 50ch;
       color: var(--text-dim);
       font-size: clamp(15px, 1.5vw, 17px)
     }
