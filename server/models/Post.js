@@ -101,7 +101,11 @@ function create(o) {
 }
 
 function update(slug, o) {
-  const f = fromApi(Object.assign({}, o, { slug }));
+  /* The editor never sends publishedAt back, and fromApi fills a missing one
+     with "now" — so every save of a live article used to restamp it as
+     published today. Keep the date it first went live. */
+  const prev = db.prepare('SELECT published_at FROM posts WHERE slug = ?').get(slug);
+  const f = fromApi(Object.assign({}, o, { slug, publishedAt: o.publishedAt || (prev && prev.published_at) || undefined }));
   const set = COLS.filter(c => c !== 'slug');
   db.prepare(`UPDATE posts SET ${set.map(c => c + '=?').join(',')}, updated_at = datetime('now') WHERE slug = ?`)
     .run(...set.map(c => f[c]), slug);
