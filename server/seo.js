@@ -88,14 +88,20 @@ const jsonForScript = (o) => JSON.stringify(o).replace(/<\//g, '<\\/').replace(/
 function inject(html, h) {
   let out = html;
   if (h.title) out = out.replace(/<title>[^<]*<\/title>/i, `<title>${escText(h.title)}</title>`);
-  if (h.description) out = out.replace(/<meta name="description" content="[^"]*">/i, `<meta name="description" content="${escAttr(h.description)}">`);
+  if (h.description) {
+    /* replaced where the template has one, added where it has none (post.html) */
+    const tag = `<meta name="description" content="${escAttr(h.description)}">`;
+    out = /<meta name="description"[^>]*>/i.test(out)
+      ? out.replace(/<meta name="description"[^>]*>/i, tag)
+      : out.replace(/<\/title>/i, `</title>\n${tag}`);
+  }
   if (h.canonical) {
     const tag = `<link rel="canonical" href="${escAttr(h.canonical)}">`;
     out = /<link rel="canonical"[^>]*>/i.test(out) ? out.replace(/<link rel="canonical"[^>]*>/i, tag) : out.replace(/<\/title>/i, `</title>\n${tag}`);
   }
   const extra = [];
-  /* og:* is a property, everything else (twitter:*) a name */
-  for (const [p, c] of h.og || []) if (c) extra.push(`<meta ${/^og:/i.test(p) ? 'property' : 'name'}="${escAttr(p)}" content="${escAttr(c)}">`);
+  /* og:* and article:* are properties, everything else (twitter:*) a name */
+  for (const [p, c] of h.og || []) if (c) extra.push(`<meta ${/^(og|article):/i.test(p) ? 'property' : 'name'}="${escAttr(p)}" content="${escAttr(c)}">`);
   if (h.jsonLd) extra.push(`<script type="application/ld+json">${jsonForScript(h.jsonLd)}</script>`);
   if (extra.length) out = out.replace(/<\/head>/i, `${extra.join('\n')}\n</head>`);
   return out;
@@ -322,6 +328,115 @@ function collectionsHead(coll) {
 const withBase = (html) =>
   /<base\s/i.test(html) ? html : html.replace(/(<meta charset="[^"]*">)/i, (m, tag) => tag + '\n<base href="/">');
 
+/* ---- the journal ----
+   post.html is one template the browser fills from /api/posts/<slug>. Until
+   that request came back, the raw file held an empty, hidden article and the
+   not-found panel, which ships in every copy of the page ready for a bad
+   address. Its words — "404 · Article not found · That article has moved or
+   was never published" — were the only ones there, under the title "Artizia —
+   Journal" shared by every article. Google read exactly that and filed a
+   published article as a soft 404.
+
+   The article is written in here instead — head, heading, date line, cover and
+   body — and the not-found panel is taken out. The page's script sees the
+   article is already there and leaves it be. An address that names no
+   published article is a real 404. */
+const postUrl = (slug) => `${SITE_URL}/blog/${encodeURIComponent(slug)}`;
+/* SQLite's datetime('now') is "YYYY-MM-DD HH:MM:SS" in UTC, not ISO 8601 */
+const isoTime = (s) => (!s ? undefined : /T/.test(s) ? s : String(s).replace(' ', 'T') + 'Z');
+const longDate = (s) => (s ? new Date(isoTime(s)).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '');
+const shortDate = (s) => (s ? new Date(isoTime(s)).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '');
+const textOf = (html) => String(html || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+
+function postHead(p) {
+  const url = postUrl(p.slug);
+  const title = p.seoTitle || p.title;
+  const description = p.seoDesc || p.excerpt || textOf(p.body).slice(0, 160);
+  const image = p.cover ? abs(p.cover) : SHARE_IMAGE;
+  /* the brand writing as itself is the organisation, not a person called Artizia */
+  const author = !p.author || /^artizia\b/i.test(p.author)
+    ? { '@id': SITE_URL + '/#organization' }
+    : { '@type': 'Person', name: p.author };
+  return {
+    title: title + ' — Artizia',
+    description,
+    canonical: url,
+    og: [
+      ['og:type', 'article'], ['og:site_name', 'Artizia'], ['og:url', url],
+      ['og:title', title], ['og:description', description], ['og:image', image],
+      ...(p.cover ? [] : [['og:image:width', '1200'], ['og:image:height', '630']]),
+      ['article:published_time', isoTime(p.publishedAt)], ['article:modified_time', isoTime(p.updatedAt)],
+      ...(p.tags || []).map(t => ['article:tag', t]),
+      ['twitter:card', 'summary_large_image']
+    ],
+    jsonLd: graph(
+      {
+        '@type': 'BlogPosting',
+        '@id': url + '#article',
+        headline: p.title,
+        description,
+        url,
+        mainEntityOfPage: url,
+        image: [image],
+        datePublished: isoTime(p.publishedAt),
+        dateModified: isoTime(p.updatedAt || p.publishedAt),
+        author,
+        publisher: { '@id': SITE_URL + '/#organization' },
+        isPartOf: { '@id': SITE_URL + '/#website' },
+        keywords: (p.tags || []).join(', ') || undefined,
+        wordCount: textOf(p.body).split(' ').filter(Boolean).length,
+        inLanguage: 'en'
+      },
+      crumbs([['Home', '/'], ['Journal', '/blog.html'], [p.title, url]])
+    )
+  };
+}
+
+function postBody(html, p) {
+  const meta = [longDate(p.publishedAt), p.author ? 'By ' + p.author : '', ...(p.tags || [])]
+    .filter(Boolean).map(x => `<span>${escText(x)}</span>`).join('');
+  let out = fillEl(html, 'title', escText(p.title));
+  out = fillEl(out, 'meta', meta);
+  if (p.cover) out = fillEl(out, 'cover', `<img src="${escAttr(p.cover)}" alt="${escAttr(p.title)}" fetchpriority="high">`);
+  /* sanitised on the way in (server/models/Post.js), so it goes in as stored */
+  out = fillEl(out, 'body', p.body || '');
+  out = out.replace(/<article id="post" hidden>/i, '<article id="post" data-ssr>');
+  return out.replace(/<section[^>]*\bid="notFound"[\s\S]*?<\/section>\s*/i, '');
+}
+
+function postPage(req, res, next) {
+  try {
+    const html = template('post.html');
+    const p = Post.bySlug(String(req.params.slug || '').toLowerCase());
+    noCache(res);
+    if (p && p.status === 'published') return res.send(postBody(inject(html, postHead(p)), p));
+    /* no such article, or a draft: say so in the status as well as the words */
+    res.status(404).send(
+      inject(html, { title: 'Article not found — Artizia' })
+        .replace(/<\/title>/i, '</title>\n<meta name="robots" content="noindex">')
+        .replace(/(<section[^>]*\bid="notFound")\s+hidden/i, '$1'));
+  } catch (e) { next(e); }
+}
+
+/* The first page of the journal's cards, in the markup blog.html's own script
+   writes over them a moment later — .rv included, so they stay hidden until
+   that script reveals its own and nothing flickers. A crawler that runs no
+   script gets a link to every recent article instead of an empty grid and the
+   hidden "No articles published yet." line. */
+function blogCards(html) {
+  const list = Post.published(9);
+  if (!list.length) return html;
+  const cards = list.map(p => `<a class="pcardx rv" href="/blog/${encodeURIComponent(p.slug)}">
+      <div class="pc-img">${p.cover ? `<img src="${escAttr(p.cover)}" alt="${escAttr(p.title)}" loading="lazy">` : ''}</div>
+      <div class="pc-body">
+        <span class="pc-date">${escText(shortDate(p.publishedAt))}${(p.tags || []).length ? ' · ' + escText(p.tags[0]) : ''}</span>
+        <h3>${escText(p.title)}</h3>
+        <p>${escText(p.excerpt || '')}</p>
+        <span class="pc-go">Read <span class="arw">→</span></span>
+      </div></a>`).join('');
+  return fillEl(html, 'posts', cards);
+}
+
 /* ---- express handlers ---- */
 function noCache(res) { res.setHeader('Cache-Control', 'no-cache'); res.type('html'); }
 
@@ -381,7 +496,9 @@ function staticPage(req, res, next) {
     const file = p === '' ? 'index.html' : (/\.html$/i.test(p) ? p : p + '.html');
     if (!SERVED_PAGES.includes(file)) return next();
     noCache(res);
-    res.send(shareTags(bannerFill(template(file))));
+    let html = bannerFill(template(file));
+    if (file === 'blog.html') html = blogCards(html);
+    res.send(shareTags(html));
   } catch (e) {
     /* this only ever adds to a page that is already complete — if anything here
        fails, hand the file to the static server untouched */
@@ -427,4 +544,4 @@ function sitemap(req, res) {
   res.send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${rows.join('\n')}\n</urlset>\n`);
 }
 
-module.exports = { productPage, productRedirect, collectionsPage, collectionsRedirect, staticPage, BANNER_ROUTES, robots, sitemap, ORG, WEBSITE, productHead, collectionsHead, inject };
+module.exports = { productPage, productRedirect, collectionsPage, collectionsRedirect, postPage, staticPage, BANNER_ROUTES, robots, sitemap, ORG, WEBSITE, productHead, collectionsHead, inject };

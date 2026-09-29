@@ -169,7 +169,9 @@ app.get('/collections.html', seo.collectionsRedirect);
    express.static, which would otherwise serve these files as they are. */
 app.get(seo.BANNER_ROUTES, seo.staticPage);
 app.get('/blog',       (req, res) => res.sendFile(path.join(ROOT, 'blog.html')));
-app.get('/blog/:slug', (req, res) => res.sendFile(path.join(ROOT, 'post.html')));
+/* an article is written into the page on the server — see seo.postPage for
+   why serving the bare template read to Google as a soft 404 */
+app.get('/blog/:slug', seo.postPage);
 
 /* static site (index.html, collections.html, assets/, …)
    HTML/CSS/JS must revalidate — a stale stylesheet against fresh markup renders a broken page.
