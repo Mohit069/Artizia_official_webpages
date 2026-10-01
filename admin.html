@@ -1500,14 +1500,15 @@
      attributes are editing aids the server drops: `open` (accordion items stay
      open while you write them) and `data-ph` (the hint in an item's empty line). */
   const RT_ALLOW={P:['data-ph'],BR:[],STRONG:[],EM:[],U:[],S:[],H2:[],H3:[],H4:[],
-    BLOCKQUOTE:[],UL:[],OL:[],LI:[],A:['href','title','target','rel'],
+    BLOCKQUOTE:[],HR:[],UL:[],OL:[],LI:[],A:['href','title','target','rel'],
     IMG:['src','alt','title','loading'],FIGURE:[],FIGCAPTION:[],CODE:[],PRE:[],
-    DETAILS:['open'],SUMMARY:['data-ph']};
+    DETAILS:['open'],SUMMARY:['data-ph'],
+    TABLE:[],THEAD:[],TBODY:[],TR:[],TH:[],TD:[]};
   const RT_MAP={B:'STRONG',I:'EM',STRIKE:'S',DEL:'S',DIV:'P',SECTION:'P',ARTICLE:'P',
     H1:'H2',H5:'H4',H6:'H4'};
   const RT_DROP=new Set(['SCRIPT','STYLE','IFRAME','OBJECT','EMBED','FORM','INPUT',
     'BUTTON','LINK','META','SVG','HEAD','TITLE','NOSCRIPT','O:P']);
-  const RT_BLOCK=new Set(['P','H2','H3','H4','BLOCKQUOTE','UL','OL','PRE','FIGURE','DETAILS']);
+  const RT_BLOCK=new Set(['P','H2','H3','H4','BLOCKQUOTE','HR','UL','OL','PRE','FIGURE','DETAILS','TABLE']);
   const RT_INLINE_OK=new Set(['STRONG','EM','U','S','A','CODE','BR','IMG']);
   /* no words and no picture — an empty line, <br> and all */
   const rtBlank=n=>!n.textContent.trim()&&!(n.querySelector&&n.querySelector('img'));
@@ -1524,7 +1525,7 @@
     /* an accordion question is one line of text: a <summary> outside an item, and
        any block inside a question, keep only their contents */
     if((tag==='SUMMARY'&&dest.tagName!=='DETAILS')||
-       ((RT_BLOCK.has(tag)||tag==='LI'||tag==='FIGCAPTION')&&dest.closest('summary'))){
+       ((RT_BLOCK.has(tag)||/^(LI|FIGCAPTION|THEAD|TBODY|TR|TH|TD)$/.test(tag))&&dest.closest('summary'))){
       node.childNodes.forEach(c=>rtCopy(c,dest)); return;
     }
     if(!RT_ALLOW[tag]){                       // span / font / unknown → unwrap
@@ -2022,12 +2023,12 @@
       {method:editingPost?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const j=await r.json();
     if(!r.ok){ $('bg_err').textContent=j.error||'Could not save.'; return; }
-    /* a server still running its code from before accordions existed strips them
-       out as it saves. Say so, and keep the article open to save again once the
-       app has been restarted */
-    if(payload.body.includes('<details')&&!String(j.body||'').includes('<details')){
+    /* a server still running its code from before accordions and tables existed
+       strips them out as it saves. Say so, and keep the article open to save
+       again once the app has been restarted */
+    if(['<details','<table'].some(t=>payload.body.includes(t)&&!String(j.body||'').includes(t))){
       editingPost=j.slug; $('bg_slug').readOnly=true;
-      $('bg_err').textContent='Saved, but the server removed the accordions: it is still running its old code. Restart the app (Plesk → Node.js → Restart App), then press Save again.';
+      $('bg_err').textContent='Saved, but the server removed the accordions or tables: it is still running its old code. Restart the app (Plesk → Node.js → Restart App), then press Save again.';
       return;
     }
     closeDrawer('bdrawer');
