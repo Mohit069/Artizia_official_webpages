@@ -1018,6 +1018,10 @@ footer{border-top:1px solid var(--line);padding:clamp(60px,7vw,96px) 0 36px;marg
 /* the reading column is centred on the page rather than pinned to the left of the
    wrap, so it sits under the centred hero instead of drifting away from it */
 [data-page="post"] .prose-long,[data-page="post"] .art-foot{margin-left:auto;margin-right:auto;max-width:70ch}
+/* justified text — the article body, and the article editor so it shows what
+   publishes. Running text only: a heading or an FAQ question set justified would
+   have its first line stretched out across the column. */
+.prose-justify p,.prose-justify li{text-align:justify}
 
 /* ============================================================
    MOBILE NAV — collapsible submenus
