@@ -197,6 +197,9 @@
   /* the button for the format under the caret lights up, so it is obvious whether
      you are in a heading or a paragraph */
   .rt-bar button.on{background:var(--accent);border-color:var(--accent);color:#0A0A0C}
+  /* buttons that can't apply where the caret is (a heading inside an accordion question) */
+  .rt-bar button.off,.rt-bar button.off:hover{opacity:.3;cursor:not-allowed;background:none;border-color:transparent;color:var(--text-dim)}
+  .rt-bar button svg{display:block;width:17px;height:17px;margin:0 auto}
   .rt-bar .sep{width:1px;background:var(--line);margin:4px 5px}
   .rt-body{min-height:340px;max-height:60vh;overflow:auto;padding:20px 22px;outline:none;max-width:none}
   .rt-body:focus{box-shadow:inset 0 0 0 2px var(--accent)}
@@ -205,6 +208,18 @@
      what publishes — but a few affordances only make sense while editing */
   .rt-body:focus{scroll-margin-top:80px}
   .rt-body code{font-family:var(--mono);font-size:.9em;background:var(--surface);padding:2px 6px;border-radius:4px}
+  /* accordion items: held open while editing (the script sees to it) and framed,
+     so it is plain which paragraphs answer which question */
+  .rt-body details,.rt-body details+details,.rt-body details[open]{border:1px dashed var(--line-2);border-radius:10px;
+    padding:0 16px 14px;background:var(--surface)}
+  .rt-body details+details{margin-top:10px}
+  .rt-body details[open]>:not(summary){animation:none}
+  .rt-body summary{cursor:text;padding:14px 32px 12px 0}
+  /* the live page's "+", left unturned: an "×" on every item would read as delete */
+  .rt-body details[open]>summary::after{right:0;transform:translateY(-50%);color:var(--text-faint)}
+  .rt-body [data-ph]{position:relative}
+  /* left at its static position, so it sits exactly where the caret will */
+  .rt-body [data-ph]::before{content:attr(data-ph);position:absolute;color:var(--text-faint);pointer-events:none}
   .rt-foot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:8px 14px;
     border-top:1px solid var(--line);background:var(--surface);
     font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint)}
@@ -520,6 +535,13 @@
             <button type="button" data-cmd="insertUnorderedList" title="Bulleted list">•</button>
             <button type="button" data-cmd="insertOrderedList" title="Numbered list">1.</button>
             <button type="button" data-block="blockquote" title="Quote">❝</button>
+            <button type="button" id="rtAcc" aria-label="Accordion" title="Accordion (FAQ) — makes the question heading at the cursor, with its answer, a collapsible item. On a section heading such as “Frequently Asked Questions”, does every question under it. On an empty line, starts a new item. Press again — on that heading, or inside an item — to take the accordion off.">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m4 5 3 3 3-3"/><path d="M13 6.5h7"/>
+                <path d="M13 11.5h5" opacity=".5"/>
+                <path d="m5.5 14 3 3-3 3"/><path d="M13 17h7"/>
+              </svg>
+            </button>
             <span class="sep"></span>
             <button type="button" id="rtLink" title="Add / edit link">🔗</button>
             <button type="button" id="rtUnlink" title="Remove link">⛌</button>
@@ -530,7 +552,7 @@
             <button type="button" data-cmd="redo" title="Redo  (Ctrl+Y)">↷</button>
           </div>
           <div class="rt-body prose-long" id="bg_body" contenteditable="true" spellcheck="true"></div>
-          <div class="rt-foot"><span id="bg_count">0 words</span><span class="rt-tip">Tip: paste from Word or the web — formatting is cleaned automatically.</span></div>
+          <div class="rt-foot"><span id="bg_count">0 words</span><span class="rt-tip" id="bg_tip">Tip: paste from Word or the web — formatting is cleaned automatically.</span></div>
         </div>
       </div>
 
@@ -1436,6 +1458,7 @@
     setPickValue('bg_cover', p?(p.cover||''):'');
     $('bg_body').innerHTML=p?(p.body||''):'';
     rtNormalize($('bg_body'));      /* fold any legacy span/br soup into clean blocks */
+    accUndo=[];                     /* nothing to undo in an article just opened */
     rtSyncFoot(); rtSyncActive();
     $('bg_seoTitle').value=p?(p.seoTitle||''):'';
     $('bg_seoDesc').value=p?(p.seoDesc||''):'';
@@ -1473,16 +1496,22 @@
   try{ document.execCommand('defaultParagraphSeparator',false,'p'); }catch(e){}
 
   /* the tags the public sanitiser keeps (server/models/Post.js) — mirror them so
-     the editor never shows formatting that will be stripped on save */
-  const RT_ALLOW={P:[],BR:[],STRONG:[],EM:[],U:[],S:[],H2:[],H3:[],H4:[],
+     the editor never shows formatting that will be stripped on save. Two of the
+     attributes are editing aids the server drops: `open` (accordion items stay
+     open while you write them) and `data-ph` (the hint in an item's empty line). */
+  const RT_ALLOW={P:['data-ph'],BR:[],STRONG:[],EM:[],U:[],S:[],H2:[],H3:[],H4:[],
     BLOCKQUOTE:[],UL:[],OL:[],LI:[],A:['href','title','target','rel'],
-    IMG:['src','alt','title','loading'],FIGURE:[],FIGCAPTION:[],CODE:[],PRE:[]};
+    IMG:['src','alt','title','loading'],FIGURE:[],FIGCAPTION:[],CODE:[],PRE:[],
+    DETAILS:['open'],SUMMARY:['data-ph']};
   const RT_MAP={B:'STRONG',I:'EM',STRIKE:'S',DEL:'S',DIV:'P',SECTION:'P',ARTICLE:'P',
     H1:'H2',H5:'H4',H6:'H4'};
   const RT_DROP=new Set(['SCRIPT','STYLE','IFRAME','OBJECT','EMBED','FORM','INPUT',
     'BUTTON','LINK','META','SVG','HEAD','TITLE','NOSCRIPT','O:P']);
-  const RT_BLOCK=new Set(['P','H2','H3','H4','BLOCKQUOTE','UL','OL','PRE','FIGURE']);
+  const RT_BLOCK=new Set(['P','H2','H3','H4','BLOCKQUOTE','UL','OL','PRE','FIGURE','DETAILS']);
   const RT_INLINE_OK=new Set(['STRONG','EM','U','S','A','CODE','BR','IMG']);
+  /* no words and no picture — an empty line, <br> and all */
+  const rtBlank=n=>!n.textContent.trim()&&!(n.querySelector&&n.querySelector('img'));
+  const rtEmptyLine=()=>{ const p=document.createElement('p'); p.innerHTML='<br>'; return p; };
 
   /* recursively copy a source node into `dest`, keeping only allowed tags and
      attributes, unwrapping everything else (spans, fonts, styled wrappers) */
@@ -1492,6 +1521,12 @@
     let tag=node.tagName.toUpperCase();
     if(RT_DROP.has(tag)) return;
     if(RT_MAP[tag]) tag=RT_MAP[tag];
+    /* an accordion question is one line of text: a <summary> outside an item, and
+       any block inside a question, keep only their contents */
+    if((tag==='SUMMARY'&&dest.tagName!=='DETAILS')||
+       ((RT_BLOCK.has(tag)||tag==='LI'||tag==='FIGCAPTION')&&dest.closest('summary'))){
+      node.childNodes.forEach(c=>rtCopy(c,dest)); return;
+    }
     if(!RT_ALLOW[tag]){                       // span / font / unknown → unwrap
       node.childNodes.forEach(c=>rtCopy(c,dest)); return;
     }
@@ -1507,13 +1542,43 @@
     dest.appendChild(el);
   }
 
+  /* an accordion item is one <summary>, the question, then its answer as blocks.
+     This puts back whatever editing or a paste bent out of shape. `final` (on
+     save) also drops the answer's empty lines, and an item left with no question
+     stops being an item: its answer stays, as ordinary text. */
+  function rtShapeItem(d,final){
+    let sum=null;
+    [...d.children].forEach(n=>{
+      if(n.tagName!=='SUMMARY') return;
+      if(!sum){ sum=n; return; }
+      const p=document.createElement('p'); p.append(...n.childNodes); n.replaceWith(p);   /* a second question joins the answer */
+    });
+    if(!sum) sum=document.createElement('summary');
+    d.prepend(sum);
+    let bucket=null;                          /* loose words in the answer go into paragraphs */
+    [...d.childNodes].forEach(n=>{
+      if(n===sum) return;
+      if(n.nodeType===1&&RT_BLOCK.has(n.tagName)){ bucket=null; return; }
+      if(!bucket){
+        if(n.nodeType===3&&!n.nodeValue.trim()){ n.remove(); return; }
+        bucket=document.createElement('p'); n.before(bucket);
+      }
+      bucket.appendChild(n);
+    });
+    if(final) [...d.children].forEach(n=>{ if(n!==sum&&n.tagName==='P'&&rtBlank(n)) n.remove(); });
+    if(!rtBlank(sum)) return;
+    if(final){ sum.remove(); d.replaceWith(...d.childNodes); }
+    else sum.innerHTML='<br>';                /* somewhere to put the caret */
+  }
+
   /* clean an HTML string into the allow-list, then guarantee the top level is
      block elements: any loose text or inline run (the span/br soup case) is
      gathered into a <p> so it becomes selectable, headable content */
-  function rtClean(html){
+  function rtClean(html,final){
     const src=new DOMParser().parseFromString(String(html||''),'text/html').body;
     const flat=document.createElement('div');
     src.childNodes.forEach(c=>rtCopy(c,flat));
+    flat.querySelectorAll('details').forEach(d=>rtShapeItem(d,final));
     const out=document.createElement('div'); let bucket=null;
     const flush=()=>{ if(bucket){ if(bucket.textContent.trim()||bucket.querySelector('img,br')) out.appendChild(bucket); bucket=null; } };
     [...flat.childNodes].forEach(n=>{
@@ -1525,11 +1590,14 @@
     return out.innerHTML;
   }
 
-  /* normalise the live editor in place, preserving the caret's rough position */
-  function rtNormalize(root){
-    const cleaned=rtClean(root.innerHTML);
+  /* normalise the live editor in place, preserving the caret's rough position.
+     `final` is the stricter pass for saving — see rtShapeItem */
+  function rtNormalize(root,final){
+    const cleaned=rtClean(root.innerHTML,final);
     if(cleaned!==root.innerHTML) root.innerHTML=cleaned;
     if(!root.firstChild) root.innerHTML='<p><br></p>';
+    root.querySelectorAll('details:not([open])').forEach(d=>{ d.open=true; });
+    rtMarkEmpty();
   }
 
   /* word count + toolbar active-state ---------------------------------------- */
@@ -1547,13 +1615,21 @@
     const blockEl=inEditor&&anc?anc.closest('p,h2,h3,h4,blockquote'):null;
     const block=blockEl?blockEl.tagName.toLowerCase():'';
     const inCode=!!(inEditor&&anc&&anc.closest('code'));
+    const inAcc=!!(inEditor&&anc&&anc.closest('details'));
+    /* an accordion question is one line: headings, lists and pictures can't go in it */
+    const inQ=!!(inEditor&&anc&&anc.closest('summary'));
     $('bg_bar').querySelectorAll('button').forEach(b=>{
       let on=false;
       if(b.dataset.block) on=inEditor&&block===b.dataset.block;
       else if(['bold','italic','underline','strikeThrough'].includes(b.dataset.cmd||'')){ try{ on=inEditor&&document.queryCommandState(b.dataset.cmd); }catch(e){} }
       else if(b.dataset.inline==='code') on=inCode;
+      else if(b.id==='rtAcc') on=inAcc;
       b.classList.toggle('on',!!on);
+      b.classList.toggle('off',inQ&&!!(b.dataset.block||/^insert(Unordered|Ordered)List$/.test(b.dataset.cmd||'')||b.id==='rtImg'));
     });
+    $('bg_tip').textContent=inAcc
+      ? 'Accordion: Enter goes from the question to its answer · Enter on an empty last line starts the next question · Enter on an empty question ends the list.'
+      : 'Tip: paste from Word or the web — formatting is cleaned automatically.';
   }
 
   /* toolbar clicks ----------------------------------------------------------- */
@@ -1561,6 +1637,8 @@
   $('bg_bar').addEventListener('click',e=>{
     const b=e.target.closest('button'); if(!b) return;
     RT_BODY.focus();
+    if(b.classList.contains('off')) return;
+    if(b.dataset.cmd==='undo'&&accUndoLast()) return;
     if(b.dataset.block){
       /* toggle: a second press on the active heading returns it to a paragraph */
       let cur=''; try{ cur=(document.queryCommandValue('formatBlock')||'').toLowerCase(); }catch(e){}
@@ -1571,7 +1649,7 @@
     } else if(b.dataset.cmd){
       document.execCommand(b.dataset.cmd,false,null);
     }
-    rtSyncFoot(); rtSyncActive();
+    rtSyncFoot(); rtSyncActive(); rtMarkEmpty();
   });
 
   /* wrap / unwrap the selection in an inline tag (used for inline code) */
@@ -1603,6 +1681,7 @@
   /* images ------------------------------------------------------------------- */
   $('rtImg').addEventListener('mousedown',e=>e.preventDefault());
   $('rtImg').addEventListener('click',()=>{
+    if($('rtImg').classList.contains('off')) return;
     const sel=window.getSelection();
     const range=sel.rangeCount?sel.getRangeAt(0).cloneRange():null;
     pickImage(url=>{
@@ -1614,12 +1693,300 @@
     });
   });
 
+  /* accordion (FAQ) -------------------------------------------------------------
+     An item is <details><summary>question</summary><p>answer…</p></details>:
+     native, so the live page opens and closes it with no script, and the answer
+     is in the page for search engines whether it is open or not. The button —
+       · on a question (a heading, or a line that is all bold) makes it and the
+         answer under it an item; on a heading over questions — an H2
+         "Frequently Asked Questions" over H3s — every question under it;
+       · on a selection, makes an item of each question in it;
+       · on an empty line or in body text, starts a blank item;
+       · inside an item, on a heading over items, or on a selection that takes
+         in items, takes the accordion off them again.
+     While editing, every item is held open: a click on a question only places
+     the caret. Undo for all of it is the snapshot further down. */
+  const ACC_HEAD=new Set(['H2','H3','H4']);
+
+  /* how a block ranks as a question — H2 heads H3s, which head H4s, which head
+     bold lines — or 99 when it isn't one */
+  function accRank(n){
+    if(!n||n.nodeType!==1) return 99;
+    if(ACC_HEAD.has(n.tagName)) return +n.tagName[1];
+    if(n.tagName!=='P'||!n.textContent.trim()) return 99;
+    const parts=[...n.childNodes].filter(c=>c.nodeName!=='BR'&&!(c.nodeType===3&&!c.nodeValue.trim()));
+    return parts.length===1&&parts[0].nodeName==='STRONG'?5:99;
+  }
+
+  const accBlank=()=>{ const d=document.createElement('details'); d.open=true; d.innerHTML='<summary><br></summary><p><br></p>'; return d; };
+
+  /* the caret at the start of `el`, or at its end */
+  function rtCaret(el,atEnd){
+    if(/^(UL|OL)$/.test(el.tagName)&&el.firstElementChild) el=atEnd?el.lastElementChild:el.firstElementChild;
+    const r=document.createRange(); r.selectNodeContents(el); r.collapse(!atEnd||rtBlank(el));
+    const s=getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+  /* nothing but tags between the caret and the start (or end) of `el`? */
+  function rtCaretAtEdge(el,atEnd){
+    const s=getSelection(); if(!s.rangeCount) return false;
+    const c=s.getRangeAt(0), r=document.createRange(); r.selectNodeContents(el);
+    if(atEnd) r.setStart(c.endContainer,c.endOffset); else r.setEnd(c.startContainer,c.startOffset);
+    return rtBlank(r.cloneContents());
+  }
+  const rtInQuestion=()=>{ let n=getSelection().anchorNode; n=n&&(n.nodeType===3?n.parentElement:n); return !!(n&&RT_BODY.contains(n)&&n.closest('summary')); };
+
+  /* the top-level blocks a selection touches. One it only reaches the very start
+     of — a triple-click, a drag down to the next line — is left out */
+  function rtTopRun(range){
+    const top=(c,o)=>{
+      if(c===RT_BODY) return RT_BODY.childNodes[Math.max(0,Math.min(o,RT_BODY.childNodes.length-1))]||null;
+      while(c&&c.parentNode!==RT_BODY) c=c.parentNode;
+      return c;
+    };
+    const a=top(range.startContainer,range.startOffset);
+    let b=range.collapsed?a:top(range.endContainer,range.endOffset-1);
+    if(!a||!b) return [];
+    if(b!==a&&range.endContainer!==RT_BODY){
+      const head=document.createRange(); head.setStart(b,0); head.setEnd(range.endContainer,range.endOffset);
+      if(rtBlank(head.cloneContents())) b=b.previousSibling;
+    }
+    const run=[];
+    for(let n=a;n;n=n.nextSibling){ if(n.nodeType===1||(n.nodeType===3&&n.nodeValue.trim())) run.push(n); if(n===b) break; }
+    return run;
+  }
+
+  /* a question and everything under it, up to the next question of its rank or higher */
+  function accSection(head){
+    const run=[head], r=accRank(head);
+    for(let n=head.nextSibling;n&&accRank(n)>r;n=n.nextSibling) run.push(n);
+    return run;
+  }
+
+  /* the questions in a run, as ranks by position. Not questions but titles: a
+     heading standing straight over an item — the FAQ's H2, once its questions
+     are items — and any heading of the same level as one, such as the next
+     category along, after its intro */
+  function accQs(run){
+    const over=new Set(run.filter((n,i)=>run[i+1]&&run[i+1].nodeName==='DETAILS').map(accRank));
+    return run.map(n=>over.has(accRank(n))?99:accRank(n));
+  }
+
+  /* make items of a run of top-level blocks. They split at the deepest kind of
+     question in the run, so taking a whole FAQ — the H2 over it, H3 categories,
+     H4 questions with their answers — leaves the headings above the questions
+     standing as titles, and anything under a title but before its first question
+     (an intro) as it is. With no question in the run, its first line becomes
+     one. Items already in the run are left where they are. */
+  function accWrap(run){
+    const ranks=accQs(run), R=Math.max(0,...ranks.filter(r=>r<99));
+    const items=[]; let cur=null;
+    run.forEach((n,i)=>{
+      if(R?ranks[i]===R:!cur&&accRank(n)===99&&n.nodeName!=='DETAILS') items.push(cur={q:n,a:[]});
+      else if(n.nodeName==='DETAILS'||accRank(n)<99) cur=null;     /* items made already, and titles, stay */
+      else if(cur) cur.a.push(n);
+    });
+    return items.map(accBuild);
+  }
+
+  function accBuild({q,a}){
+    const d=document.createElement('details'); d.open=true;
+    const s=document.createElement('summary'); d.append(s);
+    q.before(d);
+    /* the question keeps its words and inline formatting — though not a bold
+       line's bold, a question being set apart already. A list or a quote can't
+       be a question: it starts the answer, under a question still to be written */
+    const block=q.nodeType===1&&RT_BLOCK.has(q.tagName);
+    if(block&&q.tagName!=='P'&&!ACC_HEAD.has(q.tagName)) a=[q,...a];
+    else if(!block) s.append(q);
+    else { s.append(...(accRank(q)===5?q.querySelector('strong'):q).childNodes); q.remove(); }
+    let bucket=null;
+    a.forEach(n=>{
+      if(n.nodeType===1&&RT_BLOCK.has(n.tagName)){ bucket=null; d.append(n); return; }
+      if(!bucket) d.append(bucket=document.createElement('p'));
+      bucket.append(n);
+    });
+    if(rtBlank(s)) s.innerHTML='<br>';
+    if(d.children.length===1) d.append(rtEmptyLine());
+    return d;
+  }
+
+  /* the heading an item's question goes back to: one level under the title the
+     item stands beneath — H3 under the FAQ's H2, H4 under an H3 category */
+  function accLevel(d){
+    let t=d.previousElementSibling; while(t&&t.nodeName==='DETAILS') t=t.previousElementSibling;
+    return t&&ACC_HEAD.has(t.tagName)?'h'+Math.min(4,+t.tagName[1]+1):'h3';
+  }
+
+  /* an item back to plain text: the question as a heading, the answer as it was.
+     Returns the first block, for the caret */
+  function accUnwrap(d,lvl=accLevel(d)){
+    const s=d.querySelector(':scope>summary'), q=!!s&&!rtBlank(s);
+    const h=document.createElement(lvl);
+    if(q) h.append(...s.childNodes);
+    if(s) s.remove();
+    const rest=[...d.childNodes].filter(n=>n.nodeType===1?!(n.tagName==='P'&&rtBlank(n)):n.nodeValue.trim());
+    const out=q?[h,...rest]:rest.length?rest:[rtEmptyLine()];
+    d.replaceWith(...out);
+    return out[0];
+  }
+
+  /* `lvl` when the titles are known; otherwise each item's is read before any is
+     undone, while the titles are still the nearest headings above them */
+  const accOff=(ds,lvl)=>{ const lv=ds.map(d=>lvl||accLevel(d)); rtCaret(ds.map((d,i)=>accUnwrap(d,lv[i]))[0],true); };
+  const accDone=made=>{ if(made.length) rtCaret(made[0].firstChild,true); };
+
+  function rtAccordion(){
+    if(!RT_BODY.firstChild) RT_BODY.appendChild(rtEmptyLine());
+    const sel=getSelection();
+    if(!sel.rangeCount||!RT_BODY.contains(sel.getRangeAt(0).startContainer)) rtCaret(RT_BODY.lastChild,true);
+    const range=sel.getRangeAt(0), run=rtTopRun(range);
+    if(!run.length) return;
+    if(range.collapsed&&run[0].nodeName!=='DETAILS'){
+      const n=run[0];
+      if(rtBlank(n)||accRank(n)===99){                     /* an empty line, or body text: a blank item */
+        const d=accBlank();
+        if(rtBlank(n)) n.replaceWith(d); else n.after(d);
+        return rtCaret(d.firstChild);
+      }
+      const body=accSection(n).slice(1);
+      /* a title over questions: each of them, leaving any items already made */
+      if(accQs(body).some(r=>r<99)) return accDone(accWrap(body));
+      /* a title over items — the FAQ's H2, pressed a second time: off again,
+         each question a level under the title it stood beneath */
+      const items=body.filter(x=>x.nodeName==='DETAILS');
+      if(items.length&&(body[0].nodeName==='DETAILS'||n.tagName==='H2')){
+        const t=Math.max(accRank(n),...body.filter((x,i)=>body[i+1]&&body[i+1].nodeName==='DETAILS').map(accRank).filter(r=>r<99));
+        return accOff(items,'h'+Math.min(4,t+1));
+      }
+      /* a question: it and its answer, up to any item below */
+      const i=body.findIndex(x=>x.nodeName==='DETAILS');
+      return accDone(accWrap([n,...(i<0?body:body.slice(0,i))]));
+    }
+    /* inside an item, or a selection with items in it: the accordion comes off */
+    const items=run.filter(n=>n.nodeName==='DETAILS');
+    if(items.length) return accOff(items);
+    accDone(accWrap(run));
+  }
+
+  /* Enter in a question: on to the answer, taking any words after the caret with
+     it, as Enter does out of a heading. In an item with nothing in it at all, it
+     leaves the accordion instead */
+  function accEnterQuestion(d,sum){
+    const ans=[...d.children].filter(n=>n!==sum);
+    if(rtBlank(sum)&&ans.every(rtBlank)){ const p=rtEmptyLine(); d.replaceWith(p); rtCaret(p); return; }
+    const c=getSelection().getRangeAt(0), tail=document.createRange();
+    tail.setStart(c.endContainer,c.endOffset); tail.setEnd(sum,sum.childNodes.length);
+    const rest=tail.extractContents();
+    if(rtBlank(sum)) sum.innerHTML='<br>';
+    let to=ans[0];
+    if(!rtBlank(rest)){ to=document.createElement('p'); to.append(rest); sum.after(to); }
+    else if(!to){ to=rtEmptyLine(); sum.after(to); }
+    rtCaret(to);
+  }
+
+  /* Enter on the empty last line of an answer: the next question. In an item
+     with nothing in it, it leaves the accordion instead */
+  function accEnterEmptyLast(d,p){
+    if([...d.children].every(rtBlank)){ const np=rtEmptyLine(); d.replaceWith(np); rtCaret(np); return; }
+    p.remove();
+    const n=accBlank(); d.after(n); rtCaret(n.firstChild);
+  }
+
+  /* undo. Everything above is surgery the browser's own undo never sees, so
+     straight after an accordion edit, Ctrl+Z (or ↶) puts the editor back as it
+     was, caret and all — several edits deep. Once you type, the browser's own
+     undo history is the one that applies again. */
+  let accUndo=[];
+  function rtCaretPath(){
+    const s=getSelection(); if(!s.rangeCount) return null;
+    const r=s.getRangeAt(0); if(!RT_BODY.contains(r.startContainer)) return null;
+    const path=[];
+    for(let n=r.startContainer;n!==RT_BODY;n=n.parentNode) path.unshift([...n.parentNode.childNodes].indexOf(n));
+    return {path,offset:r.startOffset};
+  }
+  function accEdit(fn){
+    const html=RT_BODY.innerHTML, at=rtCaretPath();
+    fn();
+    rtSyncFoot(); rtSyncActive(); rtMarkEmpty();
+    accUndo.push({html,at,after:RT_BODY.innerHTML});
+  }
+  function accUndoLast(){
+    const last=accUndo[accUndo.length-1];
+    if(!last||RT_BODY.innerHTML!==last.after){ accUndo=[]; return false; }
+    accUndo.pop();
+    RT_BODY.innerHTML=last.html;
+    let n=RT_BODY;
+    for(const i of (last.at?last.at.path:[])){ n=n&&n.childNodes[i]; }
+    if(n&&last.at){
+      try{ const r=document.createRange(); r.setStart(n,last.at.offset); const s=getSelection(); s.removeAllRanges(); s.addRange(r); }catch(e){}
+    }
+    rtSyncFoot(); rtSyncActive(); rtMarkEmpty();
+    return true;
+  }
+
+  /* "Question" / "Answer" in an item's empty lines */
+  function rtMarkEmpty(){
+    RT_BODY.querySelectorAll('[data-ph],summary,details>p').forEach(n=>{
+      const d=n.parentElement;
+      const ph=d&&d.tagName==='DETAILS'&&rtBlank(n)
+        ? (n.tagName==='SUMMARY'?'Question':d.children.length===2&&n===d.children[1]?'Answer':'') : '';
+      if(ph){ if(n.dataset.ph!==ph) n.dataset.ph=ph; }
+      else if(n.hasAttribute('data-ph')) n.removeAttribute('data-ph');
+    });
+  }
+
+  $('rtAcc').addEventListener('click',()=>{ RT_BODY.focus(); accEdit(rtAccordion); });
+
+  RT_BODY.addEventListener('click',e=>{ if(e.target.closest&&e.target.closest('summary')) e.preventDefault(); });
+  RT_BODY.addEventListener('toggle',e=>{ if(!e.target.open) e.target.open=true; },true);
+
+  RT_BODY.addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&!e.altKey&&e.key.toLowerCase()==='z'){ if(accUndoLast()) e.preventDefault(); return; }
+    if(!['Enter','Backspace','Delete',' '].includes(e.key)||e.isComposing) return;
+    const s=getSelection(); if(!s.rangeCount) return;
+    let at=s.anchorNode; at=at&&(at.nodeType===3?at.parentElement:at);
+    if(!at||!RT_BODY.contains(at)) return;
+    const sum=at.closest('summary'), d=at.closest('details');
+    /* Space in a question: typed by hand, as Firefox would take it to mean
+       "open / close" and type nothing */
+    if(e.key===' '){ if(sum){ e.preventDefault(); document.execCommand('insertText',false,' '); } return; }
+    if(e.key==='Enter'){
+      /* the browser would split a question into two <summary>s */
+      if(sum){
+        e.preventDefault();
+        if(s.isCollapsed||sum.contains(s.focusNode)) accEdit(()=>{ s.deleteFromDocument(); accEnterQuestion(d,sum); });
+        return;
+      }
+      const p=d&&at.closest('p');
+      if(s.isCollapsed&&!e.shiftKey&&p&&p.parentElement===d&&p===d.lastElementChild&&rtBlank(p)){
+        e.preventDefault(); accEdit(()=>accEnterEmptyLast(d,p));
+      }
+      return;
+    }
+    if(!s.isCollapsed) return;
+    /* Backspace at the start of a question takes the accordion off that item —
+       the browser would pull the question out and leave the item without one */
+    if(e.key==='Backspace'){
+      if(sum&&rtCaretAtEdge(sum,false)){ e.preventDefault(); accEdit(()=>rtCaret(accUnwrap(d))); }
+      return;
+    }
+    /* Delete at the end of a line pulls the next line up into it: into an item,
+       that would be its question, so there it does nothing */
+    const blk=at.closest('summary,p,h2,h3,h4,blockquote,ul,ol,pre,figure');
+    if(blk&&rtCaretAtEdge(blk,true)){
+      let n=blk; while(n!==RT_BODY&&!n.nextElementSibling) n=n.parentElement;
+      if(n!==RT_BODY&&n.nextElementSibling.tagName==='DETAILS') e.preventDefault();
+    }
+  });
+
   /* paste — the actual fix for the reported bug ------------------------------
      strip the clipboard down to clean blocks before it lands, so headings you
      apply afterwards attach to real elements instead of nested spans */
   RT_BODY.addEventListener('paste',e=>{
     e.preventDefault();
     const cb=e.clipboardData||window.clipboardData; if(!cb) return;
+    /* into an accordion question, only the words, on one line */
+    if(rtInQuestion()){ document.execCommand('insertText',false,(cb.getData('text/plain')||'').replace(/\s+/g,' ').trim()); rtMarkEmpty(); return; }
     let html=cb.getData('text/html');
     if(!html){
       const text=cb.getData('text/plain')||'';
@@ -1629,7 +1996,7 @@
     rtNormalize(RT_BODY); rtSyncFoot(); rtSyncActive();
   });
 
-  RT_BODY.addEventListener('input',()=>{ rtSyncFoot(); });
+  RT_BODY.addEventListener('input',()=>{ rtSyncFoot(); rtMarkEmpty(); });
   RT_BODY.addEventListener('keyup',rtSyncActive);
   RT_BODY.addEventListener('mouseup',rtSyncActive);
   document.addEventListener('selectionchange',()=>{ if(RT_BODY.contains(document.getSelection().anchorNode)) rtSyncActive(); });
@@ -1639,7 +2006,7 @@
     const title=$('bg_title').value.trim();
     if(!title){ $('bg_err').textContent='Give the article a headline.'; return; }
     if(!slug){ $('bg_err').textContent='Give the article an address.'; return; }
-    rtNormalize($('bg_body'));       /* store the same clean HTML the editor shows */
+    rtNormalize($('bg_body'),true);  /* store the same clean HTML the editor shows */
     const payload={
       slug, title,
       excerpt:$('bg_excerpt').value.trim()||null,
@@ -1655,6 +2022,14 @@
       {method:editingPost?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const j=await r.json();
     if(!r.ok){ $('bg_err').textContent=j.error||'Could not save.'; return; }
+    /* a server still running its code from before accordions existed strips them
+       out as it saves. Say so, and keep the article open to save again once the
+       app has been restarted */
+    if(payload.body.includes('<details')&&!String(j.body||'').includes('<details')){
+      editingPost=j.slug; $('bg_slug').readOnly=true;
+      $('bg_err').textContent='Saved, but the server removed the accordions: it is still running its old code. Restart the app (Plesk → Node.js → Restart App), then press Save again.';
+      return;
+    }
     closeDrawer('bdrawer');
     loadPosts();
     $('msg').textContent='✓ Saved “'+j.title+'” ('+j.status+').';

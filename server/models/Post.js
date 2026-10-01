@@ -18,7 +18,11 @@ const ALLOWED = {
   ul: [], ol: [], li: [],
   a: ['href', 'title', 'target', 'rel'],
   img: ['src', 'alt', 'title', 'loading'],
-  figure: [], figcaption: [], code: [], pre: [], span: []
+  figure: [], figcaption: [], code: [], pre: [], span: [],
+  /* accordion (FAQ) items from the editor's accordion button. No attributes:
+     `open` is dropped, so every item is published closed, and so is any
+     ontoggle= that would run script the moment an item opened. */
+  details: [], summary: []
 };
 
 function sanitize(html) {
