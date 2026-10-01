@@ -68,11 +68,38 @@
     document.head.appendChild(el);
   }
 
+  /* An FAQ written as headings, an H2 "Frequently Asked Questions" (or "FAQ")
+     over H3 questions with their answers below them, reads as the accordion the
+     editor's accordion button makes: each question and its answer folded into a
+     <details> item. The article as stored is left as it is; only the page reads
+     differently. Anything between the title and the first question stays put,
+     and so do items the editor has made already. */
+  function foldFaqs(root){
+    [...root.children].forEach(h=>{
+      const lv=/^H([23])$/.exec(h.tagName);
+      if(!lv||!/\b(faqs?|frequently asked questions)\b/i.test(h.textContent)) return;
+      const q='H'+(+lv[1]+1);                       /* questions sit a level under the title */
+      let item=null;
+      for(let n=h.nextElementSibling,next;n;n=next){
+        next=n.nextElementSibling;
+        const hl=/^H([1-6])$/.exec(n.tagName);
+        if(hl&&+hl[1]<=+lv[1]) break;                 /* the next section */
+        if(n.tagName===q){
+          item=document.createElement('details');
+          const s=document.createElement('summary'); s.append(...n.childNodes);
+          item.append(s); n.replaceWith(item);
+        }
+        else if(n.tagName==='DETAILS') item=null;
+        else if(item) item.append(n);
+      }
+    });
+  }
+
   /* The server writes a published article straight into the page
      (server/seo.js). Then there is nothing to fetch — and fetching would only
      add a second copy of the head tags and the structured data. The fetch below
      stays for a host that serves this file as it is. */
-  if($('post').hasAttribute('data-ssr')){ A.refresh(); return; }
+  if($('post').hasAttribute('data-ssr')){ foldFaqs($('body')); A.refresh(); return; }
 
   fetch('/api/posts/'+encodeURIComponent(slug))
     .then(r=>{ if(!r.ok) throw new Error('404'); return r.json(); })
@@ -91,6 +118,7 @@
       if(p.cover) $('cover').innerHTML=`<img src="${esc(p.cover)}" alt="${esc(p.title)}" fetchpriority="high">`;
       /* body was sanitised server-side on save — see server/models/Post.js */
       $('body').innerHTML=p.body||'';
+      foldFaqs($('body'));
       $('post').hidden=false;
       const nf=$('notFound'); if(nf) nf.hidden=true;
 
