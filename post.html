@@ -104,7 +104,8 @@
   fetch('/api/posts/'+encodeURIComponent(slug))
     .then(r=>{ if(!r.ok) throw new Error('404'); return r.json(); })
     .then(p=>{
-      document.title=(p.seoTitle||p.title)+' — Artizia';
+      const t=p.seoTitle||p.title;
+      document.title=/\bartizia\b/i.test(t)?t:t+' — Artizia';
       meta('description',p.seoDesc||p.excerpt||'');
       meta('og:title',p.seoTitle||p.title,true);
       meta('og:description',p.seoDesc||p.excerpt||'',true);

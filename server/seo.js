@@ -358,7 +358,9 @@ function postHead(p) {
     ? { '@id': SITE_URL + '/#organization' }
     : { '@type': 'Person', name: p.author };
   return {
-    title: title + ' — Artizia',
+    /* an SEO title written with the brand already in it ("… | Artizia") is
+       used as written, rather than gaining a second "— Artizia" */
+    title: /\bartizia\b/i.test(title) ? title : title + ' — Artizia',
     description,
     canonical: url,
     og: [
