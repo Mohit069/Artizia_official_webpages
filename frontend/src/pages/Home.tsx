@@ -37,12 +37,12 @@ export default function Home() {
   return (
     <>
       <Seo
-        title="Artizia — Quartz Slab Manufacturer & Exporter | Luxury Quartz Surfaces, India"
-        description="Artizia is a quartz slab manufacturer and exporter crafting luxury quartz surfaces in Jaipur, India. Jumbo quartz slabs, white quartz slabs and 53 designs across five collections — pressed on Breton Stone technology, warranted for 15 years."
+        title="Premium Quartz Manufacturer and Quartz Exporter in India | Artizia Quartz Masterpieces"
+        description="Artizia is a premium quartz manufacturer and quartz exporter in India offering engineered quartz slabs, Jumbo quartz surfaces and premium designs for residential, commercial and hospitality projects."
         canonical="https://artizia.co.in/"
         og={[
-          ['og:title', 'Artizia — Quartz Slab Manufacturer & Exporter | Luxury Quartz Surfaces'],
-          ['og:description', 'Jumbo quartz slabs and luxury quartz surfaces, engineered in Jaipur and exported worldwide. Free samples, shipped across India in 5–7 days.'],
+          ['og:title', 'Premium Quartz Manufacturer and Quartz Exporter in India | Artizia Quartz Masterpieces'],
+          ['og:description', 'Artizia is a premium quartz manufacturer and quartz exporter in India offering engineered quartz slabs, Jumbo quartz surfaces and premium designs for residential, commercial and hospitality projects.'],
           ['og:type', 'website'],
           ['og:site_name', 'Artizia'],
           ['og:url', 'https://artizia.co.in/'],
@@ -52,8 +52,8 @@ export default function Home() {
           ['og:image:alt', 'An Artizia engineered quartz slab'],
           ['twitter:card', 'summary_large_image'],
         ]}
-        jsonLd={graph(webPage('WebPage', '/', 'Artizia — Quartz Slab Manufacturer & Exporter | Luxury Quartz Surfaces, India',
-          'Artizia is a quartz slab manufacturer and exporter crafting luxury quartz surfaces in Jaipur, India. Jumbo quartz slabs and 53 designs across five collections — pressed on Breton Stone technology, warranted for 15 years.'))}
+        jsonLd={graph(webPage('WebPage', '/', 'Premium Quartz Manufacturer and Quartz Exporter in India | Artizia Quartz Masterpieces',
+          'Artizia is a premium quartz manufacturer and quartz exporter in India offering engineered quartz slabs, Jumbo quartz surfaces and premium designs for residential, commercial and hospitality projects.'))}
       />
       <style dangerouslySetInnerHTML={{ __html: home.css }} />
       <div dangerouslySetInnerHTML={{ __html: home.html }} />
