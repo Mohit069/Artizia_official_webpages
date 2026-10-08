@@ -84,6 +84,7 @@
         next=n.nextElementSibling;
         const hl=/^H([1-6])$/.exec(n.tagName);
         if(hl&&+hl[1]<=+lv[1]) break;                 /* the next section */
+        if(n.tagName==='HR') break;                   /* a section rule ends it too */
         if(n.tagName===q){
           item=document.createElement('details');
           const s=document.createElement('summary'); s.append(...n.childNodes);
