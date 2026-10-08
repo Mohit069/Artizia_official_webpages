@@ -5,7 +5,7 @@ import { useBodyPage } from '../hooks/site'
 import { useArtizia } from '../context/ArtiziaContext'
 import { COLLECTIONS } from '../data/materials'
 import { firstPhoto } from '../lib/marble'
-import { graph, crumbs, productUrl, collectionUrl, collectionPath, productPath, collSlug, abs, SITE_URL, SLAB } from '../data/schema'
+import { graph, crumbs, productUrl, collectionUrl, collectionPath, productPath, collSlug, SITE_URL, SLAB } from '../data/schema'
 
 const PAGE = {
   banner: {
@@ -106,9 +106,9 @@ export default function Collections() {
             mainEntity: {
               '@type': 'ItemList',
               numberOfItems: list.length,
+              // links only: each surface's Product is on its own page (see server/seo.js)
               itemListElement: list.map((k, i) => ({
                 '@type': 'ListItem', position: i + 1, url: productUrl(k), name: mat[k].name,
-                item: { '@type': 'Product', '@id': productUrl(k) + '#product', name: mat[k].name, url: productUrl(k), sku: mat[k].code || undefined, image: abs((mat[k].images || []).find(Boolean)) || undefined, brand: { '@type': 'Brand', name: 'Artizia' } },
               })),
             },
           },

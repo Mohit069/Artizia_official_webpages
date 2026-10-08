@@ -14,7 +14,7 @@
    Structured data shipped:
      every page      Organization (#organization) + WebSite (#website)
      product page    Product + BreadcrumbList
-     collections     CollectionPage + ItemList of the products shown
+     collections     CollectionPage + ItemList linking the products shown
 
    No Offer / price is declared: quotes are per project, and Google refuses a
    Product rich result without a price, rating or review, so none is claimed.
@@ -307,12 +307,15 @@ function collectionsHead(coll) {
         url, name: title, description,
         isPartOf: { '@id': SITE_URL + '/#website' },
         about: { '@id': SITE_URL + '/#organization' },
+        /* Links to the surfaces, not the surfaces themselves: each one's Product
+           lives on its own page. Repeated here, every design counted as an
+           invalid product snippet (no price or review to give) on every
+           collection page in Search Console. */
         mainEntity: {
           '@type': 'ItemList',
           numberOfItems: list.length,
           itemListElement: list.map((p, i) => ({
-            '@type': 'ListItem', position: i + 1, url: productUrl(p.slug), name: p.name,
-            item: { '@type': 'Product', '@id': productUrl(p.slug) + '#product', name: p.name, url: productUrl(p.slug), sku: p.code || undefined, image: (p.images || []).filter(Boolean).slice(0, 1).map(abs)[0], brand: { '@type': 'Brand', name: 'Artizia' } }
+            '@type': 'ListItem', position: i + 1, url: productUrl(p.slug), name: p.name
           }))
         }
       },
