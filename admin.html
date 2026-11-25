@@ -833,19 +833,43 @@
      slot, the finished URL goes to this callback instead of into curImages. */
   let cropCB=null;
 
-  async function uploadBlob(blob,filename,slot){
+  /* Uploads still on their way. A Save reads the form, and read before the
+     upload is back the form still holds the old image: the new one would sit on
+     the server with nothing using it. So every Save waits for these first. */
+  const uploads=new Set();
+  function uploadBlob(blob,filename,slot){
+    const p=sendBlob(blob,filename,slot);
+    uploads.add(p);
+    p.finally(()=>uploads.delete(p));
+    return p;
+  }
+  async function uploadsDone(btn,err){
+    if(btn.disabled) return false;          /* a second click while it waits */
+    err.textContent='';
+    if(!uploads.size) return true;
+    const label=btn.textContent;
+    btn.disabled=true; btn.textContent='Uploading image…';
+    const ok=(await Promise.all(uploads)).every(Boolean);
+    btn.disabled=false; btn.textContent=label;
+    if(!ok) err.textContent='The image did not upload, so nothing has been saved. Choose it again, or press Save to keep things as they are.';
+    return ok;
+  }
+
+  async function sendBlob(blob,filename,slot){
     const cb=cropCB; cropCB=null;
     const slotEl=cb?null:document.querySelector('.uslot[data-slot="'+slot+'"]');
+    let ok=false;
     if(slotEl) slotEl.classList.add('busy');
     try{
       const fd=new FormData();
       fd.append('image',blob,filename);
       const r=await api('/api/upload',{method:'POST',body:fd});
       const j=await r.json();
-      if(r.ok&&j.url){ if(cb) cb(j.url); else { curImages[slot]=j.url; paintSlots(); } }
+      if(r.ok&&j.url){ ok=true; if(cb) cb(j.url); else { curImages[slot]=j.url; paintSlots(); } }
       else alert(j.error||'Upload failed.');
     }catch(err){ alert('Upload failed — are you still signed in?'); }
     if(slotEl) slotEl.classList.remove('busy');
+    return ok;
   }
 
   /* generic image picker used by page blocks and the article editor */
@@ -1040,6 +1064,7 @@
 
   const slugify=v=>(v||'').trim().toLowerCase().replace(/[^a-z0-9-]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
   $('saveBtn').addEventListener('click',async()=>{
+    if(!await uploadsDone($('saveBtn'),$('ferr'))) return;
     const slug=slugify($('f_slug').value);const name=$('f_name').value.trim();
     if(!slug){$('ferr').textContent='Slug is required.';return;}
     if(!name){$('ferr').textContent='Name is required.';return;}
@@ -1386,6 +1411,7 @@
   }));
 
   $('pg_save').addEventListener('click',async()=>{
+    if(!await uploadsDone($('pg_save'),$('pg_err'))) return;
     const slug=toSlug($('pg_slug').value);
     const title=$('pg_title').value.trim();
     if(!title){ $('pg_err').textContent='Give the page a title.'; return; }
@@ -2003,6 +2029,7 @@
   document.addEventListener('selectionchange',()=>{ if(RT_BODY.contains(document.getSelection().anchorNode)) rtSyncActive(); });
 
   $('bg_save').addEventListener('click',async()=>{
+    if(!await uploadsDone($('bg_save'),$('bg_err'))) return;
     const slug=toSlug($('bg_slug').value);
     const title=$('bg_title').value.trim();
     if(!title){ $('bg_err').textContent='Give the article a headline.'; return; }
